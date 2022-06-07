@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: befe6556ea85ea44d9d1ef301e43d4ee, type: 3}
+  m_Name: SoundTable
+  m_EditorClassIdentifier: 
+  _seTemplate: {fileID: 8853561135613234109, guid: 3ba4a20a8d8d19843924d25a49541f75, type: 3}
+  _bgmTemplate: {fileID: 6007269168736242151, guid: 3403b37c03d16684292f48a9ba6edd1f, type: 3}
+  _sePlayMax: 10
+  _bgmSwapTime: 2
+  _seList:
+  - clip: {fileID: 8300000, guid: 1a7d47caf78382f4d9927b7304168499, type: 3}
+    volume: 1
+    pitch: 1
+  - clip: {fileID: 8300000, guid: 22ede6d0e67ea9840be14cd9c7258f24, type: 3}
+    volume: 1
+    pitch: 1
+  - clip: {fileID: 8300000, guid: ff7fe30fa7f614e429e3087a755728d6, type: 3}
+    volume: 1
+    pitch: 1
+  - clip: {fileID: 8300000, guid: 8356211858d267240a5d5fd2ed5cd962, type: 3}
+    volume: 1
+    pitch: 1
+  - clip: {fileID: 8300000, guid: b670f183cb87bcd44b8155ec5435c113, type: 3}
+    volume: 1
+    pitch: 1
+  _bgmList: []

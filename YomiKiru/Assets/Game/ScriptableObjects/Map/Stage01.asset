@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac168b41af858b04ca509835c56b7b37, type: 3}
+  m_Name: Stage01
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: "\u30B9\u30C6\u30FC\u30B801"
+  <SceneName>k__BackingField: stage01
+  <Banner>k__BackingField: {fileID: 21300000, guid: f94631e623fb9c84d88a8e9a6632e092, type: 3}
+  <AreaBox>k__BackingField: {fileID: 1783583328117413500, guid: 988631b2e4bdde94581863348a87d709, type: 3}
