@@ -14,10 +14,10 @@ namespace Yomikiru.Enemy
     {
         [SerializeField] private Transform swordGrip;
         [SerializeField] private Transform swordRotator;
-        [SerializeField] private Collider _swordCollider;
+        [SerializeField] private Collider swordCollider;
         [SerializeField] private ParticleSystem swordTrail;
         [SerializeField] private AudioSource audioSource;
-        [SerializeField] private GameObject attackPrefub;
+        [SerializeField] private GameObject attackPrefab;
 
         [SerializeField] private EffectManager effectManager;
         public EffectManager EffectManager
@@ -69,8 +69,8 @@ namespace Yomikiru.Enemy
             await swordGrip.DOLocalRotate(new Vector3(0, 90, 70), swingSpeed).AwaitForComplete(cancellationToken: cts.Token);
 
             //剣を回す
-            Instantiate(attackPrefub, transform.position, Quaternion.identity);
-            _swordCollider.enabled = true;
+            Instantiate(attackPrefab, transform.position, Quaternion.identity);
+            swordCollider.enabled = true;
             swordTrail.Play();
             audioSource.PlayOneShot(seSwing);
             await swordRotator.DOLocalRotate(new Vector3(0, -360, 0), 0.5f, RotateMode.FastBeyond360).AwaitForStepComplete(cancellationToken: cts.Token);
@@ -84,7 +84,7 @@ namespace Yomikiru.Enemy
 
             //初期状態に戻す
             swordRotator.localRotation = Quaternion.identity;
-            _swordCollider.enabled = false;
+            swordCollider.enabled = false;
             swordGrip.gameObject.SetActive(false);
         }
     }
