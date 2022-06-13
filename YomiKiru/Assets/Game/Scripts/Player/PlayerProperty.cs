@@ -5,57 +5,57 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerProperty", menuName = "Property/PlayerProperty")]
 public class PlayerProperty : ScriptableObject
 {
-    [Header("ƒvƒŒƒCƒ„[")]
-    [Tooltip("ƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®‘¬“x(m/s)")]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼")]
+    [Tooltip("ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ç§»å‹•é€Ÿåº¦(m/s)")]
     public float MoveSpeed = 4.0f;
-    [Tooltip("ƒLƒƒƒ‰ƒNƒ^[‚Ì‘–‚é‘¬“x(m/s)")]
+    [Tooltip("ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®èµ°ã‚‹é€Ÿåº¦(m/s)")]
     public float SprintSpeed = 6.0f;
-    [Tooltip("ƒLƒƒƒ‰ƒNƒ^‚Ì‰ñ“]‘¬“x")]
+    [Tooltip("ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ã®å›è»¢é€Ÿåº¦")]
     public float RotationSpeed = 1.0f;
-    [Tooltip("‰Á‘¬“xEŒ¸‘¬“x")]
+    [Tooltip("åŠ é€Ÿåº¦ãƒ»æ¸›é€Ÿåº¦")]
     public float SpeedChangeRate = 10.0f;
 
     [Space(10)]
-    [Tooltip("ƒWƒƒƒ“ƒv—Í‚£‚Å‚·‚©‚Ë‚¥")]
+    [Tooltip("ã‚¸ãƒ£ãƒ³ãƒ—åŠ›ã…ã§ã™ã‹ã­ã‡")]
     public float JumpHeight = 1.2f;
-    [Tooltip("ƒLƒƒƒ‰ƒNƒ^[‚Í“Æ©‚Ìd—Í’lBƒGƒ“ƒWƒ“‚ÌƒfƒtƒHƒ‹ƒg‚Í-9.81f")]
+    [Tooltip("ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã¯ç‹¬è‡ªã®é‡åŠ›å€¤ã€‚ã‚¨ãƒ³ã‚¸ãƒ³ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯-9.81f")]
     public float Gravity = -15.0f;
 
     [Space(10)]
-    [Tooltip("Ä‚ÑƒWƒƒƒ“ƒv‚Å‚«‚é‚æ‚¤‚É‚È‚é‚Ü‚Å‚ÌŒo‰ßŠÔB0f‚Éİ’è‚·‚é‚ÆAu‚ÉÄƒWƒƒƒ“ƒvo—ˆ‚é")]
+    [Tooltip("å†ã³ã‚¸ãƒ£ãƒ³ãƒ—ã§ãã‚‹ã‚ˆã†ã«ãªã‚‹ã¾ã§ã®çµŒéæ™‚é–“ã€‚0fã«è¨­å®šã™ã‚‹ã¨ã€ç¬æ™‚ã«å†ã‚¸ãƒ£ãƒ³ãƒ—å‡ºæ¥ã‚‹")]
     public float JumpTimeout = 0.05f;
-    [Tooltip("—‰ºó‘Ô‚É‚È‚é‚Ü‚Å‚ÌŒo‰ßŠÔBŠK’i‚ğ‰º‚è‚é‚Æ‚«‚É•Ö—˜")]
+    [Tooltip("è½ä¸‹çŠ¶æ…‹ã«ãªã‚‹ã¾ã§ã®çµŒéæ™‚é–“ã€‚éšæ®µã‚’ä¸‹ã‚Šã‚‹ã¨ãã«ä¾¿åˆ©")]
     public float FallTimeout = 0.15f;
 
-    [Header("’n–Êî•ñ")]
-    [Tooltip("’i·‘Îô‚ÌƒIƒtƒZƒbƒg")]
+    [Header("åœ°é¢æƒ…å ±")]
+    [Tooltip("æ®µå·®å¯¾ç­–ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ")]
     public float GroundedOffset = -0.14f;
-    [Tooltip("’n–Ê”»’è‚ğó‚¯æ‚é“–‚½‚è”»’è‚Ì”¼Œa")]
+    [Tooltip("åœ°é¢åˆ¤å®šã‚’å—ã‘å–ã‚‹å½“ãŸã‚Šåˆ¤å®šã®åŠå¾„")]
     public float GroundedRadius = 0.4f;
-    [Tooltip("’n–Ê‚ÌƒŒƒCƒ„[")]
+    [Tooltip("åœ°é¢ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼")]
     public LayerMask GroundLayers;
 
     [Header("Cinemachine")]
-    [Tooltip("ƒJƒƒ‰‚ğ‰½“x‚Ü‚Åã‚É“®‚©‚¹‚é‚©")]
+    [Tooltip("ã‚«ãƒ¡ãƒ©ã‚’ä½•åº¦ã¾ã§ä¸Šã«å‹•ã‹ã›ã‚‹ã‹")]
     public float TopClamp = 90.0f;
-    [Tooltip("ƒJƒƒ‰‚ğ‰½“x‚Ü‚Å‰º‚°‚ç‚ê‚é‚©")]
+    [Tooltip("ã‚«ãƒ¡ãƒ©ã‚’ä½•åº¦ã¾ã§ä¸‹ã’ã‚‰ã‚Œã‚‹ã‹")]
     public float BottomClamp = -90.0f;
 
-    [Header("UŒ‚")]
-    [Tooltip("UŒ‚‚ğo‚µ“ü‚ê‚·‚é‘¬“x")]
+    [Header("æ”»æ’ƒ")]
+    [Tooltip("æ”»æ’ƒã‚’å‡ºã—å…¥ã‚Œã™ã‚‹é€Ÿåº¦")]
     public float AttackPopOutSpeed = 0.3f;
-    [Tooltip("UŒ‚‰ñ“]‘¬“x")]
+    [Tooltip("æ”»æ’ƒå›è»¢é€Ÿåº¦")]
     public float AttaclSpeed = 0.5f;
 
     [Header("Sound")]
-    [Tooltip("UŒ‚‰¹")]
+    [Tooltip("æ”»æ’ƒéŸ³")]
     public AudioClip seSwing;
-    [Tooltip("‘«‰¹")]
+    [Tooltip("è¶³éŸ³")]
     public AudioClip[] seWalk = new AudioClip[2];
 
-    [Header("ƒRƒ“ƒgƒ[ƒ‰[U“®")]
-    [Tooltip("U“®‚ÌÅ‘å’l"), Range(0.0f, 1.0f)]
+    [Header("ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼æŒ¯å‹•")]
+    [Tooltip("æŒ¯å‹•ã®æœ€å¤§å€¤"), Range(0.0f, 1.0f)]
     public float MaxVibration = 0.5f;
-    [Tooltip("U“®”»’è‹——£")]
+    [Tooltip("æŒ¯å‹•åˆ¤å®šè·é›¢")]
     public float DistanceVibration = 5.0f;
 }

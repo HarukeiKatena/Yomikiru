@@ -9,17 +9,17 @@ namespace Player
     {
         [SerializeField] private bool Grounded = true;
 
-        //FX
+        //è‰²ã€…
         private PlayerPropSetting _playerSetting;
         private CharacterController _controller;
 
-        //ƒWƒƒƒ“ƒv
+        //ã‚¸ãƒ£ãƒ³ãƒ—
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
         public bool IsJump = false;
         private bool IsLanding = true;
 
-        //ˆÚ“®
+        //ç§»å‹•
         [HideInInspector]
         public float verticalVelocity;
         private float _terminalVelocity = 53.0f;
@@ -52,28 +52,28 @@ namespace Player
         {
             if (Grounded)
             {
-                // —‰ºƒN[ƒ‹ƒ^ƒCƒ€ƒŠƒZƒbƒg
+                // è½ä¸‹ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ãƒªã‚»ãƒƒãƒˆ
                 _fallTimeoutDelta = _playerSetting.playerProperty.FallTimeout;
 
-                // ã‰º‚Ì‰Á‘¬“x‚ª‚¨‚©‚µ‚È”’l‚É‚È‚ç‚È‚¢‚æ‚¤‚É—}§‚·‚é
+                // ä¸Šä¸‹ã®åŠ é€Ÿåº¦ãŒãŠã‹ã—ãªæ•°å€¤ã«ãªã‚‰ãªã„ã‚ˆã†ã«æŠ‘åˆ¶ã™ã‚‹
                 if (verticalVelocity < -2f)
                 {
                     verticalVelocity = -2f;
                 }
 
-                //ã¸’†‚É“Vˆä‚É“–‚½‚Á‚½ê‡‘¦—‰º‚·‚é
+                //ä¸Šæ˜‡ä¸­ã«å¤©äº•ã«å½“ãŸã£ãŸå ´åˆå³æ™‚è½ä¸‹ã™ã‚‹
                 if (_controller.velocity.y == 0.0f)
                 {
                     verticalVelocity = 0.0f;
                 }
 
-                // ƒWƒƒƒ“ƒvƒN[ƒ‹ƒ^ƒCƒ€
+                // ã‚¸ãƒ£ãƒ³ãƒ—ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
                 if (_jumpTimeoutDelta >= 0.0f)
                 {
                     _jumpTimeoutDelta -= Time.deltaTime;
                 }
 
-                //’…’n
+                //ç€åœ°
                 if (!IsLanding && !IsJump)
                 {
                     _playerSetting.effectNamager.Play("2D Hamon", transform.position);
@@ -84,29 +84,29 @@ namespace Player
             }
             else
             {
-                // ƒWƒƒƒ“ƒvƒN[ƒ‹ƒ^ƒCƒ€ƒŠƒZƒbƒg
+                // ã‚¸ãƒ£ãƒ³ãƒ—ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ãƒªã‚»ãƒƒãƒˆ
                 _jumpTimeoutDelta = _playerSetting.playerProperty.JumpTimeout;
 
-                // —‰ºƒN[ƒ‹ƒ^ƒCƒ€
+                // è½ä¸‹ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
                 if (_fallTimeoutDelta >= 0.0f)
                 {
                     _fallTimeoutDelta -= Time.deltaTime;
                 }
 
-                //ã¸’†‚É“Vˆä‚É“–‚½‚Á‚½ê‡‘¦—‰º‚·‚é
+                //ä¸Šæ˜‡ä¸­ã«å¤©äº•ã«å½“ãŸã£ãŸå ´åˆå³æ™‚è½ä¸‹ã™ã‚‹
                 if (_controller.velocity.y == 0.0f)
                 {
                     verticalVelocity = 0.0f;
                 }
 
-                //ƒWƒƒƒ“ƒv“ü—Íó‚¯•t‚¯‚é‚æ‚¤‚É‚·‚é
+                //ã‚¸ãƒ£ãƒ³ãƒ—å…¥åŠ›å—ã‘ä»˜ã‘ã‚‹ã‚ˆã†ã«ã™ã‚‹
                 _playerSetting.inputRecord.jump = false;
 
                 IsJump = true;
                 IsLanding = false;
             }
 
-            // d—Í‚Å—‚Æ‚·
+            // é‡åŠ›ã§è½ã¨ã™
             if (verticalVelocity < _terminalVelocity)
             {
                 verticalVelocity += (_playerSetting.playerProperty.Gravity * Time.deltaTime);
@@ -115,7 +115,7 @@ namespace Player
 
         void JumpStep()
         {
-            // H * -2 * G ‚Ì•½•ûª = –]‚İ‚Ì‚‚³‚É“’B‚·‚é‚½‚ß‚É•K—v‚È‘¬“x
+            // H * -2 * G ã®å¹³æ–¹æ ¹ = æœ›ã¿ã®é«˜ã•ã«åˆ°é”ã™ã‚‹ãŸã‚ã«å¿…è¦ãªé€Ÿåº¦
             verticalVelocity = CalcHeightSpeed(_playerSetting.playerProperty.JumpHeight, _playerSetting.playerProperty.Gravity);
             Grounded = false;
             IsJump = true;

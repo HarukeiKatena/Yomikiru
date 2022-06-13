@@ -22,7 +22,7 @@ public class CheckController : MonoBehaviour
         }
     }
 
-    //’¼‘O‚ÉXV‚³‚ê‚½ƒfƒoƒCƒX‚Ìî•ñ‚ğ“n‚·
+    //ç›´å‰ã«æ›´æ–°ã•ã‚ŒãŸãƒ‡ãƒã‚¤ã‚¹ã®æƒ…å ±ã‚’æ¸¡ã™
     public IObservable<PlayerDeviceData> ChangePlayerDevice => changePlayerDevice;
     public Subject<PlayerDeviceData> changePlayerDevice = new Subject<PlayerDeviceData>();
 
@@ -38,7 +38,7 @@ public class CheckController : MonoBehaviour
         var playerDevice = ControllerManagement.PlayerDevice;
         ref var keybordPlayerIndex = ref ControllerManagement.KeybordPlayerIndex;
 
-        //ƒQ[ƒ€ƒpƒbƒh‚Å‰E‚Ìƒ{ƒ^ƒ“‚ğ“ü—Í‚³‚ê‚½ê‡
+        //ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰ã§å³ã®ãƒœã‚¿ãƒ³ã‚’å…¥åŠ›ã•ã‚ŒãŸå ´åˆ
         if (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame)
         {
             for (int i = 0; i < playerDevice.Length; i++)
@@ -50,18 +50,18 @@ public class CheckController : MonoBehaviour
                     continue;
 
                 playerDevice[i] = Gamepad.current;
-                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i]));//ƒCƒxƒ“ƒg’Ê’m
+                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i]));//ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
                 break;
             }
         }
 
-        //ƒL[ƒ{[ƒh‚ÅƒGƒ“ƒ^[‚ª‰Ÿ‚³‚ê‚½ê‡
+        //ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã§ã‚¨ãƒ³ã‚¿ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸå ´åˆ
         if (Keyboard.current != null && Mouse.current != null &&
             Keyboard.current.enterKey.wasPressedThisFrame)
         {
             for (int i = 0; i < playerDevice.Length; i++)
             {
-                //–¢“o˜^‚ÌêŠ‚ÉƒZƒbƒg‚·‚é
+                //æœªç™»éŒ²ã®å ´æ‰€ã«ã‚»ãƒƒãƒˆã™ã‚‹
                 if (playerDevice[i] != null)
                     continue;
 
@@ -79,14 +79,14 @@ public class CheckController : MonoBehaviour
 
         for (int i = 0; i < playerDevice.Length; i++)
         {
-            //ƒpƒbƒh
+            //ãƒ‘ãƒƒãƒ‰
             if (playerDevice[i] != null && playerDevice[i].buttonEast.wasPressedThisFrame)
             {
                 playerDevice[i] = null;
-                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i]));//ƒCƒxƒ“ƒg’Ê’m
+                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i]));//ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
             }
 
-            //ƒL[ƒ{[ƒh
+            //ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰
             if (keybordPlayerIndex == i &&
                 Keyboard.current != null &&
                 Keyboard.current.escapeKey.wasPressedThisFrame)

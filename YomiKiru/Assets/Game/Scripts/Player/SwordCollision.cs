@@ -1,13 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using Player;
 using UnityEngine;
-using StarterAssets;
 using Enemy;
 
 public class SwordCollision : MonoBehaviour
 {
 
-    [SerializeField] 
+    [SerializeField]
     private GameObject self;
 
     [SerializeField]

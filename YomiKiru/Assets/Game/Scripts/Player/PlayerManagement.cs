@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using Cinemachine;
 using Enemy;
 using Player;
-using StarterAssets;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -204,7 +202,7 @@ public class PlayerManagement : MonoBehaviour
         Camera came = cameraobj.transform.GetChild(1).GetComponent<Camera>();
         came.cullingMask ^= 1 << LayerIndex;
         came.depth = (playerindex + 1) % ControllerManagement.PlayerCount;
-        
+
 
         switch (ControllerManagement.PlayerCount)
         {
@@ -214,7 +212,7 @@ public class PlayerManagement : MonoBehaviour
             case 2:
                 came.rect = playerindex == 0 ? new Rect(0.0f, 0.5f, 1.0f, 0.5f) : new Rect(0.0f, 0.0f, 1.0f, 0.5f);
                 break;
-                
+
             default:
                 break;
         }
