@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class AreaBox : MonoBehaviour
 {
-    [SerializeField] private Vector3 _size;
+    [SerializeField] private Vector3 size;
     public Vector3 Size{
-        get { return _size; }
+        get { return size; }
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = new Color(1f, 0, 0, 1f);
-        Gizmos.DrawWireCube (transform.position, _size);
+        Gizmos.DrawWireCube (transform.position, size);
     }
 }
