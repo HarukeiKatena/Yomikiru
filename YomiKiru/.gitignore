@@ -739,6 +739,10 @@ sysinfo.txt
 
 # JetBrains Rider
 
+# Additional Setting
+.vsconfig
+.vscode
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
