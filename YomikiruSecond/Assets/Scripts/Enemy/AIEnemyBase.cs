@@ -7,7 +7,8 @@ using System;
 using Cysharp.Threading.Tasks;
 
 
-namespace Enemy{
+namespace Enemy
+{
     public class AIEnemyBase : MonoBehaviour
     {
         [SerializeField] private GameObject deathPrefab;
@@ -36,7 +37,8 @@ namespace Enemy{
             StartGameFlag = true;
         }
 
-        public void Die(){
+        public void Die()
+        {
             var effect = Instantiate(deathPrefab, transform.position, Quaternion.identity);
             gameObject.SetActive(false);
             Destroy(effect, 1.5f);

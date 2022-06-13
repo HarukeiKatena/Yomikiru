@@ -20,8 +20,9 @@ namespace Enemy
         [SerializeField] private GameObject attackPrefub;
 
         [SerializeField] private EffectManager effectManager;
-        public EffectManager EffectManager {
-            set { effectManager = value; } 
+        public EffectManager EffectManager
+        {
+            set { effectManager = value; }
         }
 
         [SerializeField] private int interval;
@@ -51,12 +52,13 @@ namespace Enemy
         async UniTaskVoid LoopAttack(CancellationToken token)
         {
             await UniTask.Delay(System.TimeSpan.FromSeconds(8), cancellationToken: token);
-            while(true){
+            while (true)
+            {
                 await AttackOnce();
-                await UniTask.Delay(System.TimeSpan.FromSeconds(interval), cancellationToken:token);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(interval), cancellationToken: token);
             }
         }
-        
+
         public async UniTask AttackOnce()
         {
             effectManager.Play("3D Hamon", transform.position);
