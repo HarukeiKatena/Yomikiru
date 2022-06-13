@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaBox : MonoBehaviour
+namespace Yomikiru.Enemy
 {
-    [SerializeField] private Vector3 size;
-    public Vector3 Size
+    public class AreaBox : MonoBehaviour
     {
-        get { return size; }
-    }
+        [SerializeField] private Vector3 size;
+        public Vector3 Size
+        {
+            get { return size; }
+        }
 
-    void OnDrawGizmos()
-    {
-        Gizmos.color = new Color(1f, 0, 0, 1f);
-        Gizmos.DrawWireCube(transform.position, size);
+        void OnDrawGizmos()
+        {
+            Gizmos.color = new Color(1f, 0, 0, 1f);
+            Gizmos.DrawWireCube(transform.position, size);
+        }
     }
 }

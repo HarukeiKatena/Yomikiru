@@ -1,4 +1,5 @@
 using UnityEngine;
+using Yomikiru.Enemy;
 
 namespace Yomikiru
 {

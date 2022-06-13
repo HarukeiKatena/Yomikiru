@@ -7,7 +7,7 @@ using System;
 using Cysharp.Threading.Tasks;
 
 
-namespace Enemy
+namespace Yomikiru.Enemy
 {
     public class AIEnemyBase : MonoBehaviour
     {

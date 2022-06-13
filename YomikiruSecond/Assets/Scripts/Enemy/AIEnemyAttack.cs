@@ -8,7 +8,7 @@ using System.Threading;
 using Player;
 using Yomikiru.Effect;
 
-namespace Enemy
+namespace Yomikiru.Enemy
 {
     public class AIEnemyAttack : MonoBehaviour
     {

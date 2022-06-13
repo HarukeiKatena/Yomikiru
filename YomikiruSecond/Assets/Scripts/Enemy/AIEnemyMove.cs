@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using Yomikiru.Effect;
 
-namespace Enemy
+namespace Yomikiru.Enemy
 {
     public class AIEnemyMove : MonoBehaviour
     {
