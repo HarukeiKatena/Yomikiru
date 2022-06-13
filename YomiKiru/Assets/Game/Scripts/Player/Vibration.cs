@@ -14,7 +14,7 @@ public class Vibration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //ƒQ[ƒ€ƒpƒbƒh‚ğæ“¾
+        //ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰ã‚’å–å¾—
         var device = gameObject.GetComponent<PlayerInput>().devices;
         foreach (var d in device)
         {
@@ -25,7 +25,7 @@ public class Vibration : MonoBehaviour
             }
         }
 
-        //“Gî•ñæ“¾
+        //æ•µæƒ…å ±å–å¾—
         _playerProp = gameObject.GetComponent<PlayerPropSetting>();
 
         StopMotor();
@@ -47,10 +47,10 @@ public class Vibration : MonoBehaviour
 
             Transform enemyTransform = enemy.transform;
 
-            //“G‚Æ‚Ì‹——£‚ğ‚©‚çƒoƒCƒuƒŒ[ƒVƒ‡ƒ“‚Ì‹­‚³‚ğ‹‚ß‚é
+            //æ•µã¨ã®è·é›¢ã‚’ã‹ã‚‰ãƒã‚¤ãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®å¼·ã•ã‚’æ±‚ã‚ã‚‹
             float length = 1.0f - (
                 Mathf.Clamp(
-                    Mathf.Abs((enemyTransform.position - playerTransform.position).magnitude), 0.0f, _playerProp.playerProperty.DistanceVibration) / 
+                    Mathf.Abs((enemyTransform.position - playerTransform.position).magnitude), 0.0f, _playerProp.playerProperty.DistanceVibration) /
                 _playerProp.playerProperty.DistanceVibration
             );
 

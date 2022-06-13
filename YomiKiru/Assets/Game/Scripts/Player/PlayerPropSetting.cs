@@ -8,7 +8,7 @@ namespace Player
 {
     public class PlayerPropSetting : MonoBehaviour
     {
-        [Header("İ’è")]
+        [Header("è¨­å®š")]
         [InspectInline(canEditRemoteTarget = true)]
         public PlayerProperty playerProperty;
         public InputRecord inputRecord;
@@ -16,21 +16,21 @@ namespace Player
         public PlayerCollision collision;
         public AudioSource audioSource;
 
-        [Header("©“®İ’è‚³‚ê‚é“z")]
+        [Header("è‡ªå‹•è¨­å®šã•ã‚Œã‚‹å¥´")]
         public int PlayerIndex = 0;
 
         [HideInInspector]
-        public GameObject CinemachineCameraTarget;//ƒVƒlƒ}ƒV[ƒ“‚Ìƒ^[ƒQƒbƒg
+        public GameObject CinemachineCameraTarget;//ã‚·ãƒãƒã‚·ãƒ¼ãƒ³ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
         [HideInInspector]
-        public PlayerManagement playerMana;//ƒvƒŒƒCƒ„[ƒ}ƒlƒWƒƒ“ƒg
+        public PlayerManagement playerMana;//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒãƒã‚¸ãƒ¡ãƒ³ãƒˆ
         [HideInInspector]
-        public IntroSequence intro;//ƒCƒ“ƒgƒ
+        public IntroSequence intro;//ã‚¤ãƒ³ãƒˆãƒ­
         [HideInInspector]
-        public SoundManager Sound;//ƒTƒEƒ“ƒh
+        public SoundManager Sound;//ã‚µã‚¦ãƒ³ãƒ‰
         [HideInInspector]
-        public EffectManager effectNamager;//ƒGƒtƒFƒNƒg
+        public EffectManager effectNamager;//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 
-        //UŒ‚‚µ‚½‚Æ‚«
+        //æ”»æ’ƒã—ãŸã¨ã
         public Subject<Unit> OnAttack = new Subject<Unit>();
 
         public bool EnableKeybodeMouse = false;

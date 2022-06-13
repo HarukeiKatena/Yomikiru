@@ -7,13 +7,13 @@ namespace Player
 {
     public class CameraMove : MonoBehaviour
     {
-        //FX
+        //è‰²ã€…
         private PlayerPropSetting _playerSetting;
 
-        //’è”
+        //å®šæ•°
         private const float _threshold = 0.01f;
 
-        //•Ï”
+        //å¤‰æ•°
         private float _cinemachineTargetPitch;
         private float _rotationVelocity;
 
@@ -21,8 +21,8 @@ namespace Player
         void Start()
         {
             _playerSetting = gameObject.GetComponent<PlayerPropSetting>();
-        } 
-        
+        }
+
         // Update is called once per frame
         void LateUpdate()
         {

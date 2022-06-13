@@ -1,8 +1,8 @@
 /*-------------------------------------------------------
  * 
  *  [LightSetting]
- *  Author : o‡@ãÄ‘¾
- *  ƒ‰ƒCƒg‚Ìİ’è
+ *  Author : å‡ºåˆã€€ç¿”å¤ª
+ *  ãƒ©ã‚¤ãƒˆã®è¨­å®š
  * 
 --------------------------------------------------------*/
 using System.Collections;
@@ -13,7 +13,7 @@ using DG.Tweening;
 [RequireComponent(typeof(Light))]
 public class LightSetting : MonoBehaviour
 {
-    [Header("ƒtƒB[ƒ‹ƒh‚Ì–¾‚é‚³’²®")]
+    [Header("ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®æ˜ã‚‹ã•èª¿æ•´")]
     [SerializeField] [Range(0.0f, 0.5f)] private float _IntensityEndValue;
 
     private Light _light;

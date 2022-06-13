@@ -18,20 +18,20 @@ public class IntroSequence : MonoBehaviour
     [SerializeField]protected Yomikiru.UI.IntroDisplay display;
     [SerializeField]protected SoundManager soundManager;
 
-    [Header("İ’è")]
-    [SerializeField, Tooltip("ƒCƒ“ƒgƒƒJƒƒ‰‚ÌˆÚ“®‘¬“x")]
+    [Header("è¨­å®š")]
+    [SerializeField, Tooltip("ã‚¤ãƒ³ãƒˆãƒ­ã‚«ãƒ¡ãƒ©ã®ç§»å‹•é€Ÿåº¦")]
     protected float CameraMoveSpeed = 5.0f;
-    [SerializeField, Tooltip("•¡”lƒvƒŒƒC‚Ìê‡‰æ–Ê‚ª•ªŠ„‚³‚ê‚é‘¬“x")]
+    [SerializeField, Tooltip("è¤‡æ•°äººãƒ—ãƒ¬ã‚¤ã®å ´åˆç”»é¢ãŒåˆ†å‰²ã•ã‚Œã‚‹é€Ÿåº¦")]
     protected float CameraRectSlideSpeed = 2.0f;
-    [SerializeField, Tooltip("ƒJƒƒ‰‚ªŠJnˆÊ’u‚ÉˆÚ“®‚µ‚Ä‘€ìo—ˆ‚é‚æ‚¤‚É‚È‚é‚Ü‚Å‚Ì‘Ò‚¿ŠÔ")]
+    [SerializeField, Tooltip("ã‚«ãƒ¡ãƒ©ãŒé–‹å§‹ä½ç½®ã«ç§»å‹•ã—ã¦æ“ä½œå‡ºæ¥ã‚‹ã‚ˆã†ã«ãªã‚‹ã¾ã§ã®å¾…ã¡æ™‚é–“")]
     protected float StartControlTime = 2.5f;
-    [SerializeField, Tooltip("ƒ‰ƒCƒgƒtƒF[ƒh‘¬“x")]
+    [SerializeField, Tooltip("ãƒ©ã‚¤ãƒˆãƒ•ã‚§ãƒ¼ãƒ‰é€Ÿåº¦")]
     protected float LightFadeSpeed = 1.0f;
-    [SerializeField, Tooltip("ƒQ[ƒ€ƒV[ƒ“ŠJn‚É‚·‚®“®‚©‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Ì‘Ò‚¿ŠÔ")]
+    [SerializeField, Tooltip("ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³é–‹å§‹æ™‚ã«ã™ãå‹•ã‹ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®å¾…ã¡æ™‚é–“")]
     protected float IntroStartCoolTime = 0.5f;
-    [SerializeField, Tooltip("ƒCƒ“ƒgƒŠJn‚É—¬‚ê‚é‹È")]
+    [SerializeField, Tooltip("ã‚¤ãƒ³ãƒˆãƒ­é–‹å§‹æ™‚ã«æµã‚Œã‚‹æ›²")]
     protected AudioClip bgmIntroAudio;
-    [SerializeField, Tooltip("‘€ì‰Â”\‚É‚È‚éƒ^ƒCƒ~ƒ“ƒO‚Å‚È‚éSE")]
+    [SerializeField, Tooltip("æ“ä½œå¯èƒ½ã«ãªã‚‹ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§ãªã‚‹SE")]
     protected AudioClip seGameStartAudio;
 
     public static int INTRO_START = 0;
@@ -57,7 +57,7 @@ public class IntroSequence : MonoBehaviour
 
     IEnumerator Intro()
     {
-        //ˆê“I‚É•Û‚µ‚Ä‘S‰æ–Ê•\‹L‚É‚·‚é
+        //ä¸€æ™‚çš„ã«ä¿æŒã—ã¦å…¨ç”»é¢è¡¨è¨˜ã«ã™ã‚‹
         Camera camera = playerManagement.CharacterCamera[0].transform.GetChild(1).GetComponent<Camera>();
         Rect rect = new Rect();
         rect = camera.rect;
@@ -67,29 +67,29 @@ public class IntroSequence : MonoBehaviour
 
         soundManager.PlaySE(bgmIntroAudio.name, camera.transform);
 
-        //ƒCƒ“ƒgƒŠJn
+        //ã‚¤ãƒ³ãƒˆãƒ­é–‹å§‹
         introIvent.OnNext(INTRO_START);
         display.DisplayModeAsync(matchInfo.Gamemode).Forget();
 
-        //ƒJƒƒ‰ˆÚ“®ŠJn
+        //ã‚«ãƒ¡ãƒ©ç§»å‹•é–‹å§‹
         yield return DOVirtual.Float(0.0f, 1.0f, CameraMoveSpeed, v => DollyCart.m_Position = v).SetEase(Ease.OutCubic).WaitForCompletion();
 
-        //ƒJƒƒ‰‚ÌRect‚ğŠî‚É–ß‚·
+        //ã‚«ãƒ¡ãƒ©ã®Rectã‚’åŸºã«æˆ»ã™
         camera.DORect(rect, CameraRectSlideSpeed);
 
-        //ƒJƒƒ‰ˆÚ“®I‚í‚è
+        //ã‚«ãƒ¡ãƒ©ç§»å‹•çµ‚ã‚ã‚Š
         VirtualCamera.Priority = 0;
         lightSetting.LightFade(LightFadeSpeed);
         display.DisplayReadyAsync().Forget();
 
-        //ƒRƒ“ƒgƒ[ƒ‹‰Â”\‚Ü‚Å‚Ì‘Ò‚¿ŠÔ
+        //ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«å¯èƒ½ã¾ã§ã®å¾…ã¡æ™‚é–“
         yield return new WaitForSeconds(StartControlTime);
         
         introIvent.OnNext(INTRO_END);
         introIvent.OnCompleted();
         display.DisplayGoAsync().Forget();
 
-        //—¬‚ê‚È‚¢
+        //æµã‚Œãªã„
         soundManager.PlaySE(seGameStartAudio.name, camera.transform);
     }
 }

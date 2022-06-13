@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,7 +32,7 @@ namespace Player
 
             _playerSetting.inputRecord.Attack.
                 Where(x => x && !_isAttack).
-                Subscribe(_ => { 
+                Subscribe(_ => {
                     StartCoroutine(DoAttack());
                 }).AddTo(this);
 
