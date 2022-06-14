@@ -30,7 +30,7 @@ public class EndSequence : MonoBehaviour
 
     IEnumerator SceneChange(int playerindex)
     {
-        matchInfo.State.Value = MatchState.Finished;
+        matchInfo.State = MatchState.Finished;
 
         display.DisplayAsync().Forget();
 

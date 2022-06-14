@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UniRx;
 using Yomikiru;
@@ -6,11 +7,19 @@ using Yomikiru;
 public class MatchInfo : ScriptableObject
 {
 
+    private readonly ReactiveProperty<MatchState> state = new ReactiveProperty<MatchState>(MatchState.None);
+
     public GamemodeInfo Gamemode;
     public MapInfo Map;
-    public readonly ReactiveProperty<MatchState> State = new ReactiveProperty<MatchState>(MatchState.None);
+    public MatchState State
+    {
+        get => state.Value;
+        set => state.Value = value;
+    }
 
     [Tooltip("勝者のインデックス 0～")]
     public int WinnerPlayerIndex = -1;
+
+    public IObservable<MatchState> OnStateChange => state;
 
 }

@@ -53,7 +53,7 @@ public class IntroSequence : MonoBehaviour
 
     IEnumerator Intro()
     {
-        matchInfo.State.Value = MatchState.Intro;
+        matchInfo.State = MatchState.Intro;
 
         //一時的に保持して全画面表記にする
         Camera camera = playerManagement.CharacterCamera[0].transform.GetChild(1).GetComponent<Camera>();
@@ -83,7 +83,7 @@ public class IntroSequence : MonoBehaviour
         //コントロール可能までの待ち時間
         yield return new WaitForSeconds(startControlTime);
 
-        matchInfo.State.Value = MatchState.Ingame;
+        matchInfo.State = MatchState.Ingame;
         introIvent.OnNext(INTRO_END);
         introIvent.OnCompleted();
         display.DisplayGoAsync().Forget();
