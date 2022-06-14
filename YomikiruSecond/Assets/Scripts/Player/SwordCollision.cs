@@ -13,7 +13,7 @@ public class SwordCollision : MonoBehaviour
     private PlayerPropSetting playerProp;
 
     [SerializeField]
-    private GameScriptableObject gameScriptableObject;
+    private MatchInfo gameScriptableObject;
 
     private void OnTriggerEnter(Collider other) {
         if(self == other.gameObject) return;

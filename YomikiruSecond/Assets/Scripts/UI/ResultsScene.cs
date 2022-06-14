@@ -16,7 +16,7 @@ namespace Yomikiru.UI
         [SerializeField] private CinemachineDollyCart dolly;
         [SerializeField] private TextMeshPro textWinnerName;
         [SerializeField] private Light[] lights;
-        [SerializeField] private GameScriptableObject gameScriptableObject;
+        [SerializeField] private MatchInfo gameScriptableObject;
 
         private void Start()
         {

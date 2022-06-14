@@ -10,7 +10,7 @@ using Yomikiru.Sound;
 
 public class IntroSequence : MonoBehaviour
 {
-    [SerializeField]protected GameScriptableObject matchInfo;
+    [SerializeField]protected MatchInfo matchInfo;
     [SerializeField]protected CinemachineVirtualCamera VirtualCamera;
     [SerializeField]protected CinemachineDollyCart DollyCart;
     [SerializeField]protected LightSetting lightSetting;
