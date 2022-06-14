@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
+using Yomikiru;
 using Yomikiru.Sound;
 
 public class IntroSequence : MonoBehaviour
@@ -57,6 +58,8 @@ public class IntroSequence : MonoBehaviour
 
     IEnumerator Intro()
     {
+        matchInfo.State.Value = MatchState.Intro;
+
         //一時的に保持して全画面表記にする
         Camera camera = playerManagement.CharacterCamera[0].transform.GetChild(1).GetComponent<Camera>();
         Rect rect = new Rect();
@@ -85,6 +88,7 @@ public class IntroSequence : MonoBehaviour
         //コントロール可能までの待ち時間
         yield return new WaitForSeconds(StartControlTime);
         
+        matchInfo.State.Value = MatchState.Ingame;
         introIvent.OnNext(INTRO_END);
         introIvent.OnCompleted();
         display.DisplayGoAsync().Forget();

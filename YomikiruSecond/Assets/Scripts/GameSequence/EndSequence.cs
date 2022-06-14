@@ -12,6 +12,8 @@ using Yomikiru;
 
 public class EndSequence : MonoBehaviour
 {
+    [SerializeField] private MatchInfo matchInfo;
+
     [SerializeField]
     protected PlayerManagement playerManagement;
 
@@ -50,6 +52,8 @@ public class EndSequence : MonoBehaviour
 
     IEnumerator SceneChange(int playerindex)
     {
+        matchInfo.State.Value = MatchState.Finished;
+
         display.DisplayAsync().Forget();
 
         yield return new WaitForSeconds(CameraMoveDelay);
