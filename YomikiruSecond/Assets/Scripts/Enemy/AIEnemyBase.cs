@@ -7,42 +7,44 @@ using System;
 using Cysharp.Threading.Tasks;
 
 
-namespace Enemy{
+namespace Yomikiru.Enemy
+{
     public class AIEnemyBase : MonoBehaviour
     {
-        [SerializeField]protected GameObject DeathPrefub;
+        [SerializeField] private GameObject deathPrefab;
 
-        private Subject<Unit> _startGame = new Subject<Unit>();
-        public IObservable<Unit> _onStartGame
+        private Subject<Unit> startGame = new Subject<Unit>();
+        public IObservable<Unit> OnStartGame
         {
-            get { return _startGame; }
+            get { return startGame; }
         }
 
-        public bool _startGameFlag;
+        public bool StartGameFlag;
 
-        public IObservable<int> DieEvent => _dieEvent;
-        private Subject<int> _dieEvent = new Subject<int>();
+        public IObservable<int> DieEvent => dieEvent;
+        private Subject<int> dieEvent = new Subject<int>();
 
         void Start()
         {
-            _startGameFlag = false;
+            StartGameFlag = false;
             WaitForGameStart().Forget();
         }
 
         async UniTaskVoid WaitForGameStart()
         {
             await UniTask.Delay(System.TimeSpan.FromSeconds(10));
-            _startGame.OnNext(Unit.Default);
-            _startGameFlag = true;
+            startGame.OnNext(Unit.Default);
+            StartGameFlag = true;
         }
 
-        public void Die(){
-            var effect = Instantiate(DeathPrefub, transform.position, Quaternion.identity);
+        public void Die()
+        {
+            var effect = Instantiate(deathPrefab, transform.position, Quaternion.identity);
             gameObject.SetActive(false);
             Destroy(effect, 1.5f);
 
-            _dieEvent.OnNext(3);
-            _dieEvent.OnCompleted();
+            dieEvent.OnNext(3);
+            dieEvent.OnCompleted();
         }
     }
 }

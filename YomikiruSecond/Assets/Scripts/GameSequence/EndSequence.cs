@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
-using Enemy;
+using Yomikiru.Enemy;
 using Player;
 using UnityEngine;
 using UniRx;

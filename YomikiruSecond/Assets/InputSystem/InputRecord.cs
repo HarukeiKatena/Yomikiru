@@ -2,7 +2,7 @@ using Player;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Enemy;
+using Yomikiru.Enemy;
 public class InputRecord : MonoBehaviour
 {
     [Header("キャラクター移動")]

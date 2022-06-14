@@ -8,101 +8,109 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using Yomikiru.Effect;
 
-namespace Enemy{
+namespace Yomikiru.Enemy
+{
     public class AIEnemyMove : MonoBehaviour
     {
-        [SerializeField] private PlayerManagement _playerManager;
-        public PlayerManagement PlayerManager{
-            set { _playerManager = value; } 
+        [SerializeField] private PlayerManagement playerManager;
+        public PlayerManagement PlayerManager
+        {
+            set { playerManager = value; }
         }
 
-        [SerializeField] private EffectManager _effectManager;
-        public EffectManager EffectManager { 
-            set { _effectManager = value; } 
+        [SerializeField] private EffectManager effectManager;
+        public EffectManager EffectManager
+        {
+            set { effectManager = value; }
         }
 
-        [SerializeField] private Player.Attack _playerAttack;
-        [SerializeField] private Transform _playerTransform;
-    
-        [SerializeField] private NavMeshAgent _navMeshAgent;
+        [SerializeField] private Player.Attack playerAttack;
+        [SerializeField] private Transform playerTransform;
 
-        [SerializeField] private AreaBox _areaBox;
+        [SerializeField] private NavMeshAgent navMeshAgent;
 
-        [SerializeField] private float _hamonInterval;
+        [SerializeField] private AreaBox areaBox;
 
-        [SerializeField] private float _aroundTime;
-        [SerializeField] private float _sightAngle;
-        [SerializeField] private float _maxDistance;
+        [SerializeField] private float hamonInterval;
 
-        [SerializeField] private Yomikiru.MapInfo _mapInfo;
+        [SerializeField] private float aroundTime;
+        [SerializeField] private float sightAngle;
+        [SerializeField] private float maxDistance;
 
-        private AIEnemyBase _enemyBase;
-        private AIEnemyAttack _enemyAttack;
+        [SerializeField] private Yomikiru.MapInfo mapInfo;
 
-        private Vector3 _areaBoxPos;
-        private bool _searching;
+        private AIEnemyBase enemyBase;
+        private AIEnemyAttack enemyAttack;
 
-        [SerializeField] private bool _playerAttackFlag;
+        private Vector3 areaBoxPos;
+        private bool searching;
 
-        private float _anglePerSecond;
+        [SerializeField] private bool playerAttackFlag;
 
-        CancellationTokenSource _cts;
-    
+        private float anglePerSecond;
+
+        private CancellationTokenSource cts;
+
         // Start is called before the first frame update
         void Start()
         {
-            _areaBox = _mapInfo.AreaBox;
+            areaBox = mapInfo.AreaBox;
 
-            _cts = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
 
-            _enemyBase = GetComponent<AIEnemyBase>();
-            _enemyAttack = GetComponent<AIEnemyAttack>();
+            enemyBase = GetComponent<AIEnemyBase>();
+            enemyAttack = GetComponent<AIEnemyAttack>();
 
-            var player =  _playerManager.Character[0];
-            _playerTransform = player.GetComponent<Transform>();
-            _playerAttack = player.GetComponent<Player.Attack>();
-            _areaBoxPos = _areaBox.GetComponent<Transform>().position;
-            
-            _anglePerSecond = 360 / _aroundTime;
-            _searching = false;
-            _enemyBase._onStartGame.Subscribe(_ => LoopHamon(_cts.Token).Forget());
-            _enemyBase._onStartGame.Subscribe(_ => SetDestination());
+            var player = playerManager.Character[0];
+            playerTransform = player.GetComponent<Transform>();
+            playerAttack = player.GetComponent<Player.Attack>();
+            areaBoxPos = areaBox.GetComponent<Transform>().position;
 
-            _playerAttack._onAttack.Subscribe(_ => { _playerAttackFlag = true; });
+            anglePerSecond = 360 / aroundTime;
+            searching = false;
+            enemyBase.OnStartGame.Subscribe(_ => LoopHamon(cts.Token).Forget());
+            enemyBase.OnStartGame.Subscribe(_ => SetDestination());
+
+            playerAttack._onAttack.Subscribe(_ => { playerAttackFlag = true; });
         }
 
         void OnDisable()
         {
-            _cts.Cancel();
+            cts.Cancel();
         }
-    
+
         // Update is called once per frame
         void Update()
         {
             //playerが攻撃した時
-            if(_playerAttackFlag && !_searching){
+            if (playerAttackFlag && !searching)
+            {
                 MoveWhenPlayerAttack().Forget();
             }
 
             //通常時
-            if (!_navMeshAgent.pathPending && !_navMeshAgent.hasPath && !_searching && _enemyBase._startGameFlag) {
-                Move(_cts.Token).Forget();
+            if (!navMeshAgent.pathPending && !navMeshAgent.hasPath && !searching && enemyBase.StartGameFlag)
+            {
+                Move(cts.Token).Forget();
             }
-            
+
         }
 
         async UniTaskVoid MoveWhenPlayerAttack()
         {
-            _searching = true;
+            searching = true;
             NavMeshHit navMeshHit;
-            if(NavMesh.SamplePosition(_playerTransform.position, out navMeshHit, _navMeshAgent.height * 2, 1)) {
-                _navMeshAgent.SetDestination(navMeshHit.position);
+            if (NavMesh.SamplePosition(playerTransform.position, out navMeshHit, navMeshAgent.height * 2, 1))
+            {
+                navMeshAgent.SetDestination(navMeshHit.position);
             }
-            while(true){
-                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: _cts.Token);
-                if(!_navMeshAgent.hasPath){
-                    await _enemyAttack.AttackOnce();
-                    _searching = false;
+            while (true)
+            {
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: cts.Token);
+                if (!navMeshAgent.hasPath)
+                {
+                    await enemyAttack.AttackOnce();
+                    searching = false;
                     break;
                 }
             }
@@ -111,24 +119,30 @@ namespace Enemy{
 
         async UniTaskVoid Move(CancellationToken token)
         {
-            _searching = true;
-            while(true){
+            searching = true;
+            while (true)
+            {
                 bool searchFlag = await SearchAround(token);
-                if(searchFlag){
+                if (searchFlag)
+                {
                     NavMeshHit navMeshHit;
-                    if(NavMesh.SamplePosition(_playerTransform.position, out navMeshHit, _navMeshAgent.height * 2, 1)) {
-                        _navMeshAgent.SetDestination(navMeshHit.position);
+                    if (NavMesh.SamplePosition(playerTransform.position, out navMeshHit, navMeshAgent.height * 2, 1))
+                    {
+                        navMeshAgent.SetDestination(navMeshHit.position);
                     }
-                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: _cts.Token);
-                    if(!_navMeshAgent.hasPath) {
-                        if(_enemyAttack) await _enemyAttack.AttackOnce();
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: cts.Token);
+                    if (!navMeshAgent.hasPath)
+                    {
+                        if (enemyAttack) await enemyAttack.AttackOnce();
                     }
                     SetDestination();
-                    _searching = false;
+                    searching = false;
                     break;
-                }else{
+                }
+                else
+                {
                     SetDestination();
-                    _searching = false;
+                    searching = false;
                     break;
                 }
             }
@@ -137,16 +151,18 @@ namespace Enemy{
         void SetDestination()
         {
             // NavMesh.SamplePositionが範囲外の場合、正しい場所を取得できない
-            for(int i = 0; i < 30; i++){
-                Vector3 sourcePosition = _areaBoxPos + new Vector3(
-                    Random.Range(-_areaBox.Size.x / 2, _areaBox.Size.x / 2),
-                    Random.Range(-_areaBox.Size.y / 2, _areaBox.Size.y / 2),
-                    Random.Range(-_areaBox.Size.z / 2, _areaBox.Size.z / 2));
+            for (int i = 0; i < 30; i++)
+            {
+                Vector3 sourcePosition = areaBoxPos + new Vector3(
+                    Random.Range(-areaBox.Size.x / 2, areaBox.Size.x / 2),
+                    Random.Range(-areaBox.Size.y / 2, areaBox.Size.y / 2),
+                    Random.Range(-areaBox.Size.z / 2, areaBox.Size.z / 2));
                 Debug.Log(sourcePosition);
 
                 NavMeshHit navMeshHit;
-                if(NavMesh.SamplePosition(sourcePosition, out navMeshHit, _navMeshAgent.height * 2, 1)) {
-                    _navMeshAgent.SetDestination(navMeshHit.position);
+                if (NavMesh.SamplePosition(sourcePosition, out navMeshHit, navMeshAgent.height * 2, 1))
+                {
+                    navMeshAgent.SetDestination(navMeshHit.position);
                     break;
                 }
             }
@@ -154,30 +170,32 @@ namespace Enemy{
 
         async UniTaskVoid LoopHamon(CancellationToken token)
         {
-            while(true){
-                await UniTask.Delay(System.TimeSpan.FromSeconds(_hamonInterval), cancellationToken: token);
-                _effectManager.Play("2D Hamon", transform.position);
+            while (true)
+            {
+                await UniTask.Delay(System.TimeSpan.FromSeconds(hamonInterval), cancellationToken: token);
+                effectManager.Play("2D Hamon", transform.position);
             }
         }
 
         async UniTask<bool> SearchAround(CancellationToken token)
         {
             float rotationAmount = 0;
-            Vector3 targetDir = _playerTransform.position - transform.position;
+            Vector3 targetDir = playerTransform.position - transform.position;
             float targetDistance = targetDir.magnitude;
 
-            while(true) {
+            while (true)
+            {
                 await UniTask.Yield(PlayerLoopTiming.Update);
-                float _anglePerFrame = _anglePerSecond * Time.deltaTime;
+                float _anglePerFrame = anglePerSecond * Time.deltaTime;
                 rotationAmount += _anglePerFrame;
                 transform.rotation = Quaternion.AngleAxis(_anglePerFrame, transform.up) * transform.rotation;
                 // search player
-                float cosHalf = Mathf.Cos(_sightAngle / 2 * Mathf.Deg2Rad);
+                float cosHalf = Mathf.Cos(sightAngle / 2 * Mathf.Deg2Rad);
                 float dot = Vector3.Dot(transform.forward, targetDir.normalized);
                 // found
-                if(dot > cosHalf && targetDistance < _maxDistance) return true;
+                if (dot > cosHalf && targetDistance < maxDistance) return true;
                 // finish 'couse rotate around
-                if(360 <= rotationAmount) return false;
+                if (360 <= rotationAmount) return false;
             }
         }
     }

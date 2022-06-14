@@ -8,82 +8,84 @@ using System.Threading;
 using Player;
 using Yomikiru.Effect;
 
-namespace Enemy
+namespace Yomikiru.Enemy
 {
     public class AIEnemyAttack : MonoBehaviour
     {
-        [SerializeField] private Transform _swordGrip;
-        [SerializeField] private Transform _swordRotator;
-        [SerializeField] private Collider _swordCollider;
-        [SerializeField] private ParticleSystem _swordTrail;
-        [SerializeField] private AudioSource _audioSource;
-        [SerializeField] private GameObject _attackPrefub;
+        [SerializeField] private Transform swordGrip;
+        [SerializeField] private Transform swordRotator;
+        [SerializeField] private Collider swordCollider;
+        [SerializeField] private ParticleSystem swordTrail;
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private GameObject attackPrefab;
 
-        [SerializeField] private EffectManager _effectManager;
-        public EffectManager EffectManager {
-            set { _effectManager = value; } 
+        [SerializeField] private EffectManager effectManager;
+        public EffectManager EffectManager
+        {
+            set { effectManager = value; }
         }
 
-        [SerializeField] private int _interval;
-        [SerializeField] private AudioClip _seSwing;
-        [SerializeField] private float _swingSpeed;
+        [SerializeField] private int interval;
+        [SerializeField] private AudioClip seSwing;
+        [SerializeField] private float swingSpeed;
 
-        CancellationTokenSource _cts;
+        private CancellationTokenSource cts;
 
         void Start()
         {
-            _cts = new CancellationTokenSource();
-            _swordGrip.gameObject.SetActive(false);
+            cts = new CancellationTokenSource();
+            swordGrip.gameObject.SetActive(false);
 
         }
 
         void OnDisable()
         {
-            _cts.Cancel();
+            cts.Cancel();
         }
 
         async UniTaskVoid StopAttack(double time)
         {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(time), cancellationToken: _cts.Token);
-            _cts.Cancel();
+            await UniTask.Delay(System.TimeSpan.FromSeconds(time), cancellationToken: cts.Token);
+            cts.Cancel();
         }
 
         async UniTaskVoid LoopAttack(CancellationToken token)
         {
             await UniTask.Delay(System.TimeSpan.FromSeconds(8), cancellationToken: token);
-            while(true){
+            while (true)
+            {
                 await AttackOnce();
-                await UniTask.Delay(System.TimeSpan.FromSeconds(_interval), cancellationToken:token);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(interval), cancellationToken: token);
             }
         }
-        
+
         public async UniTask AttackOnce()
         {
-            _effectManager.Play("3D Hamon", transform.position);
+            effectManager.Play("3D Hamon", transform.position);
             //剣を出す
-            _swordGrip.gameObject.SetActive(true);
-            var originalGripPos = _swordGrip.localPosition;
-            _swordGrip.DOLocalMove(Vector3.zero, _swingSpeed);
-            await _swordGrip.DOLocalRotate(new Vector3(0, 90, 70), _swingSpeed).AwaitForComplete(cancellationToken: _cts.Token);
+            swordGrip.gameObject.SetActive(true);
+            var originalGripPos = swordGrip.localPosition;
+            swordGrip.DOLocalMove(Vector3.zero, swingSpeed);
+            await swordGrip.DOLocalRotate(new Vector3(0, 90, 70), swingSpeed).AwaitForComplete(cancellationToken: cts.Token);
 
             //剣を回す
-            Instantiate(_attackPrefub, transform.position, Quaternion.identity);
-            _swordCollider.enabled = true;
-            _swordTrail.Play();
-            _audioSource.PlayOneShot(_seSwing);
-            await _swordRotator.DOLocalRotate(new Vector3(0, -360, 0), 0.5f, RotateMode.FastBeyond360).AwaitForStepComplete(cancellationToken: _cts.Token);
+            Instantiate(attackPrefab, transform.position, Quaternion.identity);
+            swordCollider.enabled = true;
+            swordTrail.Play();
+            audioSource.PlayOneShot(seSwing);
+            await swordRotator.DOLocalRotate(new Vector3(0, -360, 0), 0.5f, RotateMode.FastBeyond360).AwaitForStepComplete(cancellationToken: cts.Token);
 
             //剣を戻す
-            _swordTrail.Stop();
-            _swordGrip.DOLocalMove(originalGripPos, _swingSpeed);
-            await _swordGrip.DOLocalRotate(Vector3.zero, _swingSpeed).AwaitForComplete(cancellationToken: _cts.Token);
+            swordTrail.Stop();
+            swordGrip.DOLocalMove(originalGripPos, swingSpeed);
+            await swordGrip.DOLocalRotate(Vector3.zero, swingSpeed).AwaitForComplete(cancellationToken: cts.Token);
 
             //yield return null;
 
             //初期状態に戻す
-            _swordRotator.localRotation = Quaternion.identity;
-            _swordCollider.enabled = false;
-            _swordGrip.gameObject.SetActive(false);
+            swordRotator.localRotation = Quaternion.identity;
+            swordCollider.enabled = false;
+            swordGrip.gameObject.SetActive(false);
         }
     }
 }
