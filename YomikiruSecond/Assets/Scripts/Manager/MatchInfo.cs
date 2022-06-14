@@ -9,15 +9,15 @@ public class MatchInfo : ScriptableObject
 
     private readonly ReactiveProperty<MatchState> state = new ReactiveProperty<MatchState>(MatchState.None);
 
-    public GamemodeInfo Gamemode;
-    public MapInfo Map;
+    public GamemodeInfo Gamemode { get; set; }
+    public MapInfo Map { get; set; }
     public MatchState State
     {
         get => state.Value;
         set => state.Value = value;
     }
 
-    public int WinnerPlayerIndex = -1;
+    public int WinnerPlayerIndex { get; set; } = -1;
 
     public IObservable<MatchState> OnStateChange => state;
 
