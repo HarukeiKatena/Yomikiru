@@ -2,20 +2,21 @@ using System;
 using UnityEngine;
 using UniRx;
 using Unity.Mathematics;
+using UnityEngine.Rendering;
 using Yomikiru.Input;
 
 namespace Yomikiru.Character
 {
-    //[RequireComponent(typeof(Character))]
-    //[RequireComponent(typeof(InputEvent))]
+    [RequireComponent(typeof(Character))]
+    [RequireComponent(typeof(InputEvent))]
     public class PlayerMove : MonoBehaviour
     {
         // イベント（発行）
         private readonly Subject<Vector2> onPlayerMove = new Subject<Vector2>();
-        
+
         // イベント（講読）
         public IObservable<Vector2> OnPlayerMove => onPlayerMove;
-        
+
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
@@ -43,7 +44,7 @@ namespace Yomikiru.Character
         public void MoveUpdate(Unit unit)
         {
             velocity += direction * table.Accel;
-            
+
             if (velocity.sqrMagnitude > table.MaxSpeed * table.MaxSpeed)
             {
                 velocity = velocity.normalized * table.MaxSpeed;
@@ -53,10 +54,23 @@ namespace Yomikiru.Character
             {
                 Quaternion horizontalRotation = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
 
-                controller.Move(horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime);
+                Vector3 dir = horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime;
+
+                RaycastHit hit;
+                Vector3 point1 = transform.position + Vector3.up * table.Radius;
+                Vector3 point2 = transform.position + Vector3.up * (table.Height - table.Radius);
+                bool isHit = Physics.CapsuleCast(point1, point2, table.Radius, dir.normalized, out hit, dir.magnitude);
+
+                if (isHit)
+                {
+                    dir = dir.normalized * hit.distance;
+                }
+
+                controller.Move(dir);
+
                 onPlayerMove.OnNext(velocity);
             }
-            
+
             velocity *= table.Attenuate;
         }
     }

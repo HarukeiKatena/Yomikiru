@@ -10,7 +10,7 @@ namespace Yomikiru.Character
         // 外部パラメーター
         [field: Header("Data")]
         [field: SerializeField] public CharacterData Table { get; private set; }
-        
+
         // 公開パラメーター
         public bool IsGrounded { get; private set; }
 
@@ -19,7 +19,6 @@ namespace Yomikiru.Character
         [field: SerializeField] public Transform Eye { get; private set; }
         [field: SerializeField] public Transform Hand { get; private set; }
         [field: SerializeField] public Transform Foot { get; private set; }
-        [field: SerializeField] public Transform Camera { get; private set; }
         [field: SerializeField] public GameObject Visual { get; private set; }
 
         // 内部コンポーネント
