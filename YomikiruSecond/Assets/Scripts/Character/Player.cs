@@ -1,8 +1,5 @@
 using UnityEngine;
 using UniRx;
-using Cinemachine;
-using UniRx.Triggers;
-using UnityEngine.Rendering;
 using Yomikiru.Input;
 
 namespace Yomikiru.Character
@@ -31,15 +28,6 @@ namespace Yomikiru.Character
         private void Start()
         {
             inputEvent.OnJump.Subscribe(_ => playerJump.JumpStart());
-        }
-
-        private void Update()
-        {
-            playerMove.MoveUpdate();
-            playerCamera.CameraUpdate();
-            playerJump.FallUpdate();
-
-
         }
     }
 }

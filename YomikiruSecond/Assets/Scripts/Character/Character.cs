@@ -40,8 +40,11 @@ namespace Yomikiru.Character
             controller.height = Table.Height;
 
             IsGrounded = false;
+        }
 
-            this.UpdateAsObservable().Subscribe(_ => IsGroundedCheck());
+        private void Update()
+        {
+            IsGroundedCheck();
         }
 
         private void IsGroundedCheck()

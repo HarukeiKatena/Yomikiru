@@ -41,6 +41,11 @@ namespace Yomikiru.Character
             inputEvent.OnMove.Subscribe(dir => direction = dir);
         }
 
+        private void Update()
+        {
+            MoveUpdate();
+        }
+
         public void MoveUpdate()
         {
             velocity += direction * table.Accel;

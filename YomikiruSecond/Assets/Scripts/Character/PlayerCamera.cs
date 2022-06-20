@@ -39,6 +39,11 @@ namespace Yomikiru.Character
             inputEvent.OnLook.Subscribe(dir => look = dir);
         }
 
+        private void Update()
+        {
+            CameraUpdate();
+        }
+
         public void CameraUpdate()
         {
             horizontalAxis.m_InputAxisValue = look.x;

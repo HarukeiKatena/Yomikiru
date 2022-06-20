@@ -37,6 +37,11 @@ namespace Yomikiru.Character
             table = character.Table;
         }
 
+        private void Update()
+        {
+            FallUpdate();
+        }
+
         public void FallUpdate()
         {
             if (character.IsGrounded)
