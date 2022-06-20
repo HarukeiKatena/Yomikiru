@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using JetBrains.Annotations;
 
 namespace Yomikiru.Character
 {
@@ -14,12 +15,18 @@ namespace Yomikiru.Character
         [field: SerializeField] public Vector3 Center { get; private set; }
         [field: SerializeField] public float Radius { get; private set; }
         [field: SerializeField] public float Height { get; private set; }
-        
+
         [field: Header("Move")]
         [field: SerializeField] public float MinSpeed  { get; private set; }
         [field: SerializeField] public float MaxSpeed  { get; private set; }
         [field: SerializeField] public float Accel     { get; private set; }
         [field: SerializeField] public float Attenuate { get; private set; }
+
+        [field: Header("Sprint")]
+        [field: SerializeField] public float SprintMinSpeed  { get; private set; }
+        [field: SerializeField] public float SprintMaxSpeed  { get; private set; }
+        [field: SerializeField] public float SprintAccel     { get; private set; }
+        [field: SerializeField] public float SprintAttenuate { get; private set; }
 
         [field: Header("Jump")]
         [field: SerializeField] public float Gravity { get; private set; }
@@ -29,6 +36,10 @@ namespace Yomikiru.Character
         [field: Header("Camera")]
         [field: SerializeField] public AxisState HorizontalAxis { get; private set; }
         [field: SerializeField] public AxisState VerticalAxis { get; private set; }
-        
+
+        [field: Header("Effect")]
+        [field: SerializeField] public float MoveEffectDuration { get; private set; }
+        [field: SerializeField] public float SprintEffectDuration { get; private set; }
+
     }
 }

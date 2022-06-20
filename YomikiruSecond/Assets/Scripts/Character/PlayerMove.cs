@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 using UniRx;
-using Unity.Mathematics;
-using UnityEngine.Rendering;
+using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
 using Yomikiru.Input;
 
 namespace Yomikiru.Character
@@ -12,10 +12,12 @@ namespace Yomikiru.Character
     public class PlayerMove : MonoBehaviour
     {
         // イベント（発行）
-        private readonly Subject<Vector2> onPlayerMove = new Subject<Vector2>();
+        private readonly Subject<Vector3> onPlayerMove = new Subject<Vector3>();
+        private readonly Subject<Vector3> onPlayerSprint = new Subject<Vector3>();
 
         // イベント（講読）
-        public IObservable<Vector2> OnPlayerMove => onPlayerMove;
+        public IObservable<Vector3> OnPlayerMove => onPlayerMove;
+        public IObservable<Vector3> OnPlayerSprint => onPlayerSprint;
 
         // 内部コンポーネント
         private Character character;
@@ -26,6 +28,8 @@ namespace Yomikiru.Character
         // 内部パラメーター
         private Vector2 direction = Vector2.zero;
         private Vector2 velocity = Vector2.zero;
+        private bool isSprint = false;
+        private IDisposable effectTask = null;
 
         private void Awake()
         {
@@ -39,6 +43,7 @@ namespace Yomikiru.Character
             table = character.Table;
 
             inputEvent.OnMove.Subscribe(dir => direction = dir);
+            inputEvent.OnSprint.Subscribe(b => isSprint = b);
         }
 
         private void Update()
@@ -48,22 +53,52 @@ namespace Yomikiru.Character
 
         public void MoveUpdate()
         {
-            velocity += direction * table.Accel;
+            float accel = isSprint ? table.Accel : table.SprintAccel;
+            float minSpeed = isSprint ? table.MinSpeed : table.SprintMinSpeed;
+            float maxSpeed = isSprint ? table.MaxSpeed : table.SprintMaxSpeed;
+            float attenuate = isSprint ? table.Attenuate : table.SprintAttenuate;
 
-            if (velocity.sqrMagnitude > table.MaxSpeed * table.MaxSpeed)
+            velocity += direction * accel;
+
+            if (velocity.sqrMagnitude > maxSpeed * maxSpeed)
             {
-                velocity = velocity.normalized * table.MaxSpeed;
+                velocity = velocity.normalized * maxSpeed;
             }
 
-            if (velocity.sqrMagnitude >= table.MinSpeed * table.MinSpeed)
+            if (velocity.sqrMagnitude >= minSpeed * minSpeed)
             {
                 Quaternion horizontalRotation = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
                 controller.Move(horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime);
-
-                onPlayerMove.OnNext(velocity);
+                if (isSprint)
+                {
+                    onPlayerSprint.OnNext(transform.position);
+                }
+                else
+                {
+                    onPlayerMove.OnNext(transform.position);
+                }
             }
 
-            velocity *= table.Attenuate;
+            velocity *= attenuate;
+        }
+
+        public void SprintChanged(bool value)
+        {
+            if (effectTask != null)
+            {
+                effectTask.Dispose();
+            }
+
+            if (value)
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
+                    .Subscribe(_ => );
+            }
+            else
+            {
+
+            }
+            isSprint = value;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using UnityEngine.InputSystem;
 
 namespace Yomikiru.Character
 {
@@ -21,6 +22,9 @@ namespace Yomikiru.Character
         [field: SerializeField] public Transform Foot { get; private set; }
         [field: SerializeField] public GameObject Visual { get; private set; }
 
+        // 外部オブジェクト
+        public GameObject Manager { get; private set; }
+
         // 内部コンポーネント
         private CharacterController controller;
 
@@ -40,6 +44,8 @@ namespace Yomikiru.Character
             controller.height = Table.Height;
 
             IsGrounded = false;
+
+            Manager = GameObject.Find("Manager");
         }
 
         private void Update()
