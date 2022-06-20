@@ -11,16 +11,18 @@ namespace Yomikiru.Input
         // イベント (発行)
         private readonly Subject<Vector2> onMove = new Subject<Vector2>();
         private readonly Subject<Vector2> onLook = new Subject<Vector2>();
-        private readonly Subject<Unit> onFire = new Subject<Unit>();
+        private readonly Subject<Unit> onAttack = new Subject<Unit>();
         private readonly Subject<Unit> onJump = new Subject<Unit>();
-        private readonly Subject<bool> onDash = new Subject<bool>();
+        private readonly Subject<bool> onSprint = new Subject<bool>();
+        private readonly Subject<bool> onEscape = new Subject<bool>();
 
         // イベント (購読)
         public IObservable<Vector2> OnMove => onMove;
         public IObservable<Vector2> OnLook => onLook;
-        public IObservable<Unit> OnFire => onFire;
+        public IObservable<Unit> OnAttack => onAttack;
         public IObservable<Unit> OnJump => onJump;
-        public IObservable<bool> OnDash => onDash;
+        public IObservable<bool> OnSprint => onSprint;
+        public IObservable<bool> OnEscape => onEscape;
 
         // 内部コンポーネント
         private PlayerInput playerInput;
@@ -33,10 +35,12 @@ namespace Yomikiru.Input
             playerInput.actions["Move"].canceled += OnMoveStop;
             playerInput.actions["Look"].performed += OnLookChange;
             playerInput.actions["Look"].canceled += OnLookStop;
-            playerInput.actions["Fire"].started += OnFireStart;
+            playerInput.actions["Attack"].started += OnAttackStart;
             playerInput.actions["Jump"].started += OnJumpStart;
-            playerInput.actions["Dash"].started += OnDashChange;
-            playerInput.actions["Dash"].canceled += OnDashChange;
+            playerInput.actions["Sprint"].started += OnSprintChange;
+            playerInput.actions["Sprint"].canceled += OnSprintChange;
+            playerInput.actions["Escape"].started += OnSprintChange;
+            playerInput.actions["Escape"].canceled += OnSprintChange;
         }
 
         private void OnDisable()
@@ -45,10 +49,12 @@ namespace Yomikiru.Input
             playerInput.actions["Move"].canceled -= OnMoveStop;
             playerInput.actions["Look"].performed -= OnLookChange;
             playerInput.actions["Look"].canceled -= OnLookStop;
-            playerInput.actions["Fire"].started -= OnFireStart;
+            playerInput.actions["Attack"].started -= OnAttackStart;
             playerInput.actions["Jump"].started -= OnJumpStart;
-            playerInput.actions["Dash"].started -= OnDashChange;
-            playerInput.actions["Dash"].canceled -= OnDashChange;
+            playerInput.actions["Sprint"].started -= OnSprintChange;
+            playerInput.actions["Sprint"].canceled -= OnSprintChange;
+            playerInput.actions["Escape"].started -= OnSprintChange;
+            playerInput.actions["Escape"].canceled -= OnSprintChange;
         }
 
         private void OnMoveChange(InputAction.CallbackContext context)
@@ -63,14 +69,17 @@ namespace Yomikiru.Input
         private void OnLookStop(InputAction.CallbackContext context)
             => onLook.OnNext(Vector2.zero);
 
-        private void OnFireStart(InputAction.CallbackContext context)
-            => onFire.OnNext(Unit.Default);
+        private void OnAttackStart(InputAction.CallbackContext context)
+            => onAttack.OnNext(Unit.Default);
 
         private void OnJumpStart(InputAction.CallbackContext context)
             => onJump.OnNext(Unit.Default);
 
-        private void OnDashChange(InputAction.CallbackContext context)
-            => onDash.OnNext(context.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint);
+        private void OnSprintChange(InputAction.CallbackContext context)
+            => onSprint.OnNext(context.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint);
+
+        private void OnEscapeChange(InputAction.CallbackContext context)
+            => onSprint.OnNext(context.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint);
 
     }
 }
