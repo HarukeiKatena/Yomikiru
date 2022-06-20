@@ -30,7 +30,7 @@ namespace Yomikiru.Character
 
         private void Start()
         {
-            inputEvent.OnJump.Subscribe(playerJump.JumpStart);
+            inputEvent.OnJump.Subscribe(_ => playerJump.JumpStart());
         }
 
         private void Update()
