@@ -1,24 +1,27 @@
 using System;
 using UnityEngine;
 using UniRx;
-using Yomikiru;
 
-[CreateAssetMenu(fileName = "MatchInfo", menuName = "ScriptableObject/MatchInfo")]
-public class MatchInfo : ScriptableObject
-{
+namespace Yomikiru{
 
-    private readonly ReactiveProperty<MatchState> state = new ReactiveProperty<MatchState>(MatchState.None);
-
-    public GamemodeInfo Gamemode { get; set; }
-    public MapInfo Map { get; set; }
-    public MatchState State
+    [CreateAssetMenu(fileName = "MatchInfo", menuName = "ScriptableObject/MatchInfo")]
+    public class MatchInfo : ScriptableObject
     {
-        get => state.Value;
-        set => state.Value = value;
+
+        private readonly ReactiveProperty<MatchState> state = new ReactiveProperty<MatchState>(MatchState.None);
+
+        public GamemodeInfo Gamemode { get; set; }
+        public MapInfo Map { get; set; }
+        public MatchState State
+        {
+            get => state.Value;
+            set => state.Value = value;
+        }
+
+        public int WinnerPlayerIndex { get; set; } = -1;
+
+        public IObservable<MatchState> OnStateChange => state;
+
     }
-
-    public int WinnerPlayerIndex { get; set; } = -1;
-
-    public IObservable<MatchState> OnStateChange => state;
 
 }

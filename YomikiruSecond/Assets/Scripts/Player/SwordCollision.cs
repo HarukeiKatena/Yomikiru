@@ -1,6 +1,7 @@
 using System.Collections;
 using Player;
 using UnityEngine;
+using Yomikiru;
 using Yomikiru.Enemy;
 
 public class SwordCollision : MonoBehaviour
