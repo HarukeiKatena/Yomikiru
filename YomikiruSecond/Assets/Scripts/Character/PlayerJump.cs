@@ -18,6 +18,7 @@ namespace Yomikiru.Character
         public IObservable<Unit> OnPlayerLanding => onPlayerLanding;
 
         // 内部コンポーネント
+        private InputEvent inputEvent;
         private Character character;
         private CharacterData table;
         private CharacterController controller;
@@ -28,6 +29,7 @@ namespace Yomikiru.Character
 
         private void Awake()
         {
+            TryGetComponent(out inputEvent);
             TryGetComponent(out character);
             TryGetComponent(out controller);
         }
@@ -35,6 +37,8 @@ namespace Yomikiru.Character
         private void Start()
         {
             table = character.Table;
+
+            inputEvent.OnJump.Subscribe(_ => JumpStart());
         }
 
         private void Update()
