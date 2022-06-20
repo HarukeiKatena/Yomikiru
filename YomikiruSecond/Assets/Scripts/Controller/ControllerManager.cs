@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +9,13 @@ namespace Yomikiru.Controller
     {
         public const int MaxPlayerCound = 2;
 
-        public int PlayerCount = 2;
-        public Gamepad[] PlayerDevices = new Gamepad[2];
+        public int PlayerCount
+        {
+            get { return PlayerCount;}
+            set => PlayerCount = Math.Min(value, MaxPlayerCound);
+        }
+
+        public Gamepad[] PlayerDevices = new Gamepad[MaxPlayerCound];
 
         public const int NotUsedKeybord = -1; //未使用時の値
 
