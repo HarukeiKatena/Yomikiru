@@ -30,11 +30,16 @@ namespace Yomikiru.Character
 
         private void Start()
         {
-            this.UpdateAsObservable().Subscribe(playerMove.MoveUpdate);
-            this.UpdateAsObservable().Subscribe(playerCamera.CameraUpdate);
-            this.FixedUpdateAsObservable().Subscribe(playerJump.FallFixedUpdate);
-
             inputEvent.OnJump.Subscribe(playerJump.JumpStart);
+        }
+
+        private void Update()
+        {
+            playerMove.MoveUpdate();
+            playerCamera.CameraUpdate();
+            playerJump.FallUpdate();
+
+
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Yomikiru.Character
         private Character character;
         private CharacterData table;
         private InputEvent inputEvent;
-        
+
         // 内部パラメーター
         private AxisState horizontalAxis;
         private AxisState verticalAxis;
@@ -38,8 +38,8 @@ namespace Yomikiru.Character
 
             inputEvent.OnLook.Subscribe(dir => look = dir);
         }
-        
-        public void CameraUpdate(Unit unit)
+
+        public void CameraUpdate()
         {
             horizontalAxis.m_InputAxisValue = look.x;
             verticalAxis.m_InputAxisValue = look.y;

@@ -37,7 +37,7 @@ namespace Yomikiru.Character
             table = character.Table;
         }
 
-        public void FallFixedUpdate(Unit unit)
+        public void FallUpdate()
         {
             if (character.IsGrounded)
             {
@@ -66,7 +66,7 @@ namespace Yomikiru.Character
             isGrounded = character.IsGrounded;
         }
 
-        public void JumpStart(Unit unit)
+        public void JumpStart()
         {
             if (character.IsGrounded is false) return;
 

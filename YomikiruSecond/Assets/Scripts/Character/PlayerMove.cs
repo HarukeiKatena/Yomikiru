@@ -41,7 +41,7 @@ namespace Yomikiru.Character
             inputEvent.OnMove.Subscribe(dir => direction = dir);
         }
 
-        public void MoveUpdate(Unit unit)
+        public void MoveUpdate()
         {
             velocity += direction * table.Accel;
 
@@ -53,20 +53,7 @@ namespace Yomikiru.Character
             if (velocity.sqrMagnitude >= table.MinSpeed * table.MinSpeed)
             {
                 Quaternion horizontalRotation = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
-
-                Vector3 dir = horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime;
-
-                RaycastHit hit;
-                Vector3 point1 = transform.position + Vector3.up * table.Radius;
-                Vector3 point2 = transform.position + Vector3.up * (table.Height - table.Radius);
-                bool isHit = Physics.CapsuleCast(point1, point2, table.Radius, dir.normalized, out hit, dir.magnitude);
-
-                if (isHit)
-                {
-                    dir = dir.normalized * hit.distance;
-                }
-
-                controller.Move(dir);
+                controller.Move(horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime);
 
                 onPlayerMove.OnNext(velocity);
             }

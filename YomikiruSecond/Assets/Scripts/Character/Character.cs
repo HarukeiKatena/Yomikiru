@@ -41,17 +41,14 @@ namespace Yomikiru.Character
 
             IsGrounded = false;
 
-            this.UpdateAsObservable().Subscribe(IsGroundedCheck);
+            this.UpdateAsObservable().Subscribe(_ => IsGroundedCheck());
         }
 
-        private void IsGroundedCheck(Unit unit)
+        private void IsGroundedCheck()
         {
             RaycastHit hit;
             Ray ray = new Ray(Foot.position + Vector3.up * (Table.Radius + 0.1f), Vector3.down);
-            if (IsGrounded != Physics.SphereCast(ray, Table.Radius, out hit, Table.StepOffset + 0.1f))
-            {
-                IsGrounded = !IsGrounded;
-            }
+            IsGrounded = Physics.SphereCast(ray, Table.Radius, out hit, Table.StepOffset + 0.1f);
         }
     }
 }
