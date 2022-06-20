@@ -7,15 +7,15 @@ namespace Yomikiru.Controller
     [CreateAssetMenu(menuName = "ScriptableObjects/ControllerManager")]
     public class ControllerManager : ScriptableObject
     {
-        public const int MaxPlayerCound = 2;
+        public const int MaxPlayerCount = 2;
 
         public int PlayerCount
         {
             get { return PlayerCount;}
-            set => PlayerCount = Math.Min(value, MaxPlayerCound);
+            set => PlayerCount = Math.Min(value, MaxPlayerCount);
         }
 
-        public Gamepad[] PlayerDevices = new Gamepad[MaxPlayerCound];
+        public Gamepad[] PlayerDevices = new Gamepad[MaxPlayerCount];
 
         public const int NotUsedKeybord = -1; //未使用時の値
 
