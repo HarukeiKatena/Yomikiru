@@ -38,7 +38,11 @@ namespace Yomikiru.Character
         [field: SerializeField] public AxisState VerticalAxis { get; private set; }
 
         [field: Header("Effect")]
-        [field: SerializeField] public float MoveEffectDuration { get; private set; }
+        [field: SerializeField] public string WalkEffectName { get; private set; }
+        [field: SerializeField] public string SprintEffectName { get; private set; }
+        [field: SerializeField] public string LandingEffectName { get; private set; }
+        [field: SerializeField] public string AttackEffectName { get; private set; }
+        [field: SerializeField] public float WalkEffectDuration { get; private set; }
         [field: SerializeField] public float SprintEffectDuration { get; private set; }
 
     }

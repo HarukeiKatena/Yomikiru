@@ -3,7 +3,9 @@ using UnityEngine;
 using UniRx;
 using Cysharp.Threading;
 using Cysharp.Threading.Tasks;
+using Yomikiru.Effect;
 using Yomikiru.Input;
+using Yomikiru.Sound;
 
 namespace Yomikiru.Character
 {
@@ -12,12 +14,16 @@ namespace Yomikiru.Character
     public class PlayerMove : MonoBehaviour
     {
         // イベント（発行）
-        private readonly Subject<Vector3> onPlayerMove = new Subject<Vector3>();
+        private readonly Subject<Vector3> onPlayerWalk = new Subject<Vector3>();
         private readonly Subject<Vector3> onPlayerSprint = new Subject<Vector3>();
 
         // イベント（講読）
-        public IObservable<Vector3> OnPlayerMove => onPlayerMove;
+        public IObservable<Vector3> OnPlayerWalk => onPlayerWalk;
         public IObservable<Vector3> OnPlayerSprint => onPlayerSprint;
+
+        // 外部コンポーネント
+        private EffectManager effectManager;
+        private SoundManager soundManager;
 
         // 内部コンポーネント
         private Character character;
@@ -29,10 +35,14 @@ namespace Yomikiru.Character
         private Vector2 direction = Vector2.zero;
         private Vector2 velocity = Vector2.zero;
         private bool isSprint = false;
+        private bool isMoving = false;
         private IDisposable effectTask = null;
 
         private void Awake()
         {
+            TryGetComponent(out effectManager);
+            TryGetComponent(out soundManager);
+
             TryGetComponent(out character);
             TryGetComponent(out controller);
             TryGetComponent(out inputEvent);
@@ -43,7 +53,7 @@ namespace Yomikiru.Character
             table = character.Table;
 
             inputEvent.OnMove.Subscribe(dir => direction = dir);
-            inputEvent.OnSprint.Subscribe(b => isSprint = b);
+            inputEvent.OnSprint.Subscribe(b => SprintChanged(b));
         }
 
         private void Update()
@@ -69,36 +79,55 @@ namespace Yomikiru.Character
             {
                 Quaternion horizontalRotation = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
                 controller.Move(horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime);
-                if (isSprint)
-                {
-                    onPlayerSprint.OnNext(transform.position);
-                }
-                else
-                {
-                    onPlayerMove.OnNext(transform.position);
-                }
+
+                isMoving = true;
+            }
+            else
+            {
+                isMoving = false;
             }
 
             velocity *= attenuate;
         }
 
-        public void SprintChanged(bool value)
+        public void MoveEffect()
         {
-            if (effectTask != null)
-            {
-                effectTask.Dispose();
-            }
+            if (isMoving is false) return;
 
-            if (value)
+            if (isSprint)
             {
-                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
-                    .Subscribe(_ => );
+                effectManager.Play(table.SprintEffectName, transform.position);
+                onPlayerSprint.OnNext(transform.position);
             }
             else
             {
-
+                effectManager.Play(table.WalkEffectName, transform.position);
+                onPlayerWalk.OnNext(transform.position);
             }
+        }
+
+        public void SprintChanged(bool value)
+        {
             isSprint = value;
+
+            if (effectTask != null)
+            {
+                effectTask.Dispose();
+                effectTask = null;
+            }
+
+            if (isSprint)
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
+                    .Subscribe(_ => MoveEffect())
+                    .AddTo(this);
+            }
+            else
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
+                    .Subscribe(_ => MoveEffect())
+                    .AddTo(this);
+            }
         }
     }
 }

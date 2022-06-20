@@ -80,7 +80,7 @@ namespace Yomikiru.Character
             if (character.IsGrounded is false) return;
 
             isGrounded = true;
-
+            
             velocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
 
             onPlayerJump.OnNext(Unit.Default);
