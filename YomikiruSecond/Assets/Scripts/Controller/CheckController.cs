@@ -1,99 +1,88 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UniRx;
+using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
-public class CheckController : MonoBehaviour
+namespace Yomikiru.Controller
 {
-    public struct PlayerDeviceData
+    public class CheckController : MonoBehaviour
     {
-        public int playerIndex;
-        public Gamepad inputDevice;
-        public bool ThisKeybord;
+        [SerializeField] private ControllerManager controller;
 
-        public PlayerDeviceData(int index, Gamepad device, bool keybord = false)
+        public IObservable<ControllerManager> ChangePlayerDevice => changePlayerDevice;
+        private Subject<ControllerManager> changePlayerDevice = new Subject<ControllerManager>();
+
+        private void Update()
         {
-            playerIndex = index;
-            inputDevice = device;
-            ThisKeybord = keybord;
+            CheckInputDevice();
+            CancelPlayerDevice();
         }
-    }
 
-    //直前に更新されたデバイスの情報を渡す
-    public IObservable<PlayerDeviceData> ChangePlayerDevice => changePlayerDevice;
-    public Subject<PlayerDeviceData> changePlayerDevice = new Subject<PlayerDeviceData>();
-
-    // Update is called once per frame
-    void Update()
-    {
-        CheckInputDevice();
-        CancelPlayerDevice();
-    }
-
-    void CheckInputDevice()
-    {
-        var playerDevice = ControllerManagement.PlayerDevice;
-        ref var keybordPlayerIndex = ref ControllerManagement.KeybordPlayerIndex;
-
-        //ゲームパッドで右のボタンを入力された場合
-        if (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame)
+        //入力を受け付けたコントローラーを取得して保存
+        private void CheckInputDevice()
         {
-            for (int i = 0; i < playerDevice.Length; i++)
+            //ゲームパッドで右のボタンを入力された場合
+            if (Gamepad.current != null &&
+                Gamepad.current.buttonSouth.wasPressedThisFrame)
             {
-                if(playerDevice[i] == Gamepad.current)
+                var pad = Gamepad.current;
+
+                for (int i = 0; i < controller.PlayerCount; i++)
+                {
+                    //同じやつがある場合抜ける
+                    if(controller.PlayerDevices[i] == pad)
+                        break;
+
+                    //使われている場合抜ける
+                    if (controller.KeybordPlayerIndex == i ||
+                        controller.PlayerDevices[i] != null)
+                        continue;
+
+                    controller.PlayerDevices[i] = pad;
+                    changePlayerDevice.OnNext(controller);//イベント通知
                     break;
+                }
+            }
 
-                if (keybordPlayerIndex == i || !(playerDevice[i] is null))
-                    continue;
+            //キーボードでエンターが押された場合
+            if (Keyboard.current != null && Mouse.current != null &&
+                Keyboard.current.enterKey.wasPressedThisFrame)
+            {
+                for (int i = 0; i < controller.PlayerCount; i++)
+                {
+                    //未登録の場所にセットする
+                    if (controller.PlayerDevices[i] != null)
+                        continue;
 
-                playerDevice[i] = Gamepad.current;
-                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i]));//イベント通知
-                break;
+                    controller.KeybordPlayerIndex = i;
+                    changePlayerDevice.OnNext(controller);
+                    break;
+                }
             }
         }
 
-        //キーボードでエンターが押された場合
-        if (Keyboard.current != null && Mouse.current != null &&
-            Keyboard.current.enterKey.wasPressedThisFrame)
+        //登録デバイスの削除申請を取得する
+        void CancelPlayerDevice()
         {
-            for (int i = 0; i < playerDevice.Length; i++)
+            for (int i = 0; i < controller.PlayerCount; i++)
             {
-                //未登録の場所にセットする
-                if (playerDevice[i] != null)
-                    continue;
+                //パッド
+                if (controller.PlayerDevices[i] != null && controller.PlayerDevices[i].buttonEast.wasPressedThisFrame)
+                {
+                    controller.PlayerDevices[i] = null;
+                    changePlayerDevice.OnNext(controller);//イベント通知
+                }
 
-                keybordPlayerIndex = i;
-                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i], true));
-                break;
+                //キーボード
+                if (controller.KeybordPlayerIndex == i &&
+                    Keyboard.current != null &&
+                    Keyboard.current.escapeKey.wasPressedThisFrame)
+                {
+                    controller.KeybordPlayerIndex = ControllerManager.NotUsedKeybord;
+                    changePlayerDevice.OnNext(controller);
+                }
             }
         }
-    }
 
-    void CancelPlayerDevice()
-    {
-        var playerDevice = ControllerManagement.PlayerDevice;
-        ref var keybordPlayerIndex = ref ControllerManagement.KeybordPlayerIndex;
-
-        for (int i = 0; i < playerDevice.Length; i++)
-        {
-            //パッド
-            if (playerDevice[i] != null && playerDevice[i].buttonEast.wasPressedThisFrame)
-            {
-                playerDevice[i] = null;
-                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i]));//イベント通知
-            }
-
-            //キーボード
-            if (keybordPlayerIndex == i &&
-                Keyboard.current != null &&
-                Keyboard.current.escapeKey.wasPressedThisFrame)
-            {
-                keybordPlayerIndex = -1;
-                changePlayerDevice.OnNext(new PlayerDeviceData(i, playerDevice[i], false));
-            }
-        }
     }
 }
