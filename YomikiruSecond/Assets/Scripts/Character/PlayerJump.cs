@@ -53,15 +53,7 @@ namespace Yomikiru.Character
                 if (isGrounded is false)
                 {
                     velocity = 0.0f;
-
-                    RaycastHit hit;
-                    Ray ray = new Ray(character.Foot.position + Vector3.up * 0.1f, Vector3.down);
-                    bool isHit = Physics.Raycast(ray, out hit, table.StepOffset + 0.1f);
-                    if (isHit)
-                    {
-                        controller.Move(hit.distance * Vector3.down);
-                    }
-
+                    controller.Move(character.GroundData.distance * Vector3.down);
                     onPlayerLanding.OnNext(Unit.Default);
                 }
             }
@@ -70,7 +62,7 @@ namespace Yomikiru.Character
                 velocity += table.Gravity * table.GravityScale * Time.fixedDeltaTime;
             }
 
-            controller.Move(Vector3.up * velocity * Time.fixedDeltaTime);
+            controller.Move(Vector3.up * (velocity * Time.fixedDeltaTime));
 
             isGrounded = character.IsGrounded;
         }
@@ -80,7 +72,7 @@ namespace Yomikiru.Character
             if (character.IsGrounded is false) return;
 
             isGrounded = true;
-            
+
             velocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
 
             onPlayerJump.OnNext(Unit.Default);

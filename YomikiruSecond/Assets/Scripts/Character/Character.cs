@@ -14,6 +14,7 @@ namespace Yomikiru.Character
 
         // 公開パラメーター
         public bool IsGrounded { get; private set; }
+        public RaycastHit GroundData { get; private set; }
 
         // 内部オブジェクト
         [field: Header("Inner Object")]
@@ -58,6 +59,7 @@ namespace Yomikiru.Character
             RaycastHit hit;
             Ray ray = new Ray(Foot.position + Vector3.up * (Table.Radius + 0.1f), Vector3.down);
             IsGrounded = Physics.SphereCast(ray, Table.Radius, out hit, Table.StepOffset + 0.1f);
+            GroundData = hit;
         }
     }
 }
