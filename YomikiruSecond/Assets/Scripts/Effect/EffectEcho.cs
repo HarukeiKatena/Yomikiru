@@ -29,7 +29,7 @@ namespace Yomikiru.Effect
         private readonly Subject<EchoObject> echo = new Subject<EchoObject>();
         private readonly Subject<Unit> echoStop = new Subject<Unit>();
 
-        void RequestEchoAndPlay(Vector3 Position, int PlayerIndex)
+        void RequestEcho(Vector3 Position, int PlayerIndex)
         {
             echo.OnNext(new EchoObject(Index: PlayerIndex, Posi: Position));
         }
