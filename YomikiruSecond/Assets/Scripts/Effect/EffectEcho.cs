@@ -6,34 +6,32 @@ using UniRx;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-namespace Yomikiru.Effect.Echo
+namespace Yomikiru.Effect
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/EffectEcho")]
     public class EffectEcho : ScriptableObject
     {
-        public struct EchoObje
+        public struct EchoObject
         {
             public int PlayerIndex;
             public Vector3 Position;
 
-            public EchoObje(int Index, Vector3 Posi)
+            public EchoObject(int Index, Vector3 Posi)
             {
                 Position = Posi;
                 PlayerIndex = Index;
             }
         }
 
-        public EffectManager Effect;
-        public IObservable<EchoObje> Echo => echo;
+        public IObservable<EchoObject> Echo => echo;
         public IObservable<Unit> EchoStop => echoStop;
 
-        private readonly Subject<EchoObje> echo = new Subject<EchoObje>();
+        private readonly Subject<EchoObject> echo = new Subject<EchoObject>();
         private readonly Subject<Unit> echoStop = new Subject<Unit>();
 
-        void RequestEchoAndPlay(string Name, Vector3 Posi, int PlayerIndex)
+        void RequestEchoAndPlay(Vector3 Position, int PlayerIndex)
         {
-            Effect.Play(Name, Posi);
-            echo.OnNext(new EchoObje(Index: PlayerIndex, Posi: Posi));
+            echo.OnNext(new EchoObject(Index: PlayerIndex, Posi: Position));
         }
 
         void RequestStop()
