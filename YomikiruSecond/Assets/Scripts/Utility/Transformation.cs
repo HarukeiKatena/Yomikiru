@@ -45,7 +45,10 @@ namespace Yomikiru.Utility
             return new TransformState(
                 state1.position + state2.position,
                 state1.rotation * state2.rotation,
-                state1.scale = state2.scale);
+                new Vector3(
+                    state1.scale.x * state2.scale.x,
+                    state1.scale.y * state2.scale.y,
+                    state1.scale.z * state2.scale.z ));
         }
 
         public static void Copy(Transform dst, TransformState src)
@@ -106,7 +109,7 @@ namespace Yomikiru.Utility
             {
                 list.Add(transform.DOScale(end.scale, data.time).SetEase(ease).SetLink(this.gameObject));
             }
-            
+
             if (list.Count <= 0) return;
 
             Sequence sequence = DOTween.Sequence();
