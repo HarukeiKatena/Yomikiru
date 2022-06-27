@@ -6,11 +6,9 @@ using Yomikiru.Input;
 namespace Yomikiru.Character
 {
     [RequireComponent(typeof(Character))]
-    [RequireComponent(typeof(InputEvent))]
     public class PlayerJump : MonoBehaviour
     {
         // 内部コンポーネント
-        private InputEvent inputEvent;
         private Character character;
         private CharacterData table;
         private CharacterController controller;
@@ -19,9 +17,17 @@ namespace Yomikiru.Character
         private float velocity = 0.0f;
         private bool isGrounded = false;
 
+        public void OnJump()
+        {
+            if (character.IsGrounded is false) return;
+
+            isGrounded = true;
+
+            velocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
+        }
+
         private void Awake()
         {
-            TryGetComponent(out inputEvent);
             TryGetComponent(out character);
             TryGetComponent(out controller);
         }
@@ -29,16 +35,9 @@ namespace Yomikiru.Character
         private void Start()
         {
             table = character.Table;
-
-            inputEvent.OnJump.Subscribe(_ => JumpStart());
         }
 
         private void Update()
-        {
-            FallUpdate();
-        }
-
-        public void FallUpdate()
         {
             if (character.IsGrounded)
             {
@@ -50,21 +49,12 @@ namespace Yomikiru.Character
             }
             else
             {
-                velocity += table.Gravity * table.GravityScale * Time.fixedDeltaTime;
+                velocity += table.Gravity * table.GravityScale * Time.deltaTime;
             }
 
-            controller.Move(Vector3.up * (velocity * Time.fixedDeltaTime));
+            controller.Move(Vector3.up * (velocity * Time.deltaTime));
 
             isGrounded = character.IsGrounded;
-        }
-
-        public void JumpStart()
-        {
-            if (character.IsGrounded is false) return;
-
-            isGrounded = true;
-
-            velocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
         }
     }
 }
