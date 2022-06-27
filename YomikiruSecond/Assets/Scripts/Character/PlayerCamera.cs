@@ -14,7 +14,6 @@ namespace Yomikiru.Character
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
-        private InputEvent inputEvent;
 
         // 内部パラメーター
         private AxisState horizontalAxis;
