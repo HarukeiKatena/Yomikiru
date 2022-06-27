@@ -35,11 +35,6 @@ namespace Yomikiru.Character
 
         private void Update()
         {
-            FallUpdate();
-        }
-
-        public void FallUpdate()
-        {
             if (character.IsGrounded)
             {
                 if (isGrounded is false)
@@ -50,10 +45,10 @@ namespace Yomikiru.Character
             }
             else
             {
-                velocity += table.Gravity * table.GravityScale * Time.fixedDeltaTime;
+                velocity += table.Gravity * table.GravityScale * Time.deltaTime;
             }
 
-            controller.Move(Vector3.up * (velocity * Time.fixedDeltaTime));
+            controller.Move(Vector3.up * (velocity * Time.deltaTime));
 
             isGrounded = character.IsGrounded;
         }

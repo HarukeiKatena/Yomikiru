@@ -38,11 +38,6 @@ namespace Yomikiru.Character
 
         private void Update()
         {
-            MoveUpdate();
-        }
-
-        public void MoveUpdate()
-        {
             float accel = isSprint ? table.Accel : table.SprintAccel;
             float minSpeed = isSprint ? table.MinSpeed : table.SprintMinSpeed;
             float maxSpeed = isSprint ? table.MaxSpeed : table.SprintMaxSpeed;

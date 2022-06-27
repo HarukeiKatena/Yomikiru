@@ -41,11 +41,6 @@ namespace Yomikiru.Character
 
         private void Update()
         {
-            CameraUpdate();
-        }
-
-        public void CameraUpdate()
-        {
             horizontalAxis.m_InputAxisValue = look.x;
             verticalAxis.m_InputAxisValue = look.y;
 
