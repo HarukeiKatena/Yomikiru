@@ -10,18 +10,20 @@ using Yomikiru.Effect;
 
 namespace Yomikiru.Effect
 {
-    [RequireComponent(typeof(Transform), typeof(MeshFilter), typeof(MeshRenderer))]
+    [RequireComponent(typeof(Transform))]
+    [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(MeshRenderer))]
     public class EffectOperation : MonoBehaviour
     {
         public bool isPlaying { get; private set; } = false;
+        public IObservable<Unit> OnStopEffect => onStopEffect;
 
-        private EffectClip clip;
+
         private MeshFilter mesh;
         private MeshRenderer renderer;
+        private Subject<Unit> onStopEffect = new Subject<Unit>();
 
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
-        private void Start()
+        private void Awake()
         {
             TryGetComponent(out mesh);
             TryGetComponent(out renderer);
@@ -30,29 +32,30 @@ namespace Yomikiru.Effect
         //再生する
         public void Play(EffectClip clip)
         {
-            this.clip = clip;
-            EffectPlay(cancellationTokenSource.Token).Forget();
+            var t = transform;
+            t.position = clip.BacePosition;
+            t.rotation = clip.BaceRotation;
+            t.localScale = clip.StartScale;
+            renderer.material = clip.EffectMaterial;
+            mesh.mesh = clip.ObjectMesh;
+            EffectPlay(this.GetCancellationTokenOnDestroy(), clip).Forget();
         }
 
-        private async UniTask EffectPlay(CancellationToken token)
+        private async UniTask EffectPlay(CancellationToken token, EffectClip clip)
         {
             token.ThrowIfCancellationRequested();
 
             //開始
             isPlaying = true;
-            var t = transform;
-            t.position = clip.BacePosition;
-            t.rotation = clip.BaceRotation;
-            t.localScale = clip.StartScale;
-            mesh.mesh = clip.ObjectMesh;
-            renderer.material = clip.EffectMaterial;
+
 
             //スケール変更
             await transform.DOScale(clip.EndScale, clip.Time).ToUniTask(cancellationToken: token);
 
             //終了
-            t.localScale = Vector3.zero;
+            transform.localScale = Vector3.zero;
             isPlaying = false;
+            onStopEffect.OnNext(Unit.Default);
         }
     }
 }
