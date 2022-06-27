@@ -3,7 +3,7 @@ using Yomikiru.Sound;
 
 public class SoundTester : MonoBehaviour
 {
-    [SerializeField] private SoundManager soundManager = null;
+    [SerializeField] private SoundEcho sound = null;
     [SerializeField] private AudioClip clip = null;
     [SerializeField] private float duration = 0.0f;
 
@@ -11,7 +11,7 @@ public class SoundTester : MonoBehaviour
 
     private void Start()
     {
-        soundManager.PlaySE(clip.name, this.transform);
+        sound.RequestSE(0, "clip.name", this.transform.position);
         time = Time.time;
     }
 
@@ -19,7 +19,7 @@ public class SoundTester : MonoBehaviour
     {
         if (time + duration < Time.time)
         {
-            soundManager.PlaySE(clip.name, this.transform);
+            sound.RequestSE(0, "clip.name", this.transform.position);
             time = Time.time;
         }
     }

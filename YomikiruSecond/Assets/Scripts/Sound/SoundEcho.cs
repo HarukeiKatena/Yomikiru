@@ -3,31 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using Yomikiru.Sound;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/SoundEcho")]
 public class SoundEcho : ScriptableObject
 {
-    public struct SoundObject
+    public struct SoundEchoObject
     {
         public int PlayerIndex;
-        public Vector3 Position;
+        public SoundManager.SoundObject Sound;
 
-        public SoundObject(int Index, Vector3 Posi)
+        public SoundEchoObject(int index, SoundManager.SoundObject soundObject)
         {
-            PlayerIndex = Index;
-            Position = Posi;
+            PlayerIndex = index;
+            Sound = soundObject;
         }
     }
 
-    public IObservable<SoundObject> Sound => sound;
+    public IObservable<SoundEchoObject> OnSoundSE => onSoundSe;
+    public IObservable<SoundEchoObject> OnSoundBGM => onSoundBgm;
     public IObservable<Unit> SoundStop => soundStop;
 
-    private Subject<SoundObject> sound = new Subject<SoundObject>();
+    private Subject<SoundEchoObject> onSoundSe = new Subject<SoundEchoObject>();
+    private Subject<SoundEchoObject> onSoundBgm = new Subject<SoundEchoObject>();
     private Subject<Unit> soundStop = new Subject<Unit>();
 
-    public void RequestEcho(int PlayerIndex, Vector3 Position)
+    //SEをリクエスト
+    public void RequestSE(
+        int PlayerIndex,
+        string Name, Vector3 Position, float Delay = 0.0f)
     {
-        sound.OnNext(new SoundObject(Index: PlayerIndex, Posi: Position));
+        onSoundSe.OnNext(new SoundEchoObject(
+            PlayerIndex,
+            new SoundManager.SoundObject(Name, Position, Delay)));
+    }
+
+    //BGMをリクエスト
+    public void RequestBGM(int PlayerIndex, string Name)
+    {
+        onSoundBgm.OnNext(new SoundEchoObject(
+            PlayerIndex,
+            new SoundManager.SoundObject(Name)));
     }
 
     public void RequestStop()
