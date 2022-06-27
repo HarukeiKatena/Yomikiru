@@ -25,6 +25,7 @@ namespace Yomikiru.Effect
 
         private void Awake()
         {
+            //startだとPlayで呼ばれる頃に参照が消えてるためこっちに書いた
             TryGetComponent(out mesh);
             TryGetComponent(out renderer);
         }
