@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UniRx;
-using UniRx.Triggers;
-using UnityEngine.InputSystem;
+using Yomikiru.Effect;
+using Yomikiru.Sound;
 
 namespace Yomikiru.Character
 {
@@ -15,6 +14,12 @@ namespace Yomikiru.Character
         // 公開パラメーター
         public bool IsGrounded { get; private set; }
         public RaycastHit GroundData { get; private set; }
+
+        // 外部オブジェクト
+        [field: Header("Manager")]
+        [field: SerializeField] public EffectManager effectManager;
+
+        [field: SerializeField] public SoundManager soundManager;
 
         // 内部オブジェクト
         [field: Header("Inner Object")]

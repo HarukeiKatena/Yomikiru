@@ -21,10 +21,6 @@ namespace Yomikiru.Character
         public IObservable<Vector3> OnPlayerWalk => onPlayerWalk;
         public IObservable<Vector3> OnPlayerSprint => onPlayerSprint;
 
-        // 外部コンポーネント
-        private EffectManager effectManager;
-        private SoundManager soundManager;
-
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
@@ -40,9 +36,6 @@ namespace Yomikiru.Character
 
         private void Awake()
         {
-            TryGetComponent(out effectManager);
-            TryGetComponent(out soundManager);
-
             TryGetComponent(out character);
             TryGetComponent(out controller);
             TryGetComponent(out inputEvent);
@@ -96,12 +89,12 @@ namespace Yomikiru.Character
 
             if (isSprint)
             {
-                effectManager.Play(table.SprintEffectName, transform.position);
+                character.effectManager.Play(table.SprintEffectName, transform.position);
                 onPlayerSprint.OnNext(transform.position);
             }
             else
             {
-                effectManager.Play(table.WalkEffectName, transform.position);
+                character.effectManager.Play(table.WalkEffectName, transform.position);
                 onPlayerWalk.OnNext(transform.position);
             }
         }
