@@ -22,11 +22,11 @@ MonoBehaviour:
   <MinSpeed>k__BackingField: 0.3
   <MaxSpeed>k__BackingField: 5
   <Accel>k__BackingField: 0.1
-  <Attenuate>k__BackingField: 0.97
+  <Attenuate>k__BackingField: 0.95
   <SprintMinSpeed>k__BackingField: 0.5
   <SprintMaxSpeed>k__BackingField: 10
   <SprintAccel>k__BackingField: 0.15
-  <SprintAttenuate>k__BackingField: 0.97
+  <SprintAttenuate>k__BackingField: 0.95
   <Gravity>k__BackingField: -9.81
   <GravityScale>k__BackingField: 1
   <JumpHeight>k__BackingField: 1

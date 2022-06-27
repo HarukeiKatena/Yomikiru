@@ -12,12 +12,6 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(InputEvent))]
     public class PlayerAttack : MonoBehaviour
     {
-        // イベント（発行）
-        private readonly Subject<Vector3> onPlayerAttack = new Subject<Vector3>();
-
-        // イベント（講読）
-        public IObservable<Vector3> OnPlayerAttack => onPlayerAttack;
-
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
@@ -38,7 +32,7 @@ namespace Yomikiru.Character
 
         public void AttackStart()
         {
-            onPlayerAttack.OnNext(transform.position);
+
         }
     }
 }

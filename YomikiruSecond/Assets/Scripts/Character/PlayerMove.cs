@@ -1,11 +1,7 @@
 using System;
 using UnityEngine;
 using UniRx;
-using Cysharp.Threading;
-using Cysharp.Threading.Tasks;
-using Yomikiru.Effect;
 using Yomikiru.Input;
-using Yomikiru.Sound;
 
 namespace Yomikiru.Character
 {
@@ -13,14 +9,6 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(InputEvent))]
     public class PlayerMove : MonoBehaviour
     {
-        // イベント（発行）
-        private readonly Subject<Vector3> onPlayerWalk = new Subject<Vector3>();
-        private readonly Subject<Vector3> onPlayerSprint = new Subject<Vector3>();
-
-        // イベント（講読）
-        public IObservable<Vector3> OnPlayerWalk => onPlayerWalk;
-        public IObservable<Vector3> OnPlayerSprint => onPlayerSprint;
-
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
@@ -45,8 +33,7 @@ namespace Yomikiru.Character
         {
             table = character.Table;
 
-            inputEvent.OnMove.Subscribe(dir => direction = dir);
-            inputEvent.OnSprint.Subscribe(b => SprintChanged(b));
+            SprintChanged(false);
         }
 
         private void Update()
@@ -90,12 +77,10 @@ namespace Yomikiru.Character
             if (isSprint)
             {
                 character.effectManager.Play(table.SprintEffectName, transform.position);
-                onPlayerSprint.OnNext(transform.position);
             }
             else
             {
                 character.effectManager.Play(table.WalkEffectName, transform.position);
-                onPlayerWalk.OnNext(transform.position);
             }
         }
 

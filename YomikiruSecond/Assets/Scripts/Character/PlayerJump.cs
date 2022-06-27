@@ -9,14 +9,6 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(InputEvent))]
     public class PlayerJump : MonoBehaviour
     {
-        // イベント（発行）
-        private readonly Subject<Unit> onPlayerJump = new Subject<Unit>();
-        private readonly Subject<Unit> onPlayerLanding = new Subject<Unit>();
-
-        // イベント（講読）
-        public IObservable<Unit> OnPlayerJump => onPlayerJump;
-        public IObservable<Unit> OnPlayerLanding => onPlayerLanding;
-
         // 内部コンポーネント
         private InputEvent inputEvent;
         private Character character;
@@ -54,7 +46,6 @@ namespace Yomikiru.Character
                 {
                     velocity = 0.0f;
                     controller.Move(character.GroundData.distance * Vector3.down);
-                    onPlayerLanding.OnNext(Unit.Default);
                 }
             }
             else
@@ -74,8 +65,6 @@ namespace Yomikiru.Character
             isGrounded = true;
 
             velocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
-
-            onPlayerJump.OnNext(Unit.Default);
         }
     }
 }
