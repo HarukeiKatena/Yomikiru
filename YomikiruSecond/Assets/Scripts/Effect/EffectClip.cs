@@ -1,6 +1,7 @@
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
+using Yomikiru.Utility;
 
 namespace Yomikiru.Effect
 {
@@ -22,5 +23,5 @@ namespace Yomikiru.Effect
         [field: Header("Time")]
         [field: SerializeField] public float Time { get; private set; } = 4.0f;
         [field: SerializeField] public float Delay { get; private set; } = 0.0f;
-    }
+}
 }
