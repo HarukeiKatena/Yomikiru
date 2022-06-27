@@ -14,19 +14,22 @@ namespace Yomikiru.Character
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
-        private InputEvent inputEvent;
 
         // 内部パラメーター
         private AxisState horizontalAxis;
         private AxisState verticalAxis;
         private Quaternion horizontalRotation;
         private Quaternion verticalRotation;
-        private Vector2 look;
+        private Vector2 direction;
+
+        public void OnLook(Vector2 dir)
+        {
+            direction = dir;
+        }
 
         private void Awake()
         {
             TryGetComponent(out character);
-            TryGetComponent(out inputEvent);
         }
 
         private void Start()
@@ -35,19 +38,12 @@ namespace Yomikiru.Character
 
             horizontalAxis = table.HorizontalAxis;
             verticalAxis = table.VerticalAxis;
-
-            inputEvent.OnLook.Subscribe(dir => look = dir);
         }
 
         private void Update()
         {
-            CameraUpdate();
-        }
-
-        public void CameraUpdate()
-        {
-            horizontalAxis.m_InputAxisValue = look.x;
-            verticalAxis.m_InputAxisValue = look.y;
+            horizontalAxis.m_InputAxisValue = direction.x;
+            verticalAxis.m_InputAxisValue = direction.y;
 
             horizontalAxis.Update(Time.deltaTime);
             verticalAxis.Update(Time.deltaTime);

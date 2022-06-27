@@ -6,14 +6,12 @@ using Yomikiru.Input;
 namespace Yomikiru.Character
 {
     [RequireComponent(typeof(Character))]
-    [RequireComponent(typeof(InputEvent))]
     public class PlayerMove : MonoBehaviour
     {
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
         private CharacterController controller;
-        private InputEvent inputEvent;
 
         // 内部パラメーター
         private Vector2 direction = Vector2.zero;
@@ -22,26 +20,49 @@ namespace Yomikiru.Character
         private bool isMoving = false;
         private IDisposable effectTask = null;
 
+        public void OnMove(Vector2 dir)
+        {
+            direction = dir;
+        }
+
+        public void OnSprint(bool value)
+        {
+            isSprint = value;
+
+            if (effectTask != null)
+            {
+                effectTask.Dispose();
+                effectTask = null;
+            }
+
+            if (isSprint)
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
+                    .Subscribe(_ => MoveEffect())
+                    .AddTo(this);
+            }
+            else
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
+                    .Subscribe(_ => MoveEffect())
+                    .AddTo(this);
+            }
+        }
+
         private void Awake()
         {
             TryGetComponent(out character);
             TryGetComponent(out controller);
-            TryGetComponent(out inputEvent);
         }
 
         private void Start()
         {
             table = character.Table;
 
-            SprintChanged(false);
+            OnSprint(false);
         }
 
         private void Update()
-        {
-            MoveUpdate();
-        }
-
-        public void MoveUpdate()
         {
             float accel = isSprint ? table.Accel : table.SprintAccel;
             float minSpeed = isSprint ? table.MinSpeed : table.SprintMinSpeed;
@@ -81,30 +102,6 @@ namespace Yomikiru.Character
             else
             {
                 character.effectManager.Play(table.WalkEffectName, transform.position);
-            }
-        }
-
-        public void SprintChanged(bool value)
-        {
-            isSprint = value;
-
-            if (effectTask != null)
-            {
-                effectTask.Dispose();
-                effectTask = null;
-            }
-
-            if (isSprint)
-            {
-                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
-                    .Subscribe(_ => MoveEffect())
-                    .AddTo(this);
-            }
-            else
-            {
-                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
-                    .Subscribe(_ => MoveEffect())
-                    .AddTo(this);
             }
         }
     }
