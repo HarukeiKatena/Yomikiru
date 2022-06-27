@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Yomikiru.Effect
 {
-    [CreateAssetMenu(menuName = "ScriptableObjects/EffectEcho")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/EffectChannel")]
     public class EffectChannel : ScriptableObject
     {
         public struct EffectObject
@@ -23,7 +23,7 @@ namespace Yomikiru.Effect
 
         private Subject<EffectObject> onEffect = new Subject<EffectObject>();
 
-        void Request(string characterName, EffectClip clip)
+        public void Request(string characterName, EffectClip clip)
         {
             onEffect.OnNext(new EffectObject(characterName, clip));
         }
