@@ -21,12 +21,16 @@ namespace Yomikiru.Character
         private AxisState verticalAxis;
         private Quaternion horizontalRotation;
         private Quaternion verticalRotation;
-        private Vector2 look;
+        private Vector2 direction;
+
+        public void OnLook(Vector2 dir)
+        {
+            direction = dir;
+        }
 
         private void Awake()
         {
             TryGetComponent(out character);
-            TryGetComponent(out inputEvent);
         }
 
         private void Start()
@@ -35,14 +39,12 @@ namespace Yomikiru.Character
 
             horizontalAxis = table.HorizontalAxis;
             verticalAxis = table.VerticalAxis;
-
-            inputEvent.OnLook.Subscribe(dir => look = dir);
         }
 
         private void Update()
         {
-            horizontalAxis.m_InputAxisValue = look.x;
-            verticalAxis.m_InputAxisValue = look.y;
+            horizontalAxis.m_InputAxisValue = direction.x;
+            verticalAxis.m_InputAxisValue = direction.y;
 
             horizontalAxis.Update(Time.deltaTime);
             verticalAxis.Update(Time.deltaTime);

@@ -6,14 +6,12 @@ using Yomikiru.Input;
 namespace Yomikiru.Character
 {
     [RequireComponent(typeof(Character))]
-    [RequireComponent(typeof(InputEvent))]
     public class PlayerMove : MonoBehaviour
     {
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
         private CharacterController controller;
-        private InputEvent inputEvent;
 
         // 内部パラメーター
         private Vector2 direction = Vector2.zero;
@@ -22,11 +20,15 @@ namespace Yomikiru.Character
         private bool isMoving = false;
         private IDisposable effectTask = null;
 
+        public void OnMove(Vector2 dir)
+        {
+            direction = dir;
+        }
+
         private void Awake()
         {
             TryGetComponent(out character);
             TryGetComponent(out controller);
-            TryGetComponent(out inputEvent);
         }
 
         private void Start()
