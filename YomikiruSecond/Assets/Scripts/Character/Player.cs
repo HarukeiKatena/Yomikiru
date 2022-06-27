@@ -32,6 +32,7 @@ namespace Yomikiru.Character
         private void Start()
         {
             inputEvent.OnMove.Subscribe(move.OnMove);
+            inputEvent.OnSprint.Subscribe(move.OnSprint);
             inputEvent.OnLook.Subscribe(camera.OnLook);
             inputEvent.OnJump.Subscribe(_ => jump.OnJump());
             inputEvent.OnAttack.Subscribe(_ => attack.OnAttack());

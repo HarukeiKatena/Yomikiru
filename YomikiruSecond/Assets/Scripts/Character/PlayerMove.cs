@@ -25,6 +25,30 @@ namespace Yomikiru.Character
             direction = dir;
         }
 
+        public void OnSprint(bool value)
+        {
+            isSprint = value;
+
+            if (effectTask != null)
+            {
+                effectTask.Dispose();
+                effectTask = null;
+            }
+
+            if (isSprint)
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
+                    .Subscribe(_ => MoveEffect())
+                    .AddTo(this);
+            }
+            else
+            {
+                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
+                    .Subscribe(_ => MoveEffect())
+                    .AddTo(this);
+            }
+        }
+
         private void Awake()
         {
             TryGetComponent(out character);
@@ -35,7 +59,7 @@ namespace Yomikiru.Character
         {
             table = character.Table;
 
-            SprintChanged(false);
+            OnSprint(false);
         }
 
         private void Update()
@@ -78,30 +102,6 @@ namespace Yomikiru.Character
             else
             {
                 character.effectManager.Play(table.WalkEffectName, transform.position);
-            }
-        }
-
-        public void SprintChanged(bool value)
-        {
-            isSprint = value;
-
-            if (effectTask != null)
-            {
-                effectTask.Dispose();
-                effectTask = null;
-            }
-
-            if (isSprint)
-            {
-                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
-                    .Subscribe(_ => MoveEffect())
-                    .AddTo(this);
-            }
-            else
-            {
-                effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
-                    .Subscribe(_ => MoveEffect())
-                    .AddTo(this);
             }
         }
     }
