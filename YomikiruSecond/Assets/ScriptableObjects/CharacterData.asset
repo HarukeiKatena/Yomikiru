@@ -22,11 +22,11 @@ MonoBehaviour:
   <MinSpeed>k__BackingField: 0.3
   <MaxSpeed>k__BackingField: 5
   <Accel>k__BackingField: 0.1
-  <Attenuate>k__BackingField: 0.98
-  <SprintMinSpeed>k__BackingField: 0.3
+  <Attenuate>k__BackingField: 0.97
+  <SprintMinSpeed>k__BackingField: 0.5
   <SprintMaxSpeed>k__BackingField: 10
   <SprintAccel>k__BackingField: 0.15
-  <SprintAttenuate>k__BackingField: 0.98
+  <SprintAttenuate>k__BackingField: 0.97
   <Gravity>k__BackingField: -9.81
   <GravityScale>k__BackingField: 1
   <JumpHeight>k__BackingField: 1
@@ -56,7 +56,7 @@ MonoBehaviour:
     m_DecelTime: 0.1
     m_InputAxisName: 
     m_InputAxisValue: 0
-    m_InvertInput: 1
+    m_InvertInput: 0
     m_MinValue: -45
     m_MaxValue: 45
     m_Wrap: 0
@@ -66,3 +66,9 @@ MonoBehaviour:
       m_RecenteringTime: 0
       m_LegacyHeadingDefinition: 0
       m_LegacyVelocityFilterStrength: 0
+  <WalkEffectName>k__BackingField: Walk
+  <SprintEffectName>k__BackingField: Sprint
+  <LandingEffectName>k__BackingField: Landing
+  <AttackEffectName>k__BackingField: Attack
+  <WalkEffectDuration>k__BackingField: 0.3
+  <SprintEffectDuration>k__BackingField: 0.3
