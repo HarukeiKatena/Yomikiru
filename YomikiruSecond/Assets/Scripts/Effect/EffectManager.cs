@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace Yomikiru.Effect
@@ -8,27 +9,30 @@ namespace Yomikiru.Effect
     {
         // 外部パラメーター
         [Header("Data Table")]
-        [SerializeField] private EffectTable _table = null;
+        [SerializeField] private EffectTable dataTable;
 
         [Header("Object Pool")]
-        [SerializeField] private Transform _effect = null;
+        [SerializeField] private Transform objectPool;
+
+        [Header("EffectEcho")]
+        [SerializeField] private EffectEcho effectEcho;
 
         // 内部パラメーター
-        private List<List<EffectMono>> _instanceList = new List<List<EffectMono>>();
-        private bool _isInitialized = false;
+        private List<List<EffectMono>> instanceList = new List<List<EffectMono>>();
+        private bool isInitialized = false;
 
         private void Start()
         {
-            _isInitialized = false;
+            isInitialized = false;
 
-            foreach(var data in _table._effectList)
+            foreach(var data in dataTable._effectList)
             {
                 var _instances = new List<EffectMono>();
-                _instanceList.Add(_instances);
-                
+                instanceList.Add(_instances);
+
                 for (int j = 0; j < data.playMax; j++)
                 {
-                    var obj = Instantiate(data.prehub, _effect);
+                    var obj = Instantiate(data.prehub, objectPool);
                     var effect = obj.GetComponent<EffectMono>();
 
                     obj.transform.position = data.prehub.transform.position;
@@ -37,34 +41,38 @@ namespace Yomikiru.Effect
                 }
             }
 
-            _isInitialized = true;
+            isInitialized = true;
+
+            effectEcho.OnEcho.Subscribe(x => {
+                Play(x.EffectName, x.Position);
+            }).AddTo(this);
         }
 
-        private EffectMono FindEffect(string name)
+        private EffectMono FindEffect(string Name)
         {
-            var index = _table._effectList.FindIndex(n => n.name == name);
-            if (index < 0 || index >= _instanceList.Count) return null;
+            var index = dataTable._effectList.FindIndex(n => n.name == Name);
+            if (index < 0 || index >= instanceList.Count) return null;
 
-            return _instanceList[index].Find(n => n.isPlaying == false);
+            return instanceList[index].Find(n => n.isPlaying == false);
         }
 
-        public void Play(string name, Vector3 pos)
+        public void Play(string Name, Vector3 Position)
         {
-            if (_isInitialized is false) return;
+            if (isInitialized is false) return;
 
-            var effect = FindEffect(name);
+            var effect = FindEffect(Name);
             if (effect is null) return;
-            
-            effect.Play(pos);
+
+            effect.Play(Position);
         }
 
-        public void Play(string name, Transform parent)
+        public void Play(string Name, Transform parent)
         {
-            if (_isInitialized is false) return;
+            if (isInitialized is false) return;
 
-            var effect = FindEffect(name);
+            var effect = FindEffect(Name);
             if (effect is null) return;
-            
+
             effect.Play(parent);
         }
     }

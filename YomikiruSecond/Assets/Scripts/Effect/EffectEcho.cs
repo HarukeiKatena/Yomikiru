@@ -13,30 +13,32 @@ namespace Yomikiru.Effect
     {
         public struct EchoObject
         {
+            public string EffectName;
             public int PlayerIndex;
             public Vector3 Position;
 
-            public EchoObject(int Index, Vector3 Posi)
+            public EchoObject(string name, int index, Vector3 position)
             {
-                Position = Posi;
-                PlayerIndex = Index;
+                EffectName = name;
+                Position = position;
+                PlayerIndex = index;
             }
         }
 
-        public IObservable<EchoObject> Echo => echo;
-        public IObservable<Unit> EchoStop => echoStop;
+        public IObservable<EchoObject> OnEcho => onEcho;
+        public IObservable<Unit> OnEchoStop => onEchoStop;
 
-        private readonly Subject<EchoObject> echo = new Subject<EchoObject>();
-        private readonly Subject<Unit> echoStop = new Subject<Unit>();
+        private readonly Subject<EchoObject> onEcho = new Subject<EchoObject>();
+        private readonly Subject<Unit> onEchoStop = new Subject<Unit>();
 
-        void RequestEcho(Vector3 Position, int PlayerIndex)
+        public void Request(int PlayerIndex, string EffectName, Vector3 Position)
         {
-            echo.OnNext(new EchoObject(Index: PlayerIndex, Posi: Position));
+            onEcho.OnNext(new EchoObject(EffectName, PlayerIndex, Position));
         }
 
         void RequestStop()
         {
-            echoStop.OnNext(Unit.Default);
+            onEchoStop.OnNext(Unit.Default);
         }
 
     }

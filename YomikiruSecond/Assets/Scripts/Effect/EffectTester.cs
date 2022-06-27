@@ -4,7 +4,7 @@ namespace Yomikiru.Effect
 {
     public class EffectTester : MonoBehaviour
     {
-        [SerializeField] private EffectManager manager = null;
+        [SerializeField] private EffectEcho effect = null;
         [SerializeField] private string effectName = null;
         [SerializeField] private float duration = 0.0f;
 
@@ -12,7 +12,7 @@ namespace Yomikiru.Effect
 
         private void Start()
         {
-            manager.Play(effectName, transform.position + Vector3.up * 0.1f);
+            effect.Request(0, "", this.transform.position);
             time = Time.time;
         }
 
@@ -20,7 +20,7 @@ namespace Yomikiru.Effect
         {
             if (time + duration < Time.time)
             {
-                manager.Play(effectName, transform.position + Vector3.up * 0.1f);
+                effect.Request(0, "", this.transform.position);
                 time = Time.time;
             }
         }
