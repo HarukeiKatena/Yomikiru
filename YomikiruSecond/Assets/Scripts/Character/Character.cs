@@ -15,12 +15,6 @@ namespace Yomikiru.Character
         public bool IsGrounded { get; private set; }
         public RaycastHit GroundData { get; private set; }
 
-        // 外部オブジェクト
-        [field: Header("Manager")]
-        [field: SerializeField] public EffectManager effectManager;
-
-        [field: SerializeField] public SoundManager soundManager;
-
         // 内部オブジェクト
         [field: Header("Inner Object")]
         [field: SerializeField] public Transform Eye { get; private set; }
@@ -28,8 +22,10 @@ namespace Yomikiru.Character
         [field: SerializeField] public Transform Foot { get; private set; }
         [field: SerializeField] public GameObject Visual { get; private set; }
 
-        // 外部オブジェクト
-        public GameObject Manager { get; private set; }
+        // 外部コンポーネント
+        [field: Header("Manager")]
+        // [field: SerializeField] public EffectChannel effectChannel;
+        // [field: SerializeField] public AudioChannel audioChannel;
 
         // 内部コンポーネント
         private CharacterController controller;
@@ -41,6 +37,7 @@ namespace Yomikiru.Character
 
         private void Start()
         {
+            // Character Controllerに値を設定
             controller.slopeLimit = Table.SlopeLimit;
             controller.stepOffset = Table.StepOffset;
             controller.skinWidth = Table.SkinWidth;
@@ -49,21 +46,15 @@ namespace Yomikiru.Character
             controller.radius = Table.Radius;
             controller.height = Table.Height;
 
-            IsGrounded = false;
-
-            Manager = GameObject.Find("Manager");
+            IsGrounded = true;
         }
 
         private void Update()
         {
-            IsGroundedCheck();
-        }
-
-        private void IsGroundedCheck()
-        {
+            // 設置判定強化
             RaycastHit hit;
-            Ray ray = new Ray(Foot.position + Vector3.up * (Table.Radius + 0.1f), Vector3.down);
-            IsGrounded = Physics.SphereCast(ray, Table.Radius, out hit, Table.StepOffset + 0.1f);
+            Ray ray = new Ray(Foot.position + Vector3.up * (Table.Radius + 0.01f), Vector3.down);
+            IsGrounded = Physics.SphereCast(ray, Table.Radius, out hit, Table.CheckGroundDistance + 0.01f);
             GroundData = hit;
         }
     }
