@@ -25,7 +25,7 @@ namespace Yomikiru.Effect
             {
                 var _instances = new List<EffectMono>();
                 _instanceList.Add(_instances);
-                
+
                 for (int j = 0; j < data.playMax; j++)
                 {
                     var obj = Instantiate(data.prehub, _effect);
@@ -54,7 +54,7 @@ namespace Yomikiru.Effect
 
             var effect = FindEffect(name);
             if (effect is null) return;
-            
+
             effect.Play(pos);
         }
 
@@ -64,7 +64,7 @@ namespace Yomikiru.Effect
 
             var effect = FindEffect(name);
             if (effect is null) return;
-            
+
             effect.Play(parent);
         }
     }

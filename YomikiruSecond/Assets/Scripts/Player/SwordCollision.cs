@@ -1,6 +1,7 @@
 using System.Collections;
 using Player;
 using UnityEngine;
+using Yomikiru;
 using Yomikiru.Enemy;
 
 public class SwordCollision : MonoBehaviour
@@ -13,7 +14,7 @@ public class SwordCollision : MonoBehaviour
     private PlayerPropSetting playerProp;
 
     [SerializeField]
-    private GameScriptableObject gameScriptableObject;
+    private MatchInfo gameScriptableObject;
 
     private void OnTriggerEnter(Collider other) {
         if(self == other.gameObject) return;

@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b507e43c349a14abc82034a44f4291, type: 3}
+  m_Name: EffectTable
+  m_EditorClassIdentifier: 
+  _effectList:
+  - prehub: {fileID: 4970240507600703918, guid: f57c341ddab98f24d8cee88a3d0915b1, type: 3}
+    name: Walk
+    playMax: 30
+    lifeTime: 1
+    isDynamic: 1
+    transform:
+      start:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 0.1, y: 0.1, z: 0.1}
+      end:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 1, y: 1, z: 1}
+      time: 0.5
+      delay: 0
+  - prehub: {fileID: 7627142841226790768, guid: 0b69409b6a4e1204c8c6b8be9f5e21e9, type: 3}
+    name: Sprint
+    playMax: 30
+    lifeTime: 1
+    isDynamic: 1
+    transform:
+      start:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 0.1, y: 0.1, z: 0.1}
+      end:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 1.25, y: 1.25, z: 1.25}
+      time: 0.5
+      delay: 0
+  - prehub: {fileID: 7092807388726527995, guid: 6436dd61334f52f46a7fa616a07ef97c, type: 3}
+    name: Landing
+    playMax: 30
+    lifeTime: 3
+    isDynamic: 1
+    transform:
+      start:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 0.1, y: 0.1, z: 0.1}
+      end:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 10, y: 10, z: 10}
+      time: 3
+      delay: 0
+  - prehub: {fileID: 1205133456400554388, guid: 3866a8d6337d4d54095e94bdaa69ad19, type: 3}
+    name: Attack
+    playMax: 10
+    lifeTime: 6
+    isDynamic: 1
+    transform:
+      start:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 1, y: 1, z: 1}
+      end:
+        position: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
+        scale: {x: 50, y: 50, z: 50}
+      time: 5
+      delay: 0
