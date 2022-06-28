@@ -9,7 +9,7 @@ namespace Yomikiru.UI
     public class NewGameScene : MonoBehaviour
     {
 
-        [SerializeField] private GameScriptableObject matchInfo;
+        [SerializeField] private MatchInfo matchInfo;
         [SerializeField] private GamemodeSelectScreen gamemodeSelectScreen;
         [SerializeField] private MapSelectScreen mapSelectScreen;
         [SerializeField] private CharacterSelectScreen characterSelectScreen;
