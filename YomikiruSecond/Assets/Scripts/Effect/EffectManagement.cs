@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
-using UniRx.Toolkit;
 using UnityEngine;
-using Yomikiru.Effect;
 
 namespace Yomikiru.Effect
 {
@@ -27,7 +22,7 @@ namespace Yomikiru.Effect
             {
                 var effect = pool.Rent();
                 effect.Play(x.Clip);
-                effect.OnStopEffect.First().Subscribe(_ => pool.Return(effect));//
+                effect.OnStopEffect.First().Subscribe(_ => pool.Return(effect)).AddTo(this);
             }).AddTo(this);
         }
     }

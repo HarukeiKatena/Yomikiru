@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
-using Yomikiru.Effect;
 
 namespace Yomikiru.Effect
 {
@@ -33,12 +30,6 @@ namespace Yomikiru.Effect
         //再生する
         public void Play(EffectClip clip)
         {
-            var t = transform;
-            t.position = clip.BacePosition;
-            t.rotation = clip.BaceRotation;
-            t.localScale = clip.StartScale;
-            renderer.material = clip.EffectMaterial;
-            mesh.mesh = clip.ObjectMesh;
             EffectPlay(this.GetCancellationTokenOnDestroy(), clip).Forget();
         }
 
@@ -48,13 +39,18 @@ namespace Yomikiru.Effect
 
             //開始
             isPlaying = true;
-
+            var t = transform;
+            t.position = clip.BacePosition;
+            t.rotation = clip.BaceRotation;
+            t.localScale = clip.StartScale;
+            renderer.material = clip.EffectMaterial;
+            mesh.mesh = clip.ObjectMesh;
 
             //スケール変更
             await transform.DOScale(clip.EndScale, clip.Time).ToUniTask(cancellationToken: token);
 
             //終了
-            transform.localScale = Vector3.zero;
+            t.localScale = Vector3.zero;
             isPlaying = false;
             onStopEffect.OnNext(Unit.Default);
         }
