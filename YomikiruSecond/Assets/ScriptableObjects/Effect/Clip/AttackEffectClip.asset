@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a18be344df0cff74788619dc188064de, type: 3}
+  m_Name: AttackEffectClip
+  m_EditorClassIdentifier: 
+  <ObjectMesh>k__BackingField: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  <EffectMaterial>k__BackingField: {fileID: 2100000, guid: 5d7ad08701d1f82448f9c86c74f8e407, type: 2}
+  <PlayMax>k__BackingField: 10
+  <LifeTime>k__BackingField: 6
+  <isDynamic>k__BackingField: 1
+  <BacePosition>k__BackingField: {x: 0, y: 0, z: 0}
+  <BaceRotation>k__BackingField: {x: 0, y: 0, z: 0, w: 1}
+  <StartScale>k__BackingField: {x: 0.1, y: 0.1, z: 0.1}
+  <EndScale>k__BackingField: {x: 50, y: 50, z: 50}
+  <Time>k__BackingField: 4
+  <Delay>k__BackingField: 0
