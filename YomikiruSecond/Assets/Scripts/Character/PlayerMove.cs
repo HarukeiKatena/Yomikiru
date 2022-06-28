@@ -1,4 +1,5 @@
 using System;
+using Player;
 using UnityEngine;
 using UniRx;
 using Yomikiru.Input;
@@ -15,10 +16,21 @@ namespace Yomikiru.Character
 
         // 内部パラメーター
         private Vector2 direction = Vector2.zero;
-        private Vector2 velocity = Vector2.zero;
+        private Vector2 horizontalVelocity = Vector2.zero;
+        private float verticalVelocity = 0.0f;
         private bool isSprint = false;
         private bool isMoving = false;
+        private bool isGrounded = false;
         private IDisposable effectTask = null;
+
+        public void OnJump()
+        {
+            if (character.IsGrounded is false) return;
+
+            isGrounded = true;
+
+            verticalVelocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
+        }
 
         public void OnMove(Vector2 dir)
         {
@@ -64,22 +76,35 @@ namespace Yomikiru.Character
 
         private void Update()
         {
-            float accel = isSprint ? table.Accel : table.SprintAccel;
-            float minSpeed = isSprint ? table.MinSpeed : table.SprintMinSpeed;
-            float maxSpeed = isSprint ? table.MaxSpeed : table.SprintMaxSpeed;
-            float attenuate = isSprint ? table.Attenuate : table.SprintAttenuate;
+            float accel = isSprint ? table.SprintAccel : table.Accel;
+            float minSpeed = isSprint ? table.SprintMinSpeed : table.MinSpeed;
+            float maxSpeed = isSprint ? table.SprintMaxSpeed : table.MaxSpeed;
+            float attenuate = isSprint ? table.SprintAttenuate : table.Attenuate;
+            Vector3 velocity = Vector3.zero;
 
-            velocity += direction * accel;
+            horizontalVelocity += direction * accel;
 
-            if (velocity.sqrMagnitude > maxSpeed * maxSpeed)
+            if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
             {
-                velocity = velocity.normalized * maxSpeed;
+                horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
             }
 
-            if (velocity.sqrMagnitude >= minSpeed * minSpeed)
+            if (horizontalVelocity.sqrMagnitude >= minSpeed * minSpeed)
             {
                 Quaternion horizontalRotation = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
-                controller.Move(horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime);
+
+                Vector3 dir = horizontalRotation * new Vector3(horizontalVelocity.x, 0, horizontalVelocity.y);
+
+                Ray ray = new Ray(character.Eye.position, dir.normalized);
+                RaycastHit hit;
+                bool isHit = Physics.Raycast(ray, out hit, horizontalVelocity.magnitude * Time.deltaTime);
+                if (isHit)
+                {
+                    dir = dir.normalized * ((hit.distance - table.Radius));
+                }
+
+                velocity.x = dir.x;
+                velocity.z = dir.z;
 
                 isMoving = true;
             }
@@ -88,7 +113,33 @@ namespace Yomikiru.Character
                 isMoving = false;
             }
 
-            velocity *= attenuate;
+            horizontalVelocity *= attenuate;
+
+            if (character.IsGrounded)
+            {
+                if (isGrounded is false)
+                {
+                    verticalVelocity = 0.0f;
+                    velocity.y = -character.GroundData.distance / Time.deltaTime;
+                }
+            }
+            else
+            {
+                Ray ray = new Ray(transform.position + Vector3.up * table.Height, Vector3.up);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 0.1f) && verticalVelocity > 0.0f)
+                {
+                    verticalVelocity *= -table.JumpBouciness;
+                }
+
+                verticalVelocity += table.Gravity * table.GravityScale * Time.deltaTime;
+            }
+
+            velocity.y += verticalVelocity;
+
+            controller.Move(velocity * Time.deltaTime);
+            isGrounded = character.IsGrounded;
         }
 
         public void MoveEffect()
@@ -97,12 +148,14 @@ namespace Yomikiru.Character
 
             if (isSprint)
             {
-                character.effectManager.Play(table.SprintEffectName, transform.position);
+                //character.effectManager.Play(table.SprintEffectName, transform.position);
             }
             else
             {
-                character.effectManager.Play(table.WalkEffectName, transform.position);
+                //character.effectManager.Play(table.WalkEffectName, transform.position);
             }
         }
+
+
     }
 }
