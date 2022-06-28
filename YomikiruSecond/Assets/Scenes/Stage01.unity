@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 2129636176}
   - component: {fileID: 2129636175}
   m_Layer: 0
-  m_Name: Management
+  m_Name: CharacterManagement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -396,7 +396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controllerManager: {fileID: 11400000, guid: 661438c32b49fee49a00d61251db6c11, type: 2}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 779616209072675140, guid: c48e746dbe9556f47ac5e95aaecc35c3, type: 3}
   enemyPrefab: {fileID: 0}
   startPosition:
   - {fileID: 2004855986}
