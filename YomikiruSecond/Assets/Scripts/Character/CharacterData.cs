@@ -15,7 +15,6 @@ namespace Yomikiru.Character
         [field: SerializeField] public Vector3 Center { get; private set; }
         [field: SerializeField] public float Radius { get; private set; }
         [field: SerializeField] public float Height { get; private set; }
-        [field: SerializeField] public float CheckGroundDistance { get; private set; }
 
         [field: Header("Move")]
         [field: SerializeField] public float MinSpeed  { get; private set; }
@@ -35,6 +34,8 @@ namespace Yomikiru.Character
         [field: SerializeField] public float Mass { get; private set; }
 
         [field: Header("Jump")]
+        [field: SerializeField] public float CheckGroundDistance { get; private set; }
+        [field: SerializeField] public float CheckJumpDistance { get; private set; }
         [field: SerializeField] public float JumpHeight { get; private set; }
         [field: SerializeField] public float JumpBouciness { get; private set; }
 

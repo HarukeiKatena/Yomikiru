@@ -15,19 +15,20 @@ namespace Yomikiru.Character
         private CharacterController controller;
 
         // 内部パラメーター
+        private Vector3 velocity = Vector3.zero;
         private Vector2 direction = Vector2.zero;
         private Vector2 horizontalVelocity = Vector2.zero;
         private float verticalVelocity = 0.0f;
         private bool isSprint = false;
         private bool isMoving = false;
-        private bool isGrounded = false;
+        private bool isJumping = false;
         private IDisposable effectTask = null;
 
         public void OnJump()
         {
             if (character.IsGrounded is false) return;
 
-            isGrounded = true;
+            isJumping = true;
 
             verticalVelocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * table.Mass * -2.0f);
         }
@@ -76,11 +77,21 @@ namespace Yomikiru.Character
 
         private void Update()
         {
+            velocity = Vector3.zero;
+
+            MoveUpdate();
+            CheckJumping();
+            JumpUpdate();
+
+            controller.Move(velocity * Time.deltaTime);
+        }
+
+        public void MoveUpdate()
+        {
             float accel = isSprint ? table.SprintAccel : table.Accel;
             float minSpeed = isSprint ? table.SprintMinSpeed : table.MinSpeed;
             float maxSpeed = isSprint ? table.SprintMaxSpeed : table.MaxSpeed;
             float attenuate = isSprint ? table.SprintAttenuate : table.Attenuate;
-            Vector3 velocity = Vector3.zero;
 
             horizontalVelocity += direction * accel;
 
@@ -114,13 +125,18 @@ namespace Yomikiru.Character
             }
 
             horizontalVelocity *= attenuate;
+        }
 
+        public void JumpUpdate()
+        {
             if (character.IsGrounded)
             {
-                if (isGrounded is false)
+                if (isJumping)
                 {
                     verticalVelocity = 0.0f;
                     velocity.y = -character.GroundData.distance / Time.deltaTime;
+
+                    isJumping = false;
                 }
             }
             else
@@ -137,9 +153,14 @@ namespace Yomikiru.Character
             }
 
             velocity.y += verticalVelocity;
+        }
 
-            controller.Move(velocity * Time.deltaTime);
-            isGrounded = character.IsGrounded;
+        public void CheckJumping()
+        {
+            Ray ray = new Ray(character.Foot.position + Vector3.up * (table.Radius + 0.01f), Vector3.down);
+            RaycastHit hit;
+
+            isJumping = !Physics.SphereCast(ray, table.Radius, out hit, table.CheckJumpDistance + 0.01f);
         }
 
         public void MoveEffect()
