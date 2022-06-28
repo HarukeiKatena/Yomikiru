@@ -14,29 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SlopeLimit>k__BackingField: 45
   <StepOffset>k__BackingField: 0.3
-  <SkinWidth>k__BackingField: 0.0001
+  <SkinWidth>k__BackingField: 0.08
   <MinMoveDistance>k__BackingField: 0.001
   <Center>k__BackingField: {x: 0, y: 1, z: 0}
   <Radius>k__BackingField: 0.5
-  <Height>k__BackingField: 2
+  <Height>k__BackingField: 1.8
   <CheckGroundDistance>k__BackingField: 0.1
   <MinSpeed>k__BackingField: 0.3
   <MaxSpeed>k__BackingField: 5
-  <Accel>k__BackingField: 0.1
-  <Attenuate>k__BackingField: 0.95
+  <Accel>k__BackingField: 0.2
+  <Attenuate>k__BackingField: 0.9
   <SprintMinSpeed>k__BackingField: 0.5
   <SprintMaxSpeed>k__BackingField: 10
-  <SprintAccel>k__BackingField: 0.15
-  <SprintAttenuate>k__BackingField: 0.95
+  <SprintAccel>k__BackingField: 0.4
+  <SprintAttenuate>k__BackingField: 0.9
   <Gravity>k__BackingField: -9.81
   <GravityScale>k__BackingField: 1
   <JumpHeight>k__BackingField: 1
+  <JumpBouciness>k__BackingField: 0.5
   <HorizontalAxis>k__BackingField:
     Value: 0
     m_SpeedMode: 1
-    m_MaxSpeed: 2
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
+    m_MaxSpeed: 1
+    m_AccelTime: 0
+    m_DecelTime: 0
     m_InputAxisName: 
     m_InputAxisValue: 0
     m_InvertInput: 0
@@ -53,8 +54,8 @@ MonoBehaviour:
     Value: 0
     m_SpeedMode: 1
     m_MaxSpeed: 1
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
+    m_AccelTime: 0
+    m_DecelTime: 0
     m_InputAxisName: 
     m_InputAxisValue: 0
     m_InvertInput: 0
