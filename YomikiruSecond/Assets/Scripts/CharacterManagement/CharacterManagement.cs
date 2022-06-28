@@ -20,7 +20,7 @@ namespace Yomikiru.Characte.Management
 
         [HideInInspector] public GameObject[] CharacterList;
 
-        private void Awake()
+        private void Start()
         {
             //個数集める
             CharacterList = new GameObject[controllerManager.PlayerDevices.Length];
@@ -45,12 +45,29 @@ namespace Yomikiru.Characte.Management
             var user = player.user;
             user.UnpairDevices();
             if (controllerManager.KeybordPlayerIndex == index)
+            {
                 SetDevicesAndScheme(user, new InputDevice[] {Keyboard.current, Mouse.current}, "KeyboardMouse");
+            }
             else
-                SetDeviceAndScheme(user, controllerManager.PlayerDevices[index], "Gamepad");
+            {
+                //パッドをセットする
+                if (controllerManager.PlayerDevices[index] != null) {
+                    SetDeviceAndScheme(user, controllerManager.PlayerDevices[index], "Gamepad");
+                }
+                else {//指定デバイスが無い場合
+                    if (Gamepad.all.Count >= index + 1)//ゲームパッドがあればパッドにする
+                        SetDeviceAndScheme(user, Gamepad.all[index], "Gamepad");
+                    else if(index == ControllerManager.MaxPlayerCount - 1)
+                        SetDevicesAndScheme(user, new InputDevice[] {Keyboard.current, Mouse.current}, "KeyboardMouse");
+                }
+            }
 
             //キャラクター保持
-            CharacterList[index] = player.gameObject;
+            var obj = player.gameObject;
+            CharacterList[index] = obj;
+
+            //カメラ
+            CameraSetting(obj, index);
         }
 
         private void CreateEnemy(int index)
@@ -77,6 +94,36 @@ namespace Yomikiru.Characte.Management
             InputUser.PerformPairingWithDevice(device, user);
             user.ActivateControlScheme(scheme);
         }
+
+        private void CameraSetting(GameObject parentObject, int playerIndex)
+        {
+            var camera = CameraChildFind(parentObject.transform);
+            if(camera == null)
+                return;
+
+            camera.rect = controllerManager.PlayerCount switch
+            {
+                1 => new Rect(0.0f, 0.0f, 1.0f, 1.0f),
+                2 => playerIndex == 0 ? new Rect(0.0f, 0.5f, 1.0f, 0.5f) : new Rect(0.0f, 0.0f, 1.0f, 0.5f),
+                _ => camera.rect
+            };
+        }
+
+        private Camera CameraChildFind(Transform parent)
+        {
+            foreach (Transform child in parent.transform)
+            {
+                if (child.gameObject.name == "Camera")
+                    return child.GetComponent<Camera>();
+
+                var camera = CameraChildFind(child);
+                if (camera != null)
+                    return camera;
+            }
+
+            return null;
+        }
+
 
         //引数でしたいしたオブジェクトを除いて一番最初にヒットしたオブジェクトを返す
         public GameObject GetCharacterObject(GameObject ExcludedObject)
