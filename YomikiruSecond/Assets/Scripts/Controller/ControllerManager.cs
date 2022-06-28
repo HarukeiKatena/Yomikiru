@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace Yomikiru.Controller
 {
@@ -9,11 +10,7 @@ namespace Yomikiru.Controller
     {
         public const int MaxPlayerCount = 2;
 
-        public int PlayerCount
-        {
-            get { return PlayerCount;}
-            set => PlayerCount = Math.Min(value, MaxPlayerCount);
-        }
+        public int PlayerCount = MaxPlayerCount;
 
         public Gamepad[] PlayerDevices = new Gamepad[MaxPlayerCount];
 
