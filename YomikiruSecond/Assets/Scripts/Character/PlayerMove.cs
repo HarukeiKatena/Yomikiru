@@ -29,7 +29,7 @@ namespace Yomikiru.Character
 
             isGrounded = true;
 
-            verticalVelocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * -2.0f);
+            verticalVelocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * table.Mass * -2.0f);
         }
 
         public void OnMove(Vector2 dir)
@@ -133,7 +133,7 @@ namespace Yomikiru.Character
                     verticalVelocity *= -table.JumpBouciness;
                 }
 
-                verticalVelocity += table.Gravity * table.GravityScale * Time.deltaTime;
+                verticalVelocity += table.Gravity * table.GravityScale * table.Mass * Time.deltaTime;
             }
 
             velocity.y += verticalVelocity;
