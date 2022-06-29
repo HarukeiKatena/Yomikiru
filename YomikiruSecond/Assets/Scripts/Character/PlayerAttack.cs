@@ -17,12 +17,12 @@ namespace Yomikiru.Character
         private Character character;
         private CharacterData table;
 
-        //武器
-        public Transform SwordGrip;
-        public Transform SwordRotator;
-        public Collider SwordCollider;
-        public ParticleSystem SwordTrail;
-        public GameObject AttackPrefab;
+        // 武器
+        [SerializeField] private Transform swordGrip;
+        [SerializeField] private Transform swordRotator;
+        [SerializeField] private Collider swordCollider;
+        [SerializeField] private ParticleSystem swordTrail;
+        [SerializeField] private GameObject attackPrefab;
 
         // 状態
         private bool isAttack;
@@ -36,7 +36,7 @@ namespace Yomikiru.Character
         {
             table = character.Table;
 
-            SwordGrip.gameObject.SetActive(false);
+            swordGrip.gameObject.SetActive(false);
         }
 
         public void OnAttack()
@@ -51,33 +51,33 @@ namespace Yomikiru.Character
         {
             Debug.Log("Attack");
             //剣を出す
-            SwordGrip.gameObject.SetActive(true);
+            swordGrip.gameObject.SetActive(true);
             isAttack = true;
-            var originalGripPos = SwordGrip.localPosition;
-            SwordGrip.DOLocalMove(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
-            yield return SwordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed).WaitForCompletion();
+            var originalGripPos = swordGrip.localPosition;
+            swordGrip.DOLocalMove(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
+            yield return swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed).WaitForCompletion();
 
             //イベント発行
 
             //剣を回す
-            Instantiate(AttackPrefab, transform.position, Quaternion.identity);
-            SwordCollider.enabled = true;
-            SwordTrail.Play();
+            Instantiate(attackPrefab, transform.position, Quaternion.identity);
+            swordCollider.enabled = true;
+            swordTrail.Play();
             // play sound
             //yield return SwordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttaclSpeed, RotateMode.FastBeyond360).WaitForCompletion();
-            yield return DoRotateAround(SwordGrip, SwordRotator, -360, table.AttackSpeed).WaitForCompletion();
+            yield return DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed).WaitForCompletion();
             //剣を戻す
-            SwordTrail.Stop();
-            SwordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
-            yield return SwordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
+            swordTrail.Stop();
+            swordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
+            yield return swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
 
             yield return null;
 
             //初期状態に戻す
-            SwordRotator.localRotation = Quaternion.identity;
-            SwordCollider.enabled = false;
+            swordRotator.localRotation = Quaternion.identity;
+            swordCollider.enabled = false;
             isAttack = false;
-            SwordGrip.gameObject.SetActive(false);
+            swordGrip.gameObject.SetActive(false);
         }
 
         private float prevAngle = 0.0f;
