@@ -4,6 +4,7 @@ using System;
 using Player;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Yomikiru.Input;
 
@@ -41,13 +42,11 @@ namespace Yomikiru.Character
 
         public void OnAttack()
         {
-            if(!isAttack) 
-            {
-                StartCoroutine(DoAttack());
-            }
+            if(isAttack) return;
+            AttackAsync().Forget();
         }
 
-        private IEnumerator DoAttack()
+        private async UniTask AttackAsync()
         {
             Debug.Log("Attack");
             //剣を出す
@@ -55,7 +54,7 @@ namespace Yomikiru.Character
             isAttack = true;
             var originalGripPos = swordGrip.localPosition;
             swordGrip.DOLocalMove(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
-            yield return swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed).WaitForCompletion();
+            await swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed);
 
             //イベント発行
 
@@ -65,13 +64,13 @@ namespace Yomikiru.Character
             swordTrail.Play();
             // play sound
             //yield return SwordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttaclSpeed, RotateMode.FastBeyond360).WaitForCompletion();
-            yield return DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed).WaitForCompletion();
+            await DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed);
             //剣を戻す
             swordTrail.Stop();
             swordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
-            yield return swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
+            await swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed);
 
-            yield return null;
+            await UniTask.Yield();
 
             //初期状態に戻す
             swordRotator.localRotation = Quaternion.identity;
