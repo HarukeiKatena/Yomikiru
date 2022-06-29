@@ -72,5 +72,5 @@ MonoBehaviour:
   <AttackEffectName>k__BackingField: Attack
   <WalkEffectDuration>k__BackingField: 0.3
   <SprintEffectDuration>k__BackingField: 0.3
-  <AttackPopOutSpeed>k__BackingField: 1
-  <AttaclSpeed>k__BackingField: 0.3
+  <AttackPopOutSpeed>k__BackingField: 0.3
+  <AttackSpeed>k__BackingField: 1
