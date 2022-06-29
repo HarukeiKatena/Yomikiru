@@ -45,5 +45,8 @@ namespace Yomikiru.Character
         [field: SerializeField] public float WalkEffectDuration { get; private set; }
         [field: SerializeField] public float SprintEffectDuration { get; private set; }
 
+        [field: Header("Attack")]
+        [field: SerializeField] public float AttackPopOutSpeed { get; private set; }
+        [field: SerializeField] public float AttaclSpeed { get; private set; }
     }
 }
