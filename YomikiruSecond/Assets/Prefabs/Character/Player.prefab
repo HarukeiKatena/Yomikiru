@@ -349,7 +349,7 @@ MonoBehaviour:
   SwordRotator: {fileID: 7254001132366340696}
   SwordCollider: {fileID: 763425755747798759}
   SwordTrail: {fileID: 8785428684687206005}
-  AttackPrefub: {fileID: 816231682930952617, guid: 5c005c1426bc1624c9ace73eaee5c5e6, type: 3}
+  AttackPrefab: {fileID: 816231682930952617, guid: 5c005c1426bc1624c9ace73eaee5c5e6, type: 3}
 --- !u!114 &779616209072675141
 MonoBehaviour:
   m_ObjectHideFlags: 0

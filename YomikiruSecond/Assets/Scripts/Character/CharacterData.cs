@@ -47,6 +47,6 @@ namespace Yomikiru.Character
 
         [field: Header("Attack")]
         [field: SerializeField] public float AttackPopOutSpeed { get; private set; }
-        [field: SerializeField] public float AttaclSpeed { get; private set; }
+        [field: SerializeField] public float AttackSpeed { get; private set; }
     }
 }

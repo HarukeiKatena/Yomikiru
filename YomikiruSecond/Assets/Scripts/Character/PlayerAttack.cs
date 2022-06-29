@@ -22,7 +22,7 @@ namespace Yomikiru.Character
         public Transform SwordRotator;
         public Collider SwordCollider;
         public ParticleSystem SwordTrail;
-        public GameObject AttackPrefub;
+        public GameObject AttackPrefab;
 
         // 状態
         private bool isAttack;
@@ -60,12 +60,12 @@ namespace Yomikiru.Character
             //イベント発行
 
             //剣を回す
-            Instantiate(AttackPrefub, transform.position, Quaternion.identity);
+            Instantiate(AttackPrefab, transform.position, Quaternion.identity);
             SwordCollider.enabled = true;
             SwordTrail.Play();
             // play sound
             //yield return SwordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttaclSpeed, RotateMode.FastBeyond360).WaitForCompletion();
-            yield return DoRotateAround(SwordGrip, SwordRotator, -360, table.AttaclSpeed).WaitForCompletion();
+            yield return DoRotateAround(SwordGrip, SwordRotator, -360, table.AttackSpeed).WaitForCompletion();
             //剣を戻す
             SwordTrail.Stop();
             SwordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
