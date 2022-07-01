@@ -7,11 +7,13 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Yomikiru;
+using Yomikiru.Audio;
+using Yomikiru.Characte.Management;
 using Yomikiru.Sound;
 
 public class IntroSequence : MonoBehaviour
 {
-    [SerializeField] private MatchInfo matchInfo;
+
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private CinemachineDollyCart dollyCart;
     [SerializeField] private LightSetting lightSetting;
@@ -19,22 +21,19 @@ public class IntroSequence : MonoBehaviour
     [SerializeField] private Yomikiru.UI.IntroDisplay display;
     [SerializeField] private SoundManager soundManager;
 
-    [FormerlySerializedAs("CameraMoveSpeed")]
+    [SerializeField] private MatchInfo matchInfo;
+    [SerializeField] private CharacterManagement characterManagement;
+    [SerializeField] private AudioChannel audioChannel;
+
+
     [Header("設定")]
-    [Tooltip("イントロカメラの移動速度")]
-    [SerializeField] private float cameraMoveSpeed = 5.0f;
-    [Tooltip("複数人プレイの場合画面が分割される速度")]
-    [SerializeField] private float cameraRectSlideSpeed = 2.0f;
-    [Tooltip("カメラが開始位置に移動して操作出来るようになるまでの待ち時間")]
-    [SerializeField] private float startControlTime = 2.5f;
-    [Tooltip("ライトフェード速度")]
-    [SerializeField] private float lightFadeSpeed = 1.0f;
-    [Tooltip("ゲームシーン開始時にすぐ動かないようにするための待ち時間")]
-    [SerializeField] private float introStartCoolTime = 0.5f;
-    [Tooltip("イントロ開始時に流れる曲")]
-    [SerializeField] private AudioClip bgmIntroAudio;
-    [Tooltip("操作可能になるタイミングでなるSE")]
-    [SerializeField] private AudioClip seGameStartAudio;
+    [SerializeField] private float cameraMoveSpeed = 5.0f; //カメラの移動速度
+    [SerializeField] private float cameraRectSlideSpeed = 2.0f; //複数人プレイ時画面が分割される速度
+    [SerializeField] private float lightFadeSpeed = 1.0f; //ライトのフェード速度
+    [SerializeField] private float startControlTime = 2.5f; //イントロアニメが終わって操作可能までの時間
+    [SerializeField] private float introStartCoolTime = 0.5f; //シーン開始時すぐ動かないようにする時間
+    [SerializeField] private AudioClip bgmIntroAudio; //イントロ開始時に流れる曲
+    [SerializeField] private AudioClip seGameStartAudio; //操作可能になるタイミングの曲
 
     public static int INTRO_START = 0;
     public static int INTRO_END = 1;
@@ -49,6 +48,23 @@ public class IntroSequence : MonoBehaviour
     void Start()
     {
         StartCoroutine(Intro());
+    }
+
+    private async UniTask IntroS()
+    {
+        matchInfo.State = MatchState.Intro;
+
+        //一時的にカメラを保持して全画面にする
+        Camera camera = characterManagement.GetCharacterCamera(0);
+        Rect rect = new Rect(camera.rect);
+        camera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+
+        await UniTask.Delay(TimeSpan.FromSeconds(introStartCoolTime));
+
+        //ここでサウンド流す処理
+
+        //イントロ開始
+
     }
 
     IEnumerator Intro()
