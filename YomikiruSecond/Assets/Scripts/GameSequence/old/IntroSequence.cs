@@ -13,7 +13,7 @@ using Yomikiru.Sound;
 
 public class IntroSequence : MonoBehaviour
 {
-
+    [SerializeField] private MatchInfo matchInfo;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private CinemachineDollyCart dollyCart;
     [SerializeField] private LightSetting lightSetting;
@@ -21,9 +21,7 @@ public class IntroSequence : MonoBehaviour
     [SerializeField] private Yomikiru.UI.IntroDisplay display;
     [SerializeField] private SoundManager soundManager;
 
-    [SerializeField] private MatchInfo matchInfo;
-    [SerializeField] private CharacterManagement characterManagement;
-    [SerializeField] private AudioChannel audioChannel;
+
 
 
     [Header("設定")]
@@ -50,22 +48,7 @@ public class IntroSequence : MonoBehaviour
         StartCoroutine(Intro());
     }
 
-    private async UniTask IntroS()
-    {
-        matchInfo.State = MatchState.Intro;
 
-        //一時的にカメラを保持して全画面にする
-        Camera camera = characterManagement.GetCharacterCamera(0);
-        Rect rect = new Rect(camera.rect);
-        camera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-
-        await UniTask.Delay(TimeSpan.FromSeconds(introStartCoolTime));
-
-        //ここでサウンド流す処理
-
-        //イントロ開始
-
-    }
 
     IEnumerator Intro()
     {
