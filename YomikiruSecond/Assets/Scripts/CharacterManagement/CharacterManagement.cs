@@ -23,7 +23,7 @@ namespace Yomikiru.Characte.Management
         private void Start()
         {
             //個数集める
-            CharacterList = new GameObject[controllerManager.PlayerDevices.Length];
+            CharacterList = new GameObject[ControllerManager.MaxPlayerCount];
 
             //プレイヤー
             for (int i = 0; i < controllerManager.PlayerCount; i++)
@@ -76,9 +76,6 @@ namespace Yomikiru.Characte.Management
                 enemyPrefab,
                 startPosition[index].position,
                 startPosition[index].rotation);
-
-            //キャラクター保持
-            CharacterList[index] = enemy.gameObject;
         }
 
         private void SetDevicesAndScheme(InputUser user, InputDevice[] devices, string scheme)
@@ -124,6 +121,10 @@ namespace Yomikiru.Characte.Management
             return null;
         }
 
+        public Camera GetCharacterCamera(int playerIndex)
+        {
+            return CameraChildFind(CharacterList[playerIndex].transform);
+        }
 
         //引数でしたいしたオブジェクトを除いて一番最初にヒットしたオブジェクトを返す
         public GameObject GetCharacterObject(GameObject ExcludedObject)
