@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using Yomikiru.Audio;
 using Yomikiru.Characte.Management;
@@ -13,6 +16,10 @@ namespace Yomikiru.Intro
         [SerializeField] private MatchInfo matchInfo;
         [SerializeField] private CharacterManagement characterManagement;
         [SerializeField] private AudioChannel audioChannel;
+        [SerializeField] private Yomikiru.UI.IntroDisplay display;
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
+        [SerializeField] private CinemachineDollyCart dollyCart;
+        [SerializeField] private LightSetting lightSetting;
 
         [Header("設定")]
         [SerializeField] private float cameraMoveSpeed = 5.0f; //カメラの移動速度
@@ -20,11 +27,11 @@ namespace Yomikiru.Intro
         [SerializeField] private float lightFadeSpeed = 1.0f; //ライトのフェード速度
         [SerializeField] private float startControlTime = 2.5f; //イントロアニメが終わって操作可能までの時間
         [SerializeField] private float introStartCoolTime = 0.5f; //シーン開始時すぐ動かないようにする時間
-        [SerializeField] private AudioClip bgmIntroAudio; //イントロ開始時に流れる曲
-        [SerializeField] private AudioClip seGameStartAudio; //操作可能になるタイミングの曲
+        [SerializeField] private AudioCue introAudio; //イントロ開始時に流れる曲
+        [SerializeField] private AudioCue gameStartAudio; //操作可能になるタイミングの曲
 
 
-        private async UniTask IntroS()
+        private async UniTask IntroSequence(CancellationToken token)
         {
             matchInfo.State = MatchState.Intro;
 
@@ -33,12 +40,34 @@ namespace Yomikiru.Intro
             Rect rect = new Rect(camera.rect);
             camera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
 
+            //シーン開幕時少し待つ
             await UniTask.Delay(TimeSpan.FromSeconds(introStartCoolTime));
 
-            //ここでサウンド流す処理
+            //イントロ開始時の音を流す
+            audioChannel.Request(introAudio);
 
             //イントロ開始
+            display.DisplayModeAsync(matchInfo.Gamemode).Forget();
 
+            //カメラ移動
+            await DOVirtual.Float(0.0f, 1.0f, cameraMoveSpeed, v => { dollyCart.m_Position = v; }).SetEase(Ease.OutCubic)
+                .ToUniTask(cancellationToken: token);
+
+            //カメラのRectを元に戻す
+            camera.DORect(rect, cameraRectSlideSpeed);
+
+            //カメラ移動終わり
+            virtualCamera.Priority = 0;
+            lightSetting.LightFade(lightFadeSpeed);
+            display.DisplayReadyAsync().Forget();
+
+            //コントロール可能までの待ち時間
+            await UniTask.Delay(TimeSpan.FromSeconds(startControlTime));
+
+            matchInfo.State = MatchState.Ingame;
+            display.DisplayGoAsync().Forget();
+
+            audioChannel.Request(gameStartAudio);
         }
     }
 }
