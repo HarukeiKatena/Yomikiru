@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using UniRx;
@@ -19,21 +18,26 @@ public class End : MonoBehaviour
 
     private void Start()
     {
+        endTargetVirtualCamera.Priority = 0;
+
         matchInfo.OnStateChange.
             Where(x => x == MatchState.Finished).Subscribe(x =>
             {
-                EndSequence().Forget();
+                var cts = new CancellationTokenSource();
+                EndSequence(cts.Token).Forget();
             });
     }
 
-    private async UniTask EndSequence()
+    private async UniTask EndSequence(CancellationToken token)
     {
+        token.ThrowIfCancellationRequested();
+
         display.DisplayAsync().Forget();
 
-        await UniTask.Delay(TimeSpan.FromSeconds(cameraMoveDelay));
+        await UniTask.Delay(TimeSpan.FromSeconds(cameraMoveDelay), cancellationToken: token);
         endTargetVirtualCamera.Priority = 20;
 
-        await UniTask.Delay(TimeSpan.FromSeconds(endWaitTime));
+        await UniTask.Delay(TimeSpan.FromSeconds(endWaitTime), cancellationToken: token);
 
         //とりあえずこっちに書く
         controllerManager.ClearPlayerDevice();
