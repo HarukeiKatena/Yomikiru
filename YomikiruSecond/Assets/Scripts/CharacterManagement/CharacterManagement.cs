@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
@@ -20,7 +21,7 @@ namespace Yomikiru.Characte.Management
 
         [HideInInspector] public GameObject[] CharacterList;
 
-        private void Start()
+        private void Awake()
         {
             //個数集める
             CharacterList = new GameObject[ControllerManager.MaxPlayerCount];
@@ -55,10 +56,17 @@ namespace Yomikiru.Characte.Management
                     SetDeviceAndScheme(user, controllerManager.PlayerDevices[index], "Gamepad");
                 }
                 else {//指定デバイスが無い場合
-                    if (Gamepad.all.Count >= index + 1)//ゲームパッドがあればパッドにする
-                        SetDeviceAndScheme(user, Gamepad.all[index], "Gamepad");
-                    else if(index == ControllerManager.MaxPlayerCount - 1)
+                    var pads = Gamepad.all;
+                    if (pads.Count >= index + 1)//ゲームパッドがあればパッドにする
+                    {
+                        SetDeviceAndScheme(user, pads[index], "Gamepad");
+                        controllerManager.PlayerDevices[index] = pads[index];
+                    }
+                    else if (controllerManager.KeybordPlayerIndex != ControllerManager.NotUsedKeybord)
+                    {
                         SetDevicesAndScheme(user, new InputDevice[] {Keyboard.current, Mouse.current}, "KeyboardMouse");
+                        controllerManager.KeybordPlayerIndex = index;
+                    }
                 }
             }
 
@@ -94,36 +102,50 @@ namespace Yomikiru.Characte.Management
 
         private void CameraSetting(GameObject parentObject, int playerIndex)
         {
-            var camera = CameraChildFind(parentObject.transform);
-            if(camera == null)
+            var cameraparent = FindCameraParent(parentObject.transform);
+            if(cameraparent == null)
                 return;
 
-            camera.rect = controllerManager.PlayerCount switch
+            int layerindex = LayerMask.NameToLayer("P" + (playerIndex + 1));
+
+            //カメラの設定
+            if(cameraparent.Find("Camera").TryGetComponent(out Camera camera))
             {
-                1 => new Rect(0.0f, 0.0f, 1.0f, 1.0f),
-                2 => playerIndex == 0 ? new Rect(0.0f, 0.5f, 1.0f, 0.5f) : new Rect(0.0f, 0.0f, 1.0f, 0.5f),
-                _ => camera.rect
-            };
+                camera.cullingMask ^= 1 << layerindex;
+                camera.depth = ControllerManager.MaxPlayerCount - playerIndex;
+                camera.rect = controllerManager.PlayerCount switch
+                {
+                    1 => new Rect(0.0f, 0.0f, 1.0f, 1.0f),
+                    2 => playerIndex == 0 ? new Rect(0.0f, 0.5f, 1.0f, 0.5f) : new Rect(0.0f, 0.0f, 1.0f, 0.5f),
+                    _ => camera.rect
+                };
+            }
+
+            //CinemachineVirtualCameraの設定
+            if(cameraparent.Find("VirtualCamera").TryGetComponent(out CinemachineVirtualCamera vc))
+            {
+                vc.gameObject.layer = layerindex;
+            }
         }
 
-        private Camera CameraChildFind(Transform parent)
+        private Transform FindCameraParent(Transform parent)
         {
             foreach (Transform child in parent.transform)
             {
                 if (child.gameObject.name == "Camera")
-                    return child.GetComponent<Camera>();
+                    return child.parent;
 
-                var camera = CameraChildFind(child);
-                if (camera != null)
-                    return camera;
+                var parentobj = FindCameraParent(child);
+                if (parentobj != null)
+                    return parentobj;
             }
-
             return null;
         }
 
         public Camera GetCharacterCamera(int playerIndex)
         {
-            return CameraChildFind(CharacterList[playerIndex].transform);
+            return FindCameraParent(CharacterList[playerIndex].transform).
+                transform.Find("Camera").GetComponent<Camera>();
         }
 
         //引数でしたいしたオブジェクトを除いて一番最初にヒットしたオブジェクトを返す

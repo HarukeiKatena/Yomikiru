@@ -30,18 +30,26 @@ namespace Yomikiru.Intro
         [SerializeField] private AudioCue introAudio; //イントロ開始時に流れる曲
         [SerializeField] private AudioCue gameStartAudio; //操作可能になるタイミングの曲
 
+        private void Start()
+        {
+            var cts = new CancellationTokenSource();
+            IntroSequence(cts.Token).Forget();
+        }
+
 
         private async UniTask IntroSequence(CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             matchInfo.State = MatchState.Intro;
 
             //一時的にカメラを保持して全画面にする
-            Camera camera = characterManagement.GetCharacterCamera(0);
+            characterManagement.CharacterList[0].transform.Find("Eye").Find("Camera").TryGetComponent(out Camera camera);
             Rect rect = new Rect(camera.rect);
             camera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
 
             //シーン開幕時少し待つ
-            await UniTask.Delay(TimeSpan.FromSeconds(introStartCoolTime));
+            await UniTask.Delay(TimeSpan.FromSeconds(introStartCoolTime), cancellationToken: token);
 
             //イントロ開始時の音を流す
             //audioChannel.Request(introAudio);
@@ -62,7 +70,7 @@ namespace Yomikiru.Intro
             display.DisplayReadyAsync().Forget();
 
             //コントロール可能までの待ち時間
-            await UniTask.Delay(TimeSpan.FromSeconds(startControlTime));
+            await UniTask.Delay(TimeSpan.FromSeconds(startControlTime), cancellationToken: token);
 
             matchInfo.State = MatchState.Ingame;
             display.DisplayGoAsync().Forget();
