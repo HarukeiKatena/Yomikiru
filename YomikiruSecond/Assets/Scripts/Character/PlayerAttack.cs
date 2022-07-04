@@ -50,7 +50,7 @@ namespace Yomikiru.Character
             AttackAsync(cts.Token).Forget();
         }
 
-        private async UniTask AttackAsync(CancellationToken cts)
+        private async UniTask AttackAsync(CancellationToken token)
         {
             Debug.Log("Attack");
             //剣を出す
@@ -58,7 +58,7 @@ namespace Yomikiru.Character
             isAttack = true;
             var originalGripPos = swordGrip.localPosition;
             swordGrip.DOLocalMove(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
-            await swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed);
+            await swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed).ToUniTask(cancellationToken: token);
 
             //イベント発行
 
@@ -67,14 +67,14 @@ namespace Yomikiru.Character
             swordCollider.enabled = true;
             swordTrail.Play();
             // play sound
-            await swordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttackSpeed, RotateMode.FastBeyond360);
+            await swordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttackSpeed, RotateMode.FastBeyond360).ToUniTask(cancellationToken: token);
             //await DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed);
             //剣を戻す
             swordTrail.Stop();
             swordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
-            await swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed);
+            await swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed).ToUniTask(cancellationToken: token);
 
-            await UniTask.Yield();
+            await UniTask.Yield(cancellationToken: token);
 
             //初期状態に戻す
             swordRotator.localRotation = Quaternion.identity;
