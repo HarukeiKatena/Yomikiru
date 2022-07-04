@@ -50,7 +50,8 @@ namespace Yomikiru.Intro
             await UniTask.Delay(TimeSpan.FromSeconds(introStartCoolTime), cancellationToken: token);
 
             //イントロ開始時の音を流す
-            //audioChannel.Request(introAudio);
+            if (introAudio != null)
+                audioChannel.Request(introAudio);
 
             //イントロ開始
             display.DisplayModeAsync(matchInfo.Gamemode).Forget();
@@ -73,7 +74,8 @@ namespace Yomikiru.Intro
             matchInfo.State = MatchState.Ingame;
             display.DisplayGoAsync().Forget();
 
-            //audioChannel.Request(gameStartAudio);
+            if (gameStartAudio != null)
+                audioChannel.Request(gameStartAudio);
         }
     }
 }
