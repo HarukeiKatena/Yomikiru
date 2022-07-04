@@ -13,7 +13,7 @@ public class EffectTest : MonoBehaviour
         if (Keyboard.current.pKey.wasPressedThisFrame)
         {
             //Requestで再生できる(第一引数は自分のオブジェクト名を入れる、第二引数にはクリップ)
-            channel.Request("", clip);
+            channel.Request("", clip, transform.position);
         }
     }
 }
