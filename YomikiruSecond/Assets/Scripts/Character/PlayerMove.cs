@@ -137,9 +137,9 @@ namespace Yomikiru.Character
 
         public void JumpUpdate()
         {
-            if (isGrounded)
+            if (character.IsGrounded)
             {
-                if (isJumping && GroundData.distance <= table.CheckJumpDistance)
+                if (isGrounded && isJumping && GroundData.distance <= table.CheckJumpDistance)
                 {
                     velocity.y = -GroundData.distance;
                     verticalVelocity = 0.0f;
