@@ -38,6 +38,9 @@ namespace Yomikiru.Character
 
             horizontalAxis = table.HorizontalAxis;
             verticalAxis = table.VerticalAxis;
+
+            horizontalAxis.Value += transform.rotation.eulerAngles.y;
+            verticalAxis.Value = 0.0f;
         }
 
         private void Update()
