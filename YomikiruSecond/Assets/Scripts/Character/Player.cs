@@ -7,7 +7,6 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(Character))]
     [RequireComponent(typeof(InputEvent))]
     [RequireComponent(typeof(PlayerMove))]
-    [RequireComponent(typeof(PlayerJump))]
     [RequireComponent(typeof(PlayerAttack))]
     [RequireComponent(typeof(PlayerCamera))]
     public class Player : MonoBehaviour
@@ -15,7 +14,6 @@ namespace Yomikiru.Character
         private Character character;
         private InputEvent inputEvent;
         private PlayerMove move;
-        private PlayerJump jump;
         private PlayerAttack attack;
         private PlayerCamera camera;
 
@@ -24,17 +22,16 @@ namespace Yomikiru.Character
             TryGetComponent(out character);
             TryGetComponent(out inputEvent);
             TryGetComponent(out move);
-            TryGetComponent(out jump);
             TryGetComponent(out attack);
             TryGetComponent(out camera);
         }
 
         private void Start()
         {
-            inputEvent.OnMove.Subscribe(move.OnMove);
-            inputEvent.OnSprint.Subscribe(move.OnSprint);
+            inputEvent.OnMove.Subscribe(move.OnMoveInput);
+            inputEvent.OnSprint.Subscribe(move.OnSprintInput);
             inputEvent.OnLook.Subscribe(camera.OnLook);
-            inputEvent.OnJump.Subscribe(_ => jump.OnJump());
+            inputEvent.OnJump.Subscribe(_ => move.OnJumpInput());
             inputEvent.OnAttack.Subscribe(_ => attack.OnAttack());
         }
     }
