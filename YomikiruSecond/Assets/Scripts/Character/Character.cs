@@ -53,8 +53,8 @@ namespace Yomikiru.Character
         {
             // 設置判定強化
             RaycastHit hit;
-            Ray ray = new Ray(Foot.position + Vector3.up * (Table.Radius + 0.01f), Vector3.down);
-            IsGrounded = Physics.SphereCast(ray, Table.Radius, out hit, Table.CheckGroundDistance + 0.01f);
+            Ray ray = new Ray(Foot.position + Vector3.up * (Table.Radius + Table.SkinWidth), Vector3.down);
+            IsGrounded = Physics.SphereCast(ray, Table.Radius, out hit, Table.CheckGroundDistance + Table.SkinWidth);
             GroundData = hit;
         }
     }
