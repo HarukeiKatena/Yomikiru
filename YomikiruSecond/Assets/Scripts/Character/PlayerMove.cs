@@ -15,6 +15,7 @@ namespace Yomikiru.Character
         private CharacterController controller;
 
         // 内部パラメーター
+        private Vector3 teleport = Vector3.zero;
         private Vector3 velocity = Vector3.zero;
         private Vector2 direction = Vector2.zero;
         private Vector2 horizontalVelocity = Vector2.zero;
@@ -82,12 +83,13 @@ namespace Yomikiru.Character
 
         private void Update()
         {
+            teleport = Vector3.zero;
             velocity = Vector3.zero;
 
             MoveUpdate();
             JumpUpdate();
 
-            controller.Move(velocity);
+            controller.Move(teleport + velocity * Time.deltaTime);
 
             CheckIsGrounded();
         }
@@ -122,8 +124,8 @@ namespace Yomikiru.Character
                     dir = dir.normalized * ((hit.distance - table.Radius));
                 }
 
-                velocity.x = dir.x * Time.deltaTime;
-                velocity.z = dir.z * Time.deltaTime;
+                velocity.x = dir.x;
+                velocity.z = dir.z;
 
                 isMoving = true;
             }
@@ -139,7 +141,7 @@ namespace Yomikiru.Character
         {
             if (isGrounded && isJumping && GroundData.distance <= table.CheckJumpDistance)
             {
-                velocity.y = -GroundData.distance;
+                teleport.y = -GroundData.distance;
                 verticalVelocity = 0.0f;
                 isJumping = false;
             }
@@ -158,8 +160,7 @@ namespace Yomikiru.Character
                 verticalVelocity += table.Gravity * table.GravityScale * table.Mass * Time.deltaTime;
             }
 
-            velocity.y += verticalVelocity * Time.deltaTime;
-            isGrounded = character.IsGrounded;
+            velocity.y += verticalVelocity;
         }
 
         public void CheckIsGrounded()
