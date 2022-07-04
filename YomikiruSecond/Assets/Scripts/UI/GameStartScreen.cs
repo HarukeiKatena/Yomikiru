@@ -30,7 +30,7 @@ namespace Yomikiru.UI
             }).AddTo(this);
         }
 
-        public void Display(GamemodeInfo gamemode, MapInfo map, CharacterInfo character)
+        public void Display(GamemodeInfo gamemode, MapInfo map)
         {
             mapButton.Map = map;
             DisplayPlayers();

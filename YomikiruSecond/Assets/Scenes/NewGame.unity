@@ -533,7 +533,6 @@ MonoBehaviour:
   matchInfo: {fileID: 11400000, guid: 556e30d3915c67a488f93b71d2a9f4eb, type: 2}
   gamemodeSelectScreen: {fileID: 1839539803}
   mapSelectScreen: {fileID: 22460859}
-  characterSelectScreen: {fileID: 0}
   gameStartScreen: {fileID: 1826470439}
 --- !u!1 &268111422
 GameObject:
