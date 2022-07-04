@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System;
 using Player;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(InputEvent))]
     public class PlayerAttack : MonoBehaviour
     {
+        // CancellationTokenSourceを生成
+        private CancellationTokenSource cts;
         // 内部コンポーネント
         private Character character;
         private CharacterData table;
@@ -30,6 +33,7 @@ namespace Yomikiru.Character
 
         private void Awake()
         {
+            cts = new CancellationTokenSource();
             TryGetComponent(out character);
         }
 
@@ -43,10 +47,10 @@ namespace Yomikiru.Character
         public void OnAttack()
         {
             if(isAttack) return;
-            AttackAsync().Forget();
+            AttackAsync(cts.Token).Forget();
         }
 
-        private async UniTask AttackAsync()
+        private async UniTask AttackAsync(CancellationToken cts)
         {
             Debug.Log("Attack");
             //剣を出す
