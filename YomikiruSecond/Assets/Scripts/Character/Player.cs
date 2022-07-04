@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Yomikiru.Input;
 using UniRx;
 
@@ -16,6 +18,7 @@ namespace Yomikiru.Character
         private PlayerMove move;
         private PlayerAttack attack;
         private PlayerCamera camera;
+        private List<IDisposable> eventList = new List<IDisposable>();
 
         private void Awake()
         {
@@ -28,11 +31,50 @@ namespace Yomikiru.Character
 
         private void Start()
         {
-            inputEvent.OnMove.Subscribe(move.OnMoveInput);
-            inputEvent.OnSprint.Subscribe(move.OnSprintInput);
-            inputEvent.OnLook.Subscribe(camera.OnLook);
-            inputEvent.OnJump.Subscribe(_ => move.OnJumpInput());
-            inputEvent.OnAttack.Subscribe(_ => attack.OnAttack());
+            character.Match.OnStateChange.Subscribe(state =>
+            {
+                switch (state)
+                {
+                    case MatchState.Intro:
+                        //DisableEvents();
+                        break;
+                    case MatchState.Ingame:
+                        EnableEvents();
+                        break;
+                    case MatchState.Finished:
+                        DisableEvents();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        public void EnableEvents()
+        {
+            if (eventList.Count != 0) return;
+
+            eventList.Add(inputEvent.OnMove.Subscribe(move.OnMoveInput));
+            eventList.Add(inputEvent.OnSprint.Subscribe(move.OnSprintInput));
+            eventList.Add(inputEvent.OnLook.Subscribe(camera.OnLook));
+            eventList.Add(inputEvent.OnJump.Subscribe(_ => move.OnJumpInput()));
+            eventList.Add(inputEvent.OnAttack.Subscribe(_ => attack.OnAttack()));
+        }
+
+        public void DisableEvents()
+        {
+            if (eventList.Count == 0) return;
+
+            foreach (var e in eventList)
+            {
+                e.Dispose();
+            }
+            eventList.Clear();
+        }
+
+        public void Die()
+        {
+            character.Match.State = MatchState.Finished;
         }
     }
 }
