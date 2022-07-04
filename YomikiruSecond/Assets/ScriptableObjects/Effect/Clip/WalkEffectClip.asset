@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a18be344df0cff74788619dc188064de, type: 3}
-  m_Name: AttackEffectClip
+  m_Name: WalkEffectClip
   m_EditorClassIdentifier: 
   ObjectMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
-  EffectMaterial: {fileID: 2100000, guid: 5d7ad08701d1f82448f9c86c74f8e407, type: 2}
+  EffectMaterial: {fileID: 2100000, guid: 622da0b47395c3e439ca66f5e676a95a, type: 2}
   <BacePosition>k__BackingField: {x: 0, y: 0, z: 0}
   <BaceRotation>k__BackingField: {x: 0, y: 0, z: 0, w: 1}
-  <StartScale>k__BackingField: {x: 0.01, y: 50, z: 0.01}
-  <EndScale>k__BackingField: {x: 50, y: 50, z: 50}
-  <Time>k__BackingField: 4
+  <StartScale>k__BackingField: {x: 0.01, y: 1.25, z: 0.01}
+  <EndScale>k__BackingField: {x: 1, y: 1.25, z: 1}
+  <Time>k__BackingField: 0.8
   <Delay>k__BackingField: 0
