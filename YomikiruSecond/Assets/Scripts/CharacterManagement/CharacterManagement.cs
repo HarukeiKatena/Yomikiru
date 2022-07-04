@@ -109,7 +109,8 @@ namespace Yomikiru.Characte.Management
             int layerindex = LayerMask.NameToLayer("P" + (playerIndex + 1));
 
             //カメラの設定
-            if(cameraparent.Find("Camera").TryGetComponent(out Camera camera))
+            var cameraobject = cameraparent.Find("Camera");
+            if(cameraobject != null && cameraobject.TryGetComponent(out Camera camera))
             {
                 camera.cullingMask ^= 1 << layerindex;
                 camera.depth = ControllerManager.MaxPlayerCount - playerIndex;
@@ -122,7 +123,8 @@ namespace Yomikiru.Characte.Management
             }
 
             //CinemachineVirtualCameraの設定
-            if(cameraparent.Find("VirtualCamera").TryGetComponent(out CinemachineVirtualCamera vc))
+            var vcobject = cameraparent.Find("VirtualCamera");
+            if(vcobject != null && vcobject.TryGetComponent(out CinemachineVirtualCamera vc))
             {
                 vc.gameObject.layer = layerindex;
             }
