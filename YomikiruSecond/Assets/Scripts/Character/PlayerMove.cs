@@ -26,7 +26,7 @@ namespace Yomikiru.Character
         private RaycastHit GroundData;
         private IDisposable effectTask = null;
 
-        public void OnJump()
+        public void OnJumpInput()
         {
             if (isJumping) return;
 
@@ -35,12 +35,12 @@ namespace Yomikiru.Character
             verticalVelocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * table.Mass * -2.0f);
         }
 
-        public void OnMove(Vector2 dir)
+        public void OnMoveInput(Vector2 dir)
         {
             direction = dir;
         }
 
-        public void OnSprint(bool value)
+        public void OnSprintInput(bool value)
         {
             isSprint = value;
 
@@ -77,7 +77,7 @@ namespace Yomikiru.Character
             isJumping = false;
             isGrounded = true;
             CheckIsGrounded();
-            OnSprint(false);
+            OnSprintInput(false);
         }
 
         private void Update()
