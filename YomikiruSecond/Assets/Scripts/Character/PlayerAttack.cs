@@ -63,8 +63,8 @@ namespace Yomikiru.Character
             swordCollider.enabled = true;
             swordTrail.Play();
             // play sound
-            //yield return SwordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttaclSpeed, RotateMode.FastBeyond360).WaitForCompletion();
-            await DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed);
+            await swordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttackSpeed, RotateMode.FastBeyond360);
+            //await DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed);
             //剣を戻す
             swordTrail.Stop();
             swordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
@@ -77,25 +77,6 @@ namespace Yomikiru.Character
             swordCollider.enabled = false;
             isAttack = false;
             swordGrip.gameObject.SetActive(false);
-        }
-
-        private float prevAngle = 0.0f;
-        private Tween DoRotateAround(Transform target, Transform rotateAxis, float endValue, float duration)
-        {
-            prevAngle = 0.0f;
-
-            // durationの時間で値を0～endValueまで変更させて公転処理を呼ぶ
-            Tween ret = DOTween.To(x => RotateAroundPrc(target, rotateAxis, x), 0.0f, endValue, duration);
-            return ret;
-        }
-
-        private void RotateAroundPrc(Transform target, Transform rotateAxis, float value)
-        {
-            float delta = value - prevAngle;
-
-            target.RotateAround(rotateAxis.position, rotateAxis.eulerAngles, delta);
-
-            prevAngle = value;
         }
     }
 }
