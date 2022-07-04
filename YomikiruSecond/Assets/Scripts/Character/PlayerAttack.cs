@@ -57,8 +57,10 @@ namespace Yomikiru.Character
             swordGrip.gameObject.SetActive(true);
             isAttack = true;
             var originalGripPos = swordGrip.localPosition;
-            swordGrip.DOLocalMove(Vector3.zero, table.AttackPopOutSpeed).WaitForCompletion();
-            await swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed).ToUniTask(cancellationToken: token);
+            await UniTask.WhenAll(
+                swordGrip.DOLocalMove(Vector3.zero, table.AttackPopOutSpeed).ToUniTask(cancellationToken: token),
+                swordGrip.DOLocalRotate(new Vector3(0, -90, -70), table.AttackPopOutSpeed).ToUniTask(cancellationToken: token)
+            );
 
             //イベント発行
 
@@ -68,11 +70,12 @@ namespace Yomikiru.Character
             swordTrail.Play();
             // play sound
             await swordRotator.DOLocalRotate(new Vector3(0, -360, 0), table.AttackSpeed, RotateMode.FastBeyond360).ToUniTask(cancellationToken: token);
-            //await DoRotateAround(swordGrip, swordRotator, -360, table.AttackSpeed);
             //剣を戻す
             swordTrail.Stop();
-            swordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).WaitForCompletion();
-            await swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed).ToUniTask(cancellationToken: token);
+            await UniTask.WhenAll(
+                swordGrip.DOLocalMove(originalGripPos, table.AttackPopOutSpeed).ToUniTask(cancellationToken: token),
+                swordGrip.DOLocalRotate(Vector3.zero, table.AttackPopOutSpeed).ToUniTask(cancellationToken: token)
+            );
 
             await UniTask.Yield(cancellationToken: token);
 
