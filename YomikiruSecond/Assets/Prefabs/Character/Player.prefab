@@ -188,7 +188,6 @@ GameObject:
   - component: {fileID: 779616209072675146}
   - component: {fileID: 779616209072675145}
   - component: {fileID: 779616209072675144}
-  - component: {fileID: 779616209072675143}
   - component: {fileID: 779616209072675142}
   - component: {fileID: 779616209072675150}
   - component: {fileID: 779616209072675141}
@@ -248,8 +247,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Table>k__BackingField: {fileID: 11400000, guid: 24c97b8106e56ca4ba50868d0aadb878, type: 2}
-  effectManager: {fileID: 0}
-  soundManager: {fileID: 0}
   <Eye>k__BackingField: {fileID: 779616207979166648}
   <Hand>k__BackingField: {fileID: 779616207961762647}
   <Foot>k__BackingField: {fileID: 779616209764702693}
@@ -306,18 +303,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f6370fd3e4436c4a9fb262a23e40b28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &779616209072675143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 779616209072675140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b712cad3206230844b4f0f099aa6c3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &779616209072675142

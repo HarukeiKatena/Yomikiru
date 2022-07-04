@@ -1,4 +1,5 @@
 using System;
+using Player;
 using UnityEngine;
 using UniRx;
 using Yomikiru.Input;
@@ -14,18 +15,33 @@ namespace Yomikiru.Character
         private CharacterController controller;
 
         // 内部パラメーター
+        private Vector3 teleport = Vector3.zero;
+        private Vector3 velocity = Vector3.zero;
         private Vector2 direction = Vector2.zero;
-        private Vector2 velocity = Vector2.zero;
+        private Vector2 horizontalVelocity = Vector2.zero;
+        private float verticalVelocity = 0.0f;
         private bool isSprint = false;
         private bool isMoving = false;
+        private bool isJumping = false;
+        private bool isGrounded = false;
+        private RaycastHit GroundData;
         private IDisposable effectTask = null;
 
-        public void OnMove(Vector2 dir)
+        public void OnJumpInput()
+        {
+            if (isJumping) return;
+
+            isJumping = true;
+            isGrounded = false;
+            verticalVelocity = Mathf.Sqrt(table.JumpHeight * table.Gravity * table.GravityScale * table.Mass * -2.0f);
+        }
+
+        public void OnMoveInput(Vector2 dir)
         {
             direction = dir;
         }
 
-        public void OnSprint(bool value)
+        public void OnSprintInput(bool value)
         {
             isSprint = value;
 
@@ -38,13 +54,13 @@ namespace Yomikiru.Character
             if (isSprint)
             {
                 effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
-                    .Subscribe(_ => MoveEffect())
+                    .Subscribe(_ => SprintEffect())
                     .AddTo(this);
             }
             else
             {
                 effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
-                    .Subscribe(_ => MoveEffect())
+                    .Subscribe(_ => WalkEffect())
                     .AddTo(this);
             }
         }
@@ -59,27 +75,57 @@ namespace Yomikiru.Character
         {
             table = character.Table;
 
-            OnSprint(false);
+            isJumping = false;
+            isGrounded = true;
+            CheckIsGrounded();
+            OnSprintInput(false);
         }
 
         private void Update()
         {
-            float accel = isSprint ? table.Accel : table.SprintAccel;
-            float minSpeed = isSprint ? table.MinSpeed : table.SprintMinSpeed;
-            float maxSpeed = isSprint ? table.MaxSpeed : table.SprintMaxSpeed;
-            float attenuate = isSprint ? table.Attenuate : table.SprintAttenuate;
+            teleport = Vector3.zero;
+            velocity = Vector3.zero;
 
-            velocity += direction * accel;
+            MoveUpdate();
+            JumpUpdate();
 
-            if (velocity.sqrMagnitude > maxSpeed * maxSpeed)
+            controller.Move(teleport + velocity * Time.deltaTime);
+
+            CheckIsGrounded();
+        }
+
+        public void MoveUpdate()
+        {
+            float accel = isSprint ? table.SprintAccel : table.Accel;
+            float minSpeed = isSprint ? table.SprintMinSpeed : table.MinSpeed;
+            float maxSpeed = isSprint ? table.SprintMaxSpeed : table.MaxSpeed;
+            float attenuate = isSprint ? table.SprintAttenuate : table.Attenuate;
+
+            horizontalVelocity += direction * accel;
+
+            if (horizontalVelocity.sqrMagnitude == 0.0f) return;
+
+            if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
             {
-                velocity = velocity.normalized * maxSpeed;
+                horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
             }
 
-            if (velocity.sqrMagnitude >= minSpeed * minSpeed)
+            if (horizontalVelocity.sqrMagnitude >= minSpeed * minSpeed)
             {
                 Quaternion horizontalRotation = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
-                controller.Move(horizontalRotation * new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime);
+
+                Vector3 dir = horizontalRotation * new Vector3(horizontalVelocity.x, 0, horizontalVelocity.y);
+
+                Ray ray = new Ray(character.Eye.position, dir.normalized);
+                RaycastHit hit;
+                bool isHit = Physics.Raycast(ray, out hit, horizontalVelocity.magnitude * Time.deltaTime);
+                if (isHit)
+                {
+                    dir = dir.normalized * ((hit.distance - table.Radius));
+                }
+
+                velocity.x = dir.x;
+                velocity.z = dir.z;
 
                 isMoving = true;
             }
@@ -88,21 +134,63 @@ namespace Yomikiru.Character
                 isMoving = false;
             }
 
-            velocity *= attenuate;
+            horizontalVelocity *= attenuate;
         }
 
-        public void MoveEffect()
+        public void JumpUpdate()
         {
-            if (isMoving is false) return;
-
-            if (isSprint)
+            if (isGrounded && GroundData.distance <= table.CheckJumpDistance)
             {
-                character.effectManager.Play(table.SprintEffectName, transform.position);
+                verticalVelocity = 0.0f;
+                if (isJumping)
+                {
+                    teleport.y = -GroundData.distance;
+                    isJumping = false;
+                }
+            }
+
+            if ((character.IsGrounded is false && isGrounded is false)
+                || verticalVelocity > 0.0f)
+            {
+                Ray ray = new Ray(transform.position + Vector3.up * table.Height, Vector3.up);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 0.1f) && verticalVelocity > 0.0f)
+                {
+                    verticalVelocity *= -table.JumpBouciness;
+                }
+
+                verticalVelocity += table.Gravity * table.GravityScale * table.Mass * Time.deltaTime;
+            }
+
+            velocity.y += verticalVelocity;
+        }
+
+        public void CheckIsGrounded()
+        {
+            if (isJumping && verticalVelocity > 0.0f)
+            {
+                isGrounded = false;
             }
             else
             {
-                character.effectManager.Play(table.WalkEffectName, transform.position);
+                Ray ray = new Ray(character.Foot.position + Vector3.up * (table.Radius / 2 + table.SkinWidth), Vector3.down);
+                isGrounded = Physics.SphereCast(ray, table.Radius / 2, out GroundData, table.CheckJumpDistance + table.SkinWidth);
             }
+        }
+
+        public void WalkEffect()
+        {
+            if (isMoving is false) return;
+
+
+        }
+
+        public void SprintEffect()
+        {
+            if (isMoving is false) return;
+
+
         }
     }
 }

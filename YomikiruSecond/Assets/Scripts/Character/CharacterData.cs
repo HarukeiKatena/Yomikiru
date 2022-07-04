@@ -28,10 +28,16 @@ namespace Yomikiru.Character
         [field: SerializeField] public float SprintAccel     { get; private set; }
         [field: SerializeField] public float SprintAttenuate { get; private set; }
 
-        [field: Header("Jump")]
+        [field: Header("Physics")]
         [field: SerializeField] public float Gravity { get; private set; }
         [field: SerializeField] public float GravityScale { get; private set; }
+        [field: SerializeField] public float Mass { get; private set; }
+
+        [field: Header("Jump")]
+        [field: SerializeField] public float CheckGroundDistance { get; private set; }
+        [field: SerializeField] public float CheckJumpDistance { get; private set; }
         [field: SerializeField] public float JumpHeight { get; private set; }
+        [field: SerializeField] public float JumpBouciness { get; private set; }
 
         [field: Header("Camera")]
         [field: SerializeField] public AxisState HorizontalAxis { get; private set; }
