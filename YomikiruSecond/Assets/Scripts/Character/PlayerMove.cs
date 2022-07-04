@@ -137,16 +137,15 @@ namespace Yomikiru.Character
 
         public void JumpUpdate()
         {
-            if (character.IsGrounded)
+            if (isGrounded && isJumping && GroundData.distance <= table.CheckJumpDistance)
             {
-                if (isGrounded && isJumping && GroundData.distance <= table.CheckJumpDistance)
-                {
-                    velocity.y = -GroundData.distance;
-                    verticalVelocity = 0.0f;
-                    isJumping = false;
-                }
+                velocity.y = -GroundData.distance;
+                verticalVelocity = 0.0f;
+                isJumping = false;
             }
-            else
+
+            if ((character.IsGrounded is false && verticalVelocity <= 0.0f) ||
+                (isGrounded is false && verticalVelocity > 0.0f))
             {
                 Ray ray = new Ray(transform.position + Vector3.up * table.Height, Vector3.up);
                 RaycastHit hit;
