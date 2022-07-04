@@ -13,6 +13,10 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(PlayerCamera))]
     public class Player : MonoBehaviour
     {
+        // 公開パラメータ
+        public bool DebugFlag = false;
+
+        // 内部コンポーネント
         private Character character;
         private CharacterData table;
         private InputEvent inputEvent;
@@ -51,6 +55,11 @@ namespace Yomikiru.Character
                         break;
                 }
             });
+
+            if (DebugFlag)
+            {
+                EnableEvents();
+            }
         }
 
         public void EnableEvents()
