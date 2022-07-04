@@ -14,6 +14,7 @@ namespace Yomikiru.Character
     public class Player : MonoBehaviour
     {
         private Character character;
+        private CharacterData table;
         private InputEvent inputEvent;
         private PlayerMove move;
         private PlayerAttack attack;
@@ -31,7 +32,9 @@ namespace Yomikiru.Character
 
         private void Start()
         {
-            character.Match.OnStateChange.Subscribe(state =>
+            table = character.Table;
+
+            table.Match.OnStateChange.Subscribe(state =>
             {
                 switch (state)
                 {
@@ -74,7 +77,7 @@ namespace Yomikiru.Character
 
         public void Die()
         {
-            character.Match.State = MatchState.Finished;
+            table.Match.State = MatchState.Finished;
         }
     }
 }

@@ -122,7 +122,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 82bb3f15db8c1024d81020662873f1fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -248,7 +248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Table>k__BackingField: {fileID: 11400000, guid: 24c97b8106e56ca4ba50868d0aadb878, type: 2}
-  <Match>k__BackingField: {fileID: 11400000, guid: 556e30d3915c67a488f93b71d2a9f4eb, type: 2}
   <Eye>k__BackingField: {fileID: 779616207979166648}
   <Hand>k__BackingField: {fileID: 779616207961762647}
   <Foot>k__BackingField: {fileID: 779616209764702693}

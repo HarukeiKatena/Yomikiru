@@ -52,7 +52,7 @@ namespace Yomikiru.Character
 
         private async UniTask AttackAsync(CancellationToken token)
         {
-            Debug.Log("Attack");
+            //Debug.Log("Attack");
             //剣を出す
             swordGrip.gameObject.SetActive(true);
             isAttack = true;

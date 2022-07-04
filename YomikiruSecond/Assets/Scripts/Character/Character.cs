@@ -11,7 +11,6 @@ namespace Yomikiru.Character
         // 外部パラメーター
         [field: Header("Data")]
         [field: SerializeField] public CharacterData Table { get; private set; }
-        [field: SerializeField] public MatchInfo Match { get; private set; }
 
         // 公開パラメーター
         public bool IsGrounded { get; private set; }

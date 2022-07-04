@@ -1,12 +1,17 @@
 using UnityEngine;
 using Cinemachine;
+using Yomikiru.Effect;
 using JetBrains.Annotations;
+using UnityEngine.InputSystem;
 
 namespace Yomikiru.Character
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/CharacterData")]
     public class CharacterData : ScriptableObject
     {
+        [field: Header("Scriptable Objects")]
+        [field: SerializeField] public MatchInfo Match { get; private set; }
+        [field: SerializeField] public EffectChannel Effect { get; private set; }
         [field: Header("Controller")]
         [field: SerializeField] public float SlopeLimit { get; private set; }
         [field: SerializeField] public float StepOffset { get; private set; }
@@ -44,10 +49,10 @@ namespace Yomikiru.Character
         [field: SerializeField] public AxisState VerticalAxis { get; private set; }
 
         [field: Header("Effect")]
-        [field: SerializeField] public string WalkEffectName { get; private set; }
-        [field: SerializeField] public string SprintEffectName { get; private set; }
-        [field: SerializeField] public string LandingEffectName { get; private set; }
-        [field: SerializeField] public string AttackEffectName { get; private set; }
+        [field: SerializeField] public EffectClip WalkEffect { get; private set; }
+        [field: SerializeField] public EffectClip SprintEffect { get; private set; }
+        [field: SerializeField] public EffectClip LandingEffect { get; private set; }
+        [field: SerializeField] public EffectClip AttackEffect { get; private set; }
         [field: SerializeField] public float WalkEffectDuration { get; private set; }
         [field: SerializeField] public float SprintEffectDuration { get; private set; }
 
