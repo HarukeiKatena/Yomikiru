@@ -16,7 +16,7 @@ namespace Yomikiru.Character
 
         // 内部パラメーター
         private Vector3 teleport = Vector3.zero;
-        private Vector3 velocity = Vector3.zero;
+        public Vector3 velocity = Vector3.zero;
         private Vector2 direction = Vector2.zero;
         private Vector2 horizontalVelocity = Vector2.zero;
         private float verticalVelocity = 0.0f;
@@ -139,15 +139,18 @@ namespace Yomikiru.Character
 
         public void JumpUpdate()
         {
-            if (isGrounded && isJumping && GroundData.distance <= table.CheckJumpDistance)
+            if (isGrounded && GroundData.distance <= table.CheckJumpDistance)
             {
-                teleport.y = -GroundData.distance;
                 verticalVelocity = 0.0f;
-                isJumping = false;
+                if (isJumping)
+                {
+                    teleport.y = -GroundData.distance;
+                    isJumping = false;
+                }
             }
 
-            if ((character.IsGrounded is false && verticalVelocity <= 0.0f) ||
-                (isGrounded is false && verticalVelocity > 0.0f))
+            if ((character.IsGrounded is false && isGrounded is false)
+                || verticalVelocity > 0.0f)
             {
                 Ray ray = new Ray(transform.position + Vector3.up * table.Height, Vector3.up);
                 RaycastHit hit;
