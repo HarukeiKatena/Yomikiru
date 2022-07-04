@@ -16,7 +16,7 @@ namespace Yomikiru.Character
 
         // 内部パラメーター
         private Vector3 teleport = Vector3.zero;
-        public Vector3 velocity = Vector3.zero;
+        private Vector3 velocity = Vector3.zero;
         private Vector2 direction = Vector2.zero;
         private Vector2 horizontalVelocity = Vector2.zero;
         private float verticalVelocity = 0.0f;
