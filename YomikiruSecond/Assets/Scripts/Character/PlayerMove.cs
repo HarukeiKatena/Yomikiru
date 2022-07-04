@@ -54,13 +54,13 @@ namespace Yomikiru.Character
             if (isSprint)
             {
                 effectTask = Observable.Interval(TimeSpan.FromSeconds(table.SprintEffectDuration))
-                    .Subscribe(_ => MoveEffect())
+                    .Subscribe(_ => SprintEffect())
                     .AddTo(this);
             }
             else
             {
                 effectTask = Observable.Interval(TimeSpan.FromSeconds(table.WalkEffectDuration))
-                    .Subscribe(_ => MoveEffect())
+                    .Subscribe(_ => WalkEffect())
                     .AddTo(this);
             }
         }
@@ -165,24 +165,29 @@ namespace Yomikiru.Character
 
         public void CheckIsGrounded()
         {
-            Ray ray = new Ray(character.Foot.position + Vector3.up * (table.Radius / 2 + table.SkinWidth), Vector3.down);
-            isGrounded = Physics.SphereCast(ray, table.Radius / 2, out GroundData, table.CheckJumpDistance + table.SkinWidth);
-        }
-
-        public void MoveEffect()
-        {
-            if (isMoving is false) return;
-
-            if (isSprint)
+            if (isJumping && verticalVelocity > 0.0f)
             {
-                //character.effectManager.Play(table.SprintEffectName, transform.position);
+                isGrounded = false;
             }
             else
             {
-                //character.effectManager.Play(table.WalkEffectName, transform.position);
+                Ray ray = new Ray(character.Foot.position + Vector3.up * (table.Radius / 2 + table.SkinWidth), Vector3.down);
+                isGrounded = Physics.SphereCast(ray, table.Radius / 2, out GroundData, table.CheckJumpDistance + table.SkinWidth);
             }
         }
 
+        public void WalkEffect()
+        {
+            if (isMoving is false) return;
 
+
+        }
+
+        public void SprintEffect()
+        {
+            if (isMoving is false) return;
+
+
+        }
     }
 }
