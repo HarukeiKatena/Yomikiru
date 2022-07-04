@@ -16,7 +16,7 @@ namespace Yomikiru.UI
         [SerializeField] private Button buttonReady;
         [SerializeField] private GameObject playersContainer;
         [SerializeField] private PlayerJoin playerPrefab;
-        [SerializeField] private CheckController controllerCheck;
+        [SerializeField] private Controller.CheckController controllerCheck;
 
         private readonly List<PlayerJoin> players = new List<PlayerJoin>();
 
