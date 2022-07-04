@@ -62,7 +62,7 @@ namespace Yomikiru.Characte.Management
                         SetDeviceAndScheme(user, pads[index], "Gamepad");
                         controllerManager.PlayerDevices[index] = pads[index];
                     }
-                    else if (controllerManager.KeybordPlayerIndex != ControllerManager.NotUsedKeybord)
+                    else if (controllerManager.KeybordPlayerIndex == ControllerManager.NotUsedKeybord)
                     {
                         SetDevicesAndScheme(user, new InputDevice[] {Keyboard.current, Mouse.current}, "KeyboardMouse");
                         controllerManager.KeybordPlayerIndex = index;
