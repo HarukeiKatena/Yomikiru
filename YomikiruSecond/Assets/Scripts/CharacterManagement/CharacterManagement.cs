@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using Yomikiru.Controller;
+using Random = UnityEngine.Random;
 
 namespace Yomikiru.Characte.Management
 {
@@ -24,14 +25,18 @@ namespace Yomikiru.Characte.Management
         private void Awake()
         {
             //初期座標の子オブジェクトを設定
-            var startPositions = startPositionParent.OfType<Transform>().ToArray();
+            var startPositions = startPositionParent.OfType<Transform>().ToList();
 
             //個数集める
             CharacterList = new GameObject[ControllerManager.MaxPlayerCount];
 
             //プレイヤー
             for (int i = 0; i < controllerManager.PlayerCount; i++)
-                CreatePlayer(i, startPositions[i]);
+            {
+                var startPosition = startPositions[Random.Range(0, startPositions.Count - 1)];
+                CreatePlayer(i, startPosition);
+                startPositions.Remove(startPosition);
+            }
 
             //プレイヤー数が1の場合エネミー作成する
             if (controllerManager.PlayerCount == 1)
