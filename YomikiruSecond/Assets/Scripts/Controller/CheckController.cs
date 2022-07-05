@@ -9,6 +9,7 @@ namespace Yomikiru.Controller
     {
         [SerializeField] private ControllerManager controller;
 
+        public ControllerManager ControllerManager => controller;
         public IObservable<ControllerManager> ChangePlayerDevice => changePlayerDevice;
         private Subject<ControllerManager> changePlayerDevice = new Subject<ControllerManager>();
 

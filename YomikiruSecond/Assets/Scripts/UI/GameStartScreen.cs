@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UniRx;
+using Yomikiru.Controller;
 
 namespace Yomikiru.UI
 {
@@ -24,21 +25,21 @@ namespace Yomikiru.UI
 
         private void Start()
         {
-            controllerCheck.ChangePlayerDevice.Subscribe(data =>
+            controllerCheck.ChangePlayerDevice.Subscribe(controllerManager =>
             {
-                DisplayPlayers();
+                DisplayPlayers(controllerManager);
             }).AddTo(this);
         }
 
-        public void Display(GamemodeInfo gamemode, MapInfo map, CharacterInfo character)
+        public void Display(GamemodeInfo gamemode, MapInfo map)
         {
             mapButton.Map = map;
-            DisplayPlayers();
+            DisplayPlayers(controllerCheck.ControllerManager);
         }
 
-        private void DisplayPlayers()
+        private void DisplayPlayers(ControllerManager controllerManager)
         {
-            var playerCount = ControllerManagement.PlayerCount;
+            var playerCount = controllerManager.PlayerCount;
             // プレイヤーリストに追加
             while (players.Count < playerCount)
             {
@@ -57,10 +58,10 @@ namespace Yomikiru.UI
             }
             for (int i = 0; i < playerCount; i++)
             {
-                var gamepad = ControllerManagement.PlayerDevice[i];
+                var gamepad = controllerManager.PlayerDevices[i];
                 if (gamepad == null)
                 {
-                    if (i == ControllerManagement.KeybordPlayerIndex)
+                    if (i == controllerManager.KeybordPlayerIndex)
                     {
                         // キーボード (deviceにnullじゃなくてKeyboard渡したい)
                         players[i].DisplayJoined(gamepad, true);
@@ -68,7 +69,7 @@ namespace Yomikiru.UI
                     else
                     {
                         // 無登録
-                        players[i].DisplayAwaitingInput(ControllerManagement.KeybordPlayerIndex == -1);
+                        players[i].DisplayAwaitingInput(controllerManager.KeybordPlayerIndex == -1);
                     }
                 }
                 else
@@ -77,7 +78,7 @@ namespace Yomikiru.UI
                     players[i].DisplayJoined(gamepad, false);
                 }
             }
-            bool allControllersSet = ControllerManagement.IsControllersForAllPlayersSet();
+            bool allControllersSet = controllerManager.IsControllersForAllPlayersSet();
             buttonReady.interactable = allControllersSet;
             // 退出で準備完了ボタンが選択解除されるので再参加で再選択
             if (allControllersSet && EventSystem.current.currentSelectedGameObject == null)
