@@ -139,7 +139,7 @@ namespace Yomikiru.Character
 
         public void JumpUpdate()
         {
-            if (isGrounded && GroundData.distance <= table.CheckJumpDistance)
+            if (isGrounded && GroundData.distance <= table.CheckJumpDistance && verticalVelocity != 0.0f)
             {
                 verticalVelocity = 0.0f;
                 if (isJumping)
@@ -147,10 +147,11 @@ namespace Yomikiru.Character
                     teleport.y = -GroundData.distance;
                     isJumping = false;
                 }
+
+                table.Effect.Request(this.name, table.LandingEffect, transform.position);
             }
 
-            if ((character.IsGrounded is false && isGrounded is false)
-                || verticalVelocity > 0.0f)
+            if ((character.IsGrounded is false && isGrounded is false) || verticalVelocity > 0.0f)
             {
                 Ray ray = new Ray(transform.position + Vector3.up * table.Height, Vector3.up);
                 RaycastHit hit;
@@ -183,14 +184,14 @@ namespace Yomikiru.Character
         {
             if (isMoving is false) return;
 
-
+            table.Effect.Request(this.name, table.WalkEffect, transform.position);
         }
 
         public void SprintEffect()
         {
             if (isMoving is false) return;
 
-
+            table.Effect.Request(this.name, table.SprintEffect, transform.position);
         }
     }
 }

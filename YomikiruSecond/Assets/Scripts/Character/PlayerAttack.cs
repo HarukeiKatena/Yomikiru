@@ -46,12 +46,13 @@ namespace Yomikiru.Character
         public void OnAttack()
         {
             if(isAttack) return;
+            table.Effect.Request(this.name, table.AttackEffect, transform.position);
             AttackAsync(cts.Token).Forget();
         }
 
         private async UniTask AttackAsync(CancellationToken token)
         {
-            Debug.Log("Attack");
+            //Debug.Log("Attack");
             //剣を出す
             swordGrip.gameObject.SetActive(true);
             isAttack = true;

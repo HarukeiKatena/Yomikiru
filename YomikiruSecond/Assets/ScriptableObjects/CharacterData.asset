@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad50b75ff34da824ba81c9ee83d75171, type: 3}
   m_Name: CharacterData
   m_EditorClassIdentifier: 
+  <Match>k__BackingField: {fileID: 11400000, guid: 556e30d3915c67a488f93b71d2a9f4eb, type: 2}
+  <Effect>k__BackingField: {fileID: 11400000, guid: c4bdfb77759ba4540b59144d48afb0bc, type: 2}
   <SlopeLimit>k__BackingField: 45
   <StepOffset>k__BackingField: 0.3
   <SkinWidth>k__BackingField: 0.06
@@ -70,11 +72,11 @@ MonoBehaviour:
       m_RecenteringTime: 0
       m_LegacyHeadingDefinition: 0
       m_LegacyVelocityFilterStrength: 0
-  <WalkEffectName>k__BackingField: Walk
-  <SprintEffectName>k__BackingField: Sprint
-  <LandingEffectName>k__BackingField: Landing
-  <AttackEffectName>k__BackingField: Attack
-  <WalkEffectDuration>k__BackingField: 0.3
-  <SprintEffectDuration>k__BackingField: 0.3
+  <WalkEffect>k__BackingField: {fileID: 11400000, guid: dcd9a264b475def42a114cf980d83277, type: 2}
+  <SprintEffect>k__BackingField: {fileID: 11400000, guid: 30469f14c7af69342be674a9a0344237, type: 2}
+  <LandingEffect>k__BackingField: {fileID: 11400000, guid: c227e6e56ec195a4fa01b130e5a10ce4, type: 2}
+  <AttackEffect>k__BackingField: {fileID: 11400000, guid: b6dd2f7a32cd30740969baf6f1f57531, type: 2}
+  <WalkEffectDuration>k__BackingField: 0.6
+  <SprintEffectDuration>k__BackingField: 0.4
   <AttackPopOutSpeed>k__BackingField: 0.3
   <AttackSpeed>k__BackingField: 1

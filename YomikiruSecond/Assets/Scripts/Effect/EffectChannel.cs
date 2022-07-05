@@ -11,11 +11,13 @@ namespace Yomikiru.Effect
         {
             public string CharacterName;
             public EffectClip Clip;
+            public Vector3 Position;
 
-            public EffectObject(string name, EffectClip clip)
+            public EffectObject(string name, EffectClip clip, Vector3 pos)
             {
                 CharacterName = name;
                 Clip = clip;
+                Position = pos;
             }
         }
 
@@ -23,9 +25,9 @@ namespace Yomikiru.Effect
 
         private Subject<EffectObject> onEffect = new Subject<EffectObject>();
 
-        public void Request(string characterName, EffectClip clip)
+        public void Request(string characterName, EffectClip clip, Vector3 pos)
         {
-            onEffect.OnNext(new EffectObject(characterName, clip));
+            onEffect.OnNext(new EffectObject(characterName, clip, pos));
         }
     }
 }
