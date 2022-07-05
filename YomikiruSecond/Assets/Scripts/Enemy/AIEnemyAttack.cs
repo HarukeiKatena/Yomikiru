@@ -5,7 +5,6 @@ using UniRx;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using Player;
 using Yomikiru.Effect;
 
 namespace Yomikiru.Enemy
