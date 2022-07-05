@@ -21,7 +21,7 @@ namespace Yomikiru.Effect
             effectChannel.OnEffect.Subscribe(x =>
             {
                 var effect = pool.Rent();
-                effect.Play(x.Clip);
+                effect.Play(x.Clip, x.Position);
                 effect.OnStopEffect.First().Subscribe(_ => pool.Return(effect)).AddTo(this);
             }).AddTo(this);
         }
