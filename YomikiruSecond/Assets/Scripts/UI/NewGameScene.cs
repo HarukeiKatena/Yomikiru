@@ -12,12 +12,10 @@ namespace Yomikiru.UI
         [SerializeField] private MatchInfo matchInfo;
         [SerializeField] private GamemodeSelectScreen gamemodeSelectScreen;
         [SerializeField] private MapSelectScreen mapSelectScreen;
-        [SerializeField] private CharacterSelectScreen characterSelectScreen;
         [SerializeField] private GameStartScreen gameStartScreen;
 
         private GamemodeInfo gamemode;
         private MapInfo map;
-        private CharacterInfo character;
         private NewGameScreen currentScreen;
 
         private void Start()
@@ -59,7 +57,7 @@ namespace Yomikiru.UI
 
         private void ShowGameStart()
         {
-            gameStartScreen.Display(gamemode, map, character);
+            gameStartScreen.Display(gamemode, map);
             ShowScreenAsync(gameStartScreen).Forget();
         }
 
