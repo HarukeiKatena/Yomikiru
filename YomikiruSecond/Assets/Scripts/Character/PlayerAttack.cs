@@ -46,6 +46,7 @@ namespace Yomikiru.Character
         public void OnAttack()
         {
             if(isAttack) return;
+            table.Effect.Request(this.name, table.AttackEffect, transform.position);
             AttackAsync(cts.Token).Forget();
         }
 
