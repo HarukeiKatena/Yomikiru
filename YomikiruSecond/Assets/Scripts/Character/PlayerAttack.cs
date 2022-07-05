@@ -12,7 +12,6 @@ using Yomikiru.Input;
 namespace Yomikiru.Character
 {
     [RequireComponent(typeof(Character))]
-    [RequireComponent(typeof(InputEvent))]
     public class PlayerAttack : MonoBehaviour
     {
         // CancellationTokenSourceを生成
