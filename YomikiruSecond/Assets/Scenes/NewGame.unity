@@ -220,7 +220,7 @@ PrefabInstance:
     - target: {fileID: 3083944611280502565, guid: cbe3e7b32a97c7a4faf2467b3b112b04, type: 3}
       propertyPath: map
       value: 
-      objectReference: {fileID: 11400000, guid: ec15ec852841e234da07464c3704bdce, type: 2}
+      objectReference: {fileID: 11400000, guid: 6974437584f73f147984231e7bf569c2, type: 2}
     - target: {fileID: 3083944611280502565, guid: cbe3e7b32a97c7a4faf2467b3b112b04, type: 3}
       propertyPath: mapName
       value: "\u516D\u7573\u4E00\u9593"
@@ -715,7 +715,7 @@ PrefabInstance:
     - target: {fileID: 3083944611280502565, guid: cbe3e7b32a97c7a4faf2467b3b112b04, type: 3}
       propertyPath: map
       value: 
-      objectReference: {fileID: 11400000, guid: ec15ec852841e234da07464c3704bdce, type: 2}
+      objectReference: {fileID: 11400000, guid: b36d8223e0204304d9c2d5e1e2290ff5, type: 2}
     - target: {fileID: 3083944611280502565, guid: cbe3e7b32a97c7a4faf2467b3b112b04, type: 3}
       propertyPath: mapName
       value: "\u7BB1\u5EAD"
@@ -3128,7 +3128,7 @@ PrefabInstance:
     - target: {fileID: 3083944611280502565, guid: cbe3e7b32a97c7a4faf2467b3b112b04, type: 3}
       propertyPath: map
       value: 
-      objectReference: {fileID: 11400000, guid: ec15ec852841e234da07464c3704bdce, type: 2}
+      objectReference: {fileID: 11400000, guid: 912e73e64a82fc64a96f23bc57a2b68d, type: 2}
     - target: {fileID: 3083944611280502565, guid: cbe3e7b32a97c7a4faf2467b3b112b04, type: 3}
       propertyPath: mapName
       value: "\u7D42\u70B9"
