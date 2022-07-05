@@ -10,14 +10,14 @@ namespace Yomikiru.Controller
     {
         public const int MaxPlayerCount = 2;
 
-        public int PlayerCount = MaxPlayerCount;
+        [HideInInspector] public int PlayerCount = MaxPlayerCount;
 
         public Gamepad[] PlayerDevices = new Gamepad[MaxPlayerCount];
 
         public const int NotUsedKeybord = -1; //未使用時の値
 
         //キーボードを利用してるプレイヤーインデックス(使わない場合-1)
-        public int KeybordPlayerIndex = NotUsedKeybord;
+        [HideInInspector] public int KeybordPlayerIndex = NotUsedKeybord;
 
         //プレイヤー数の設定
         public void SetOnePlayer()

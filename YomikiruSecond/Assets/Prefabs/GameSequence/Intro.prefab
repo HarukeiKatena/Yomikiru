@@ -261,8 +261,8 @@ MonoBehaviour:
   lightFadeSpeed: 1
   startControlTime: 2.5
   introStartCoolTime: 0.5
-  introAudio: {fileID: 0}
-  gameStartAudio: {fileID: 0}
+  introAudio: {fileID: 11400000, guid: 71b23720c27de6b4db85fde25e681da3, type: 2}
+  gameStartAudio: {fileID: 11400000, guid: 03b0fda9b9ebfc3408e373d04d9e9ce4, type: 2}
 --- !u!1 &7429793124713944609
 GameObject:
   m_ObjectHideFlags: 0
