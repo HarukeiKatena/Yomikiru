@@ -17,30 +17,33 @@ namespace Yomikiru.Characte.Management
         [SerializeField] private ControllerManager controllerManager;
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject enemyPrefab;
-        [SerializeField] private Transform[] startPosition;
+        [SerializeField] private Transform startPositionParent;//開始座標が入ったオブジェクトの親
 
         [HideInInspector] public GameObject[] CharacterList;
 
         private void Awake()
         {
+            //初期座標の子オブジェクトを設定
+            var startPositions = startPositionParent.OfType<Transform>().ToArray();
+
             //個数集める
             CharacterList = new GameObject[ControllerManager.MaxPlayerCount];
 
             //プレイヤー
             for (int i = 0; i < controllerManager.PlayerCount; i++)
-                CreatePlayer(i);
+                CreatePlayer(i, startPositions[i]);
 
             //プレイヤー数が1の場合エネミー作成する
             if (controllerManager.PlayerCount == 1)
-                CreateEnemy(1);
+                CreateEnemy(1, startPositions[1]);
         }
 
-        private void CreatePlayer(int index)
+        private void CreatePlayer(int index, Transform startPosition)
         {
             var player = PlayerInput.Instantiate(playerPrefab);
             player.transform.SetPositionAndRotation(
-                startPosition[index].position,
-                startPosition[index].rotation);
+                startPosition.position,
+                startPosition.rotation);
 
             //事前に指定したデバイスをセットする
             var user = player.user;
@@ -78,12 +81,12 @@ namespace Yomikiru.Characte.Management
             CameraSetting(obj, index);
         }
 
-        private void CreateEnemy(int index)
+        private void CreateEnemy(int index, Transform startPosition)
         {
             var enemy = GameObject.Instantiate(
                 enemyPrefab,
-                startPosition[index].position,
-                startPosition[index].rotation);
+                startPosition.position,
+                startPosition.rotation);
         }
 
         private void SetDevicesAndScheme(InputUser user, InputDevice[] devices, string scheme)
