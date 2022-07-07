@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UniRx;
+using Yomikiru.Controller;
 
 namespace Yomikiru.UI
 {
@@ -13,6 +14,7 @@ namespace Yomikiru.UI
         [SerializeField] private GamemodeSelectScreen gamemodeSelectScreen;
         [SerializeField] private MapSelectScreen mapSelectScreen;
         [SerializeField] private GameStartScreen gameStartScreen;
+        [SerializeField] private ControllerManager controllerManager;
 
         private GamemodeInfo gamemode;
         private MapInfo map;
@@ -24,10 +26,10 @@ namespace Yomikiru.UI
             {
                 this.gamemode = gamemode;
                 // gamemode か gamemode.Gamemode に人数持たせるべきな気がする
-                ControllerManagement.PlayerCount = gamemode.Gamemode switch
+                controllerManager.PlayerCount = gamemode.Gamemode switch
                 {
                     Gamemode.DUELS => 2,
-                    Gamemode.SOLO  => 1,
+                    Gamemode.SOLO => 1,
                     _ => throw new ArgumentOutOfRangeException(nameof(gamemode.Gamemode)),
                 };
                 ShowMapSelect();

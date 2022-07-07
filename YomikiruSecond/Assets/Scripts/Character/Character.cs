@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using Yomikiru.Effect;
-using Yomikiru.Sound;
 
 namespace Yomikiru.Character
 {
