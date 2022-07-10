@@ -2637,6 +2637,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 11400000, guid: 661438c32b49fee49a00d61251db6c11, type: 2}
+  joinButton:
+    m_Name: Join Button
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6ff1d462-558f-4021-bcc9-b6abe831fb19
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 899799aa-577a-49cd-a09b-96d7793d4e14
+      m_Path: <Gamepad>/buttonSouth
+      m_Interactions: Press(behavior=1)
+      m_Processors: 
+      m_Groups: 
+      m_Action: Join Button
+      m_Flags: 0
+    - m_Name: 
+      m_Id: c50df811-1b47-493f-af50-e99729a32d5e
+      m_Path: <Keyboard>/enter
+      m_Interactions: Press(behavior=1)
+      m_Processors: 
+      m_Groups: 
+      m_Action: Join Button
+      m_Flags: 0
+    m_Flags: 0
+  cancelButton:
+    m_Name: Cancel Button
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c7e514ae-cecc-42ac-852c-c042d7177899
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 9fdcf98a-25b5-44b5-8e84-721f96437039
+      m_Path: <Gamepad>/buttonEast
+      m_Interactions: Press(behavior=1)
+      m_Processors: 
+      m_Groups: 
+      m_Action: Cancel Button
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 97254e65-e764-4a77-a8a8-5f3895a0b882
+      m_Path: <Keyboard>/escape
+      m_Interactions: Press(behavior=1)
+      m_Processors: 
+      m_Groups: 
+      m_Action: Cancel Button
+      m_Flags: 0
+    m_Flags: 0
 --- !u!1001 &1838718808
 PrefabInstance:
   m_ObjectHideFlags: 0
