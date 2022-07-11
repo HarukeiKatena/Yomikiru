@@ -48,7 +48,7 @@ namespace Yomikiru.Character
             float length = 0.0f;
             foreach (var enemy in enemys)
             {
-                float distance = 1.0f - ((enemy.transform.position - posi).magnitude / (MaxDistance - MinDistance));
+                float distance = 1.0f - Vector3.Distance(enemy.transform.position, posi);
                 distance = Mathf.Clamp(distance, 0.0f, 1.0f);
 
                 length = Mathf.Max(distance, length);
