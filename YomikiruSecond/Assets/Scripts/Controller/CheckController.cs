@@ -47,21 +47,21 @@ namespace Yomikiru.Controller
             }
 
             //ゲームパッド
-            for (int i = 0; i < controller.PlayerCount; i++)
+            if (device is Gamepad pad)
             {
-                //パッドがすでに登録されている場合
-                if(controller.PlayerDevices[i] == callback.control.device)
-                    break;
-
-                //使われている場合抜ける
-                if (controller.KeybordPlayerIndex == i ||
-                    controller.PlayerDevices[i] != null)
-                    continue;
-
-                //一致するパッドを探す
-                foreach (var gamepad in Gamepad.all.Where(x => x.deviceId == callback.control.device.deviceId))
+                for (int i = 0; i < controller.PlayerCount; i++)
                 {
-                    controller.PlayerDevices[i] = gamepad;
+                    //パッドがすでに登録されている場合
+                    if(controller.PlayerDevices[i] == pad)
+                        break;
+
+                    //使われている場合抜ける
+                    if (controller.KeybordPlayerIndex == i ||
+                        controller.PlayerDevices[i] != null)
+                        continue;
+
+                    //一致するパッドを探す
+                    controller.PlayerDevices[i] = pad;
                     changePlayerDevice.OnNext(controller);//イベント通知
                     return;
                 }
