@@ -22,7 +22,7 @@ namespace Yomikiru.Character
         private Quaternion verticalRotation;
         private Vector2 direction;
 
-        public void OnLook(Vector2 dir)
+        public void OnLookInput(Vector2 dir)
         {
             direction = dir;
         }
