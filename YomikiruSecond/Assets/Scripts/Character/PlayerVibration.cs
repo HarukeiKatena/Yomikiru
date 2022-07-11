@@ -14,6 +14,9 @@ namespace Yomikiru.Character
         private List<GameObject> enemys;
         private Gamepad gamepad;
 
+        [field: SerializeField] public float MaxDistance { get; private set; } = 5.0f;
+        [field: SerializeField] public float MinDistance { get; private set; } = 0.0f;
+
         private void Start()
         {
             //自分を除いた敵のオブジェクトを取得
@@ -33,11 +36,30 @@ namespace Yomikiru.Character
                     gamepad = pad;
                 }
             }
+        }
 
-            if (gamepad != null)
+        private void Update()
+        {
+            if (gamepad == null)
+                return;
+
+            var posi = transform.position;
+
+            float length = 0.0f;
+            foreach (var enemy in enemys)
             {
-                gamepad.SetMotorSpeeds(1.0f, 1.0f);
+                float distance = 1.0f - ((enemy.transform.position - posi).magnitude / (MaxDistance - MinDistance));
+                distance = Mathf.Clamp(distance, 0.0f, 1.0f);
+
+                length = Mathf.Max(distance, length);
             }
+
+            gamepad.SetMotorSpeeds(0.0f, length);
+        }
+
+        private void OnDisable()
+        {
+            gamepad.SetMotorSpeeds(0.0f, 0.0f);
         }
     }
 }
