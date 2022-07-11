@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 using Yomikiru.Input;
 using UniRx;
@@ -68,7 +69,7 @@ namespace Yomikiru.Character
 
             eventList.Add(inputEvent.OnMove.Subscribe(move.OnMoveInput));
             eventList.Add(inputEvent.OnSprint.Subscribe(move.OnSprintInput));
-            eventList.Add(inputEvent.OnLook.Subscribe(camera.OnLook));
+            eventList.Add(inputEvent.OnLook.Subscribe(camera.OnLookInput));
             eventList.Add(inputEvent.OnJump.Subscribe(_ => move.OnJumpInput()));
             eventList.Add(inputEvent.OnAttack.Subscribe(_ => attack.OnAttack()));
         }
@@ -81,7 +82,11 @@ namespace Yomikiru.Character
             {
                 e.Dispose();
             }
+
             eventList.Clear();
+
+            move.OnMoveInput(Vector2.zero);
+            camera.OnLookInput(Vector2.zero);
         }
 
         public void Die()
