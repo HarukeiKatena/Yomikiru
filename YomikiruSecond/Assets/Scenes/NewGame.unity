@@ -534,6 +534,7 @@ MonoBehaviour:
   gamemodeSelectScreen: {fileID: 1839539803}
   mapSelectScreen: {fileID: 22460859}
   gameStartScreen: {fileID: 1826470439}
+  controllerManager: {fileID: 11400000, guid: 661438c32b49fee49a00d61251db6c11, type: 2}
 --- !u!1 &268111422
 GameObject:
   m_ObjectHideFlags: 0
