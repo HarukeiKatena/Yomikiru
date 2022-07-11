@@ -11,11 +11,11 @@ namespace Yomikiru.Controller
     {
         [SerializeField] private ControllerManager controller;
 
-        [Header("JoinButton")]
-        [SerializeField] private InputAction joinButton;
+        [field: Header("JoinButton")]
+        [field: SerializeField] public InputAction joinButton { get; private set; }
 
-        [Header("ExitButton")]
-        [SerializeField] private InputAction cancelButton;
+        [field: Header("ExitButton")]
+        [field: SerializeField] public InputAction cancelButton { get; private set; }
 
         public ControllerManager ControllerManager => controller;
         public IObservable<ControllerManager> ChangePlayerDevice => changePlayerDevice;
