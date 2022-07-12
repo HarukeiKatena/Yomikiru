@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Yomikiru.Characte.Management;
@@ -11,14 +10,16 @@ namespace Yomikiru.Character
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerVibration : MonoBehaviour
     {
-        private List<GameObject> enemys;
-        private Gamepad gamepad;
-
         [field: SerializeField] public float MaxDistance { get; private set; } = 5.0f;
         [field: SerializeField] public float MinDistance { get; private set; } = 0.0f;
 
         [Range(0.0f, 1.0f)]
         [SerializeField] private float VibrationMaxPower = 0.2f;
+
+        [SerializeField] private MatchInfo matchInfo;
+
+        private List<GameObject> enemys;
+        private Gamepad gamepad;
 
         private void Start()
         {
@@ -32,13 +33,25 @@ namespace Yomikiru.Character
             //自分のパッドを入手
             var gamepads = Gamepad.all;
             var pdevices = gameObject.GetComponent<PlayerInput>().devices;
-            foreach (var device in pdevices)
+            foreach (var device in pdevices.OfType<Gamepad>())
             {
-                foreach (var pad in gamepads.Where(x => x.deviceId == device.deviceId))
-                {
-                    gamepad = pad;
-                }
+                gamepad = device as Gamepad;
             }
+
+            matchInfo.OnStateChange.Subscribe(x =>
+            {
+                switch (x)
+                {
+                    case MatchState.Ingame://ゲーム中のみ振動するようにする
+                        InputSystem.ResumeHaptics();
+                        break;
+                    default:
+                        InputSystem.ResetHaptics();
+                        InputSystem.PauseHaptics();
+                        break;
+                }
+            });
+
         }
 
         private void Update()
