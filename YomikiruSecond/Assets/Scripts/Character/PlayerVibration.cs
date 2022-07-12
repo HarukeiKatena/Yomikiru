@@ -17,6 +17,9 @@ namespace Yomikiru.Character
         [field: SerializeField] public float MaxDistance { get; private set; } = 5.0f;
         [field: SerializeField] public float MinDistance { get; private set; } = 0.0f;
 
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float VibrationMaxPower = 0.2f;
+
         private void Start()
         {
             //自分を除いた敵のオブジェクトを取得
@@ -48,13 +51,13 @@ namespace Yomikiru.Character
             float length = 0.0f;
             foreach (var enemy in enemys)
             {
-                float distance = 1.0f - Vector3.Distance(enemy.transform.position, posi);
-                distance = Mathf.Clamp(distance, 0.0f, 1.0f);
+                float distance = (Vector3.Distance(enemy.transform.position, posi) / (MaxDistance - MinDistance));
+                distance = 1.0f - Mathf.Clamp(distance, 0.0f, 1.0f);
 
                 length = Mathf.Max(distance, length);
             }
 
-            gamepad.SetMotorSpeeds(0.0f, length);
+            gamepad.SetMotorSpeeds(0.0f, length * VibrationMaxPower);
         }
 
         private void OnDisable()
