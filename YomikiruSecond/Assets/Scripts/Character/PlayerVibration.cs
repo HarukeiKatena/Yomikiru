@@ -24,18 +24,17 @@ namespace Yomikiru.Character
         private void Start()
         {
             //自分を除いた敵のオブジェクトを取得
-            var cmobj = GameObject.Find("CharacterManagement");
-            if (cmobj != null && cmobj.TryGetComponent(out CharacterManagement cm))
+            var characterManagement = GameObject.Find("CharacterManagement");
+            if (characterManagement != null && characterManagement.TryGetComponent(out CharacterManagement cm))
             {
                 enemys = cm.GetCharacterObjectList(this.gameObject);
             }
 
             //自分のパッドを入手
-            var gamepads = Gamepad.all;
-            var pdevices = gameObject.GetComponent<PlayerInput>().devices;
-            foreach (var device in pdevices.OfType<Gamepad>())
+            var playerDevices = gameObject.GetComponent<PlayerInput>().devices;
+            foreach (var device in playerDevices.OfType<Gamepad>())
             {
-                gamepad = device as Gamepad;
+                gamepad = device;
             }
 
             matchInfo.OnStateChange.Subscribe(x =>
@@ -59,12 +58,12 @@ namespace Yomikiru.Character
             if (gamepad == null)
                 return;
 
-            var posi = transform.position;
+            var position = transform.position;
 
             float length = 0.0f;
             foreach (var enemy in enemys)
             {
-                float distance = (Vector3.Distance(enemy.transform.position, posi) / (MaxDistance - MinDistance));
+                float distance = (Vector3.Distance(enemy.transform.position, position) / (MaxDistance - MinDistance));
                 distance = 1.0f - Mathf.Clamp(distance, 0.0f, 1.0f);
 
                 length = Mathf.Max(distance, length);
