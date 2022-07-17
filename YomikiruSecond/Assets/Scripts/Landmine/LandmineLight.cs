@@ -11,6 +11,7 @@ namespace Yomikiru.Landmine
         [SerializeField] private float duration;
         [SerializeField] private float fadeDuration;
         [SerializeField] private Light light;
+        [SerializeField] private ParticleSystem particles;
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip audioClip;
 
@@ -38,6 +39,11 @@ namespace Yomikiru.Landmine
             isPlaying = true;
 
             audioSource.PlayOneShot(audioClip);
+
+            if(particles != null)
+            {
+                particles.Play();
+            }
 
             light.enabled = true;
             await DOTween.Sequence()
