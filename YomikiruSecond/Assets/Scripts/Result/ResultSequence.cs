@@ -13,6 +13,7 @@ namespace Yomikiru.Result
         [SerializeField] private Animator playerAnimator;
         [SerializeField] private CinemachineDollyCart dollyCart;
         [SerializeField] private float cameraMoveTime = 20.0f;
+        [SerializeField] private string nextSceneName = "Title";
 
         public IObservable<Unit> OnStopCamera => onStopCamera;
         private Subject<Unit> onStopCamera = new Subject<Unit>();
@@ -22,11 +23,6 @@ namespace Yomikiru.Result
             playerAnimator.SetBool("isWin", true);
 
             Result(this.GetCancellationTokenOnDestroy()).Forget();
-
-            OnStopCamera.Subscribe(_ =>
-            {
-                Debug.Log("カメラ止まったよ");
-            });
         }
 
         private async UniTask Result(CancellationToken token)
@@ -39,6 +35,10 @@ namespace Yomikiru.Result
 
             onStopCamera.OnNext(Unit.Default);
             onStopCamera.OnCompleted();
+
+            await UniTask.Delay(3, cancellationToken: token);
+
+            GameManager.Instance.LoadScene(nextSceneName, GameManager.LoadingScreenType.DARK);
         }
     }
 }
