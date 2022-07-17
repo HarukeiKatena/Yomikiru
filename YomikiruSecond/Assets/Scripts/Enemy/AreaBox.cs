@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Yomikiru.Enemy
+namespace Yomikiru
 {
     public class AreaBox : MonoBehaviour
     {

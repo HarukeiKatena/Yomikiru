@@ -1,40 +1,86 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using UniRx;
-using System;
+using Yomikiru.Characte.Management;
+using Yomikiru.Character.Enemy.StateMachine;
 
-using Cysharp.Threading.Tasks;
-
-
-namespace Yomikiru.Enemy
+namespace Yomikiru.Character.Enemy
 {
+    [RequireComponent(typeof(EnemyMove))]
     public class AIEnemyBase : MonoBehaviour
     {
         [SerializeField] private GameObject deathPrefab;
 
-        private Subject<Unit> startGame = new Subject<Unit>();
-        public IObservable<Unit> OnStartGame
-        {
-            get { return startGame; }
-        }
+        // state
+        public State.None NoneState { get; private set; }
+        public State.Search SearchState { get; private set; }
+        public State.Attack AttackState { get; private set; }
+        public State.Chase ChaseState { get; private set; }
+        public EnemyStateMachine<AIEnemyBase> StateMachine { get; private set; } = new EnemyStateMachine<AIEnemyBase>();
+        
+        // parameter
+        [SerializeField] private MatchInfo matchInfo;
 
-        public bool StartGameFlag;
+        //player info
+        private PlayerAttack playerAttack;
+        public PlayerAttack PlayerAttack { get => playerAttack; set => playerAttack = value; }
 
-        public IObservable<int> DieEvent => dieEvent;
+        //enemy info
+        private PlayerAttack attack;
+        public PlayerAttack Attack { get => attack; set => attack = value; }
+        private EnemyMove move;
+        public EnemyMove Move { get => move; set => move = value; }
+
+        [SerializeField] private float attackTime;
+        public float AttackTime { get => attackTime; }
+        [SerializeField] private float chaseLimitTime;
+        public float ChaseLimitTime { get => chaseLimitTime; }
+        [SerializeField] private float wattingTimeOnPlayerLost;
+        public float WattingTimeOnPlayerLost { get => wattingTimeOnPlayerLost; }
+
+        //前回あったけどいるかわからない
         private Subject<int> dieEvent = new Subject<int>();
+        public IObservable<int> DieEvent => dieEvent;
 
-        void Start()
+        public CancellationTokenSource Cts { get; private set; }
+
+        public AIEnemyBase()
         {
-            StartGameFlag = false;
-            WaitForGameStart().Forget();
+            NoneState = new State.None(this);
+            SearchState = new State.Search(this);
+            AttackState = new State.Attack(this);
+            ChaseState = new State.Chase(this);
+
+            Cts = new CancellationTokenSource();
         }
 
-        async UniTaskVoid WaitForGameStart()
+        private void Awake()
         {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(10));
-            startGame.OnNext(Unit.Default);
-            StartGameFlag = true;
+            StateMachine.CurrentState = NoneState;
+            matchInfo.OnStateChange.Subscribe(_ => StartGame());
+
+            TryGetComponent<PlayerAttack>(out attack);
+            TryGetComponent<EnemyMove>(out move);
+        }
+        private void Start()
+        {
+            StartGame();
+        }
+
+        private void Update()
+        {
+            StateMachine.Update(); 
+        }
+
+        private void StartGame()
+        {
+            if(matchInfo.Gamemode.Gamemode == Gamemode.SOLO && matchInfo.State == MatchState.Ingame)
+            {
+                StateMachine.CurrentState = SearchState;
+            }
         }
 
         public void Die()
