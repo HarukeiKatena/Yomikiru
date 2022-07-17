@@ -5,10 +5,9 @@ using Yomikiru.Character.Enemy.StateMachine;
 
 namespace Yomikiru.Character.Enemy.State
 {
-    public sealed class Attack : EnemyState<AIEnemyBase>
+    public sealed class EnemyStateAttack : EnemyState<AIEnemyBase>
     {
-        bool finish;
-        public Attack(AIEnemyBase enemy) : base(enemy)
+        public EnemyStateAttack(AIEnemyBase enemy) : base(enemy)
         {
         }
 
@@ -19,8 +18,7 @@ namespace Yomikiru.Character.Enemy.State
                 enemy.Attack.Attack();
                 Debug.Log("Attack");
             }
-            finish = false;
-            WaitSeconds(enemy.AttackTime, enemy.Cts.Token).Forget();
+            ToSearchState(enemy.AttackTime, enemy.GetCancellationTokenOnDestroy()).Forget();
         }
 
         public override void OnExit()
@@ -29,16 +27,12 @@ namespace Yomikiru.Character.Enemy.State
 
         public override void Update()
         {
-            if(finish)
-            {
-                enemy.StateMachine.CurrentState = enemy.SearchState;
-            }
         }
 
-        private async UniTaskVoid WaitSeconds(float seconds, CancellationToken token)
+        private async UniTaskVoid ToSearchState(float seconds, CancellationToken token)
         {
             await UniTask.Delay(System.TimeSpan.FromSeconds(seconds), cancellationToken: token);
-            finish = true;
+            enemy.StateMachine.CurrentState = new EnemyStateSearch(enemy);
         }
     }
 

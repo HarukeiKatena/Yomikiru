@@ -5,12 +5,12 @@ using UniRx;
 
 namespace Yomikiru.Character.Enemy.State
 {
-    public sealed class Search : EnemyState<Yomikiru.Character.Enemy.AIEnemyBase>
+    public sealed class EnemyStateSearch : EnemyState<Yomikiru.Character.Enemy.AIEnemyBase>
     {
-        bool playerAttacking;
+        bool isPlayerAttacked;
 
         IDisposable disposablePlayerAttack;
-        public Search(AIEnemyBase enemy) : base(enemy)
+        public EnemyStateSearch(AIEnemyBase enemy) : base(enemy)
         {
         }
 
@@ -19,9 +19,9 @@ namespace Yomikiru.Character.Enemy.State
             Debug.Log("Search");
             enemy.Move.SetRandomDestination();
             enemy.Move.RestartAgent();
-            playerAttacking = false;
+            isPlayerAttacked = false;
 
-            disposablePlayerAttack = enemy.PlayerAttack?.OnAttack.Subscribe(_ => playerAttacking = true);
+            if(enemy.PlayerAttack is object) disposablePlayerAttack = enemy.PlayerAttack.OnAttack.Subscribe(_ => enemy.StateMachine.CurrentState = new EnemyStateChase(enemy));
         }
 
         public override void OnExit()
@@ -33,11 +33,7 @@ namespace Yomikiru.Character.Enemy.State
         {
             if(enemy.Move.GetReachDestination())
             {
-                enemy.StateMachine.CurrentState = enemy.AttackState;
-            }
-            else if(playerAttacking)
-            {
-                enemy.StateMachine.CurrentState = enemy.ChaseState;
+                enemy.StateMachine.CurrentState =  new EnemyStateAttack(enemy);
             }
         }
 

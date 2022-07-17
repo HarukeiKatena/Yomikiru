@@ -11,19 +11,18 @@ namespace Yomikiru.Character.Enemy
 {
     public class EnemyMove : MonoBehaviour
     {
-        // component
         private Character character;
-        private CharacterData table;
+        private CharacterData table => character.Table;
         private CharacterController controller;
         private NavMeshAgent navMeshAgent;
 
         private AIEnemyBase aiEnemyBase;
 
-        //serch around perameter
+        // search around parameter
         [SerializeField] private float aroundTime;
         [SerializeField] private float sightAngle;
         [SerializeField] private float maxDistance;
-        private float anglePerSecond;
+        private float degreesPerSecond;
 
         // map info
         [SerializeField] private AreaBox areaBox;
@@ -34,16 +33,7 @@ namespace Yomikiru.Character.Enemy
             TryGetComponent(out controller);
             TryGetComponent(out navMeshAgent);
 
-            anglePerSecond = 360 / aroundTime;
-        }
-
-        private void Start()
-        {
-            table = character.Table;
-        }
-
-        private void Update()
-        {
+            degreesPerSecond = 360 / aroundTime;
         }
 
         public bool GetReachDestination()
@@ -71,8 +61,7 @@ namespace Yomikiru.Character.Enemy
                     UnityEngine.Random.Range(-areaBox.Size.y / 2, areaBox.Size.y / 2),
                     UnityEngine.Random.Range(-areaBox.Size.z / 2, areaBox.Size.z / 2));
 
-                NavMeshHit navMeshHit;
-                if (NavMesh.SamplePosition(sourcePosition, out navMeshHit, navMeshAgent.height * 2, 1))
+                if (NavMesh.SamplePosition(sourcePosition, out var navMeshHit, navMeshAgent.height * 2, 1))
                 {
                     navMeshAgent.SetDestination(navMeshHit.position);
                     Debug.Log(navMeshHit.position);
@@ -81,34 +70,11 @@ namespace Yomikiru.Character.Enemy
             }
         }
 
-        public void SetDestinationForPlayer(Vector3 sourcePosition)
+        public void SetDestination(Vector3 playerPosition)
         {
-            NavMeshHit navMeshHit;
-            if (NavMesh.SamplePosition(sourcePosition, out navMeshHit, navMeshAgent.height * 2, 1))
+            if (NavMesh.SamplePosition(playerPosition, out var navMeshHit, navMeshAgent.height * 2, 1))
             {
                 navMeshAgent.SetDestination(navMeshHit.position);
-            }
-        }
-
-        public async UniTask<bool> SearchAround(CancellationToken token)
-        {
-            float rotationAmount = 0;
-            Vector3 targetDir = aiEnemyBase.PlayerAttack.transform.position - transform.position;
-            float targetDistance = targetDir.magnitude;
-
-            while (true)
-            {
-                await UniTask.Yield(PlayerLoopTiming.Update);
-                float _anglePerFrame = anglePerSecond * Time.deltaTime;
-                rotationAmount += _anglePerFrame;
-                transform.rotation = Quaternion.AngleAxis(_anglePerFrame, transform.up) * transform.rotation;
-                // search player
-                float cosHalf = Mathf.Cos(sightAngle / 2 * Mathf.Deg2Rad);
-                float dot = Vector3.Dot(transform.forward, targetDir.normalized);
-                // found
-                if (dot > cosHalf && targetDistance < maxDistance) return true;
-                // finish 'couse rotate around
-                if (360 <= rotationAmount) return false;
             }
         }
     }

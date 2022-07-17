@@ -6,33 +6,36 @@ using UnityEngine;
 using UniRx;
 using Yomikiru.Characte.Management;
 using Yomikiru.Character.Enemy.StateMachine;
+using Yomikiru.Character.Enemy.State;
 
 namespace Yomikiru.Character.Enemy
 {
     [RequireComponent(typeof(EnemyMove))]
     public class AIEnemyBase : MonoBehaviour
     {
-        [SerializeField] private GameObject deathPrefab;
-
         // state
-        public State.None NoneState { get; private set; }
-        public State.Search SearchState { get; private set; }
-        public State.Attack AttackState { get; private set; }
-        public State.Chase ChaseState { get; private set; }
         public EnemyStateMachine<AIEnemyBase> StateMachine { get; private set; } = new EnemyStateMachine<AIEnemyBase>();
         
         // parameter
         [SerializeField] private MatchInfo matchInfo;
 
-        //player info
+        // player info
+        private CharacterManagement characterManagement;
+        public CharacterManagement CharacterManagement
+        { 
+            get => characterManagement;
+            set 
+            { 
+                characterManagement = value;
+                playerAttack = characterManagement.GetCharacterObject(this.gameObject).GetComponent<PlayerAttack>();
+            }
+        }
         private PlayerAttack playerAttack;
-        public PlayerAttack PlayerAttack { get => playerAttack; set => playerAttack = value; }
+        public PlayerAttack PlayerAttack => playerAttack;
 
-        //enemy info
-        private PlayerAttack attack;
-        public PlayerAttack Attack { get => attack; set => attack = value; }
-        private EnemyMove move;
-        public EnemyMove Move { get => move; set => move = value; }
+        // enemy info
+        public PlayerAttack Attack { get; private set; }
+        public EnemyMove Move { get; private set; }
 
         [SerializeField] private float attackTime;
         public float AttackTime { get => attackTime; }
@@ -41,33 +44,13 @@ namespace Yomikiru.Character.Enemy
         [SerializeField] private float wattingTimeOnPlayerLost;
         public float WattingTimeOnPlayerLost { get => wattingTimeOnPlayerLost; }
 
-        //前回あったけどいるかわからない
-        private Subject<int> dieEvent = new Subject<int>();
-        public IObservable<int> DieEvent => dieEvent;
-
-        public CancellationTokenSource Cts { get; private set; }
-
-        public AIEnemyBase()
-        {
-            NoneState = new State.None(this);
-            SearchState = new State.Search(this);
-            AttackState = new State.Attack(this);
-            ChaseState = new State.Chase(this);
-
-            Cts = new CancellationTokenSource();
-        }
-
         private void Awake()
         {
-            StateMachine.CurrentState = NoneState;
-            matchInfo.OnStateChange.Subscribe(_ => StartGame());
+            StateMachine.CurrentState = new EnemyStateNone(this);
+            matchInfo.OnStateChange.Subscribe(state => StartGame(state));
 
-            TryGetComponent<PlayerAttack>(out attack);
-            TryGetComponent<EnemyMove>(out move);
-        }
-        private void Start()
-        {
-            StartGame();
+            if(TryGetComponent<PlayerAttack>(out var attack)) Attack = attack;
+            if(TryGetComponent<EnemyMove>(out var move)) Move = move;
         }
 
         private void Update()
@@ -75,22 +58,13 @@ namespace Yomikiru.Character.Enemy
             StateMachine.Update(); 
         }
 
-        private void StartGame()
+        private void StartGame(MatchState state)
         {
-            if(matchInfo.Gamemode.Gamemode == Gamemode.SOLO && matchInfo.State == MatchState.Ingame)
+            if(state == MatchState.Ingame) return;
+            if(matchInfo.Gamemode.Gamemode == Gamemode.SOLO)
             {
-                StateMachine.CurrentState = SearchState;
+                StateMachine.CurrentState = new EnemyStateSearch(this);
             }
-        }
-
-        public void Die()
-        {
-            var effect = Instantiate(deathPrefab, transform.position, Quaternion.identity);
-            gameObject.SetActive(false);
-            Destroy(effect, 1.5f);
-
-            dieEvent.OnNext(3);
-            dieEvent.OnCompleted();
         }
     }
 }

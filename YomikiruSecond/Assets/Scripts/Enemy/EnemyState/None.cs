@@ -5,9 +5,9 @@ using UniRx;
 
 namespace Yomikiru.Character.Enemy.State
 {
-    public sealed class None : EnemyState<AIEnemyBase>
+    public sealed class EnemyStateNone : EnemyState<AIEnemyBase>
     {
-        public None(AIEnemyBase enemy) : base(enemy)
+        public EnemyStateNone(AIEnemyBase enemy) : base(enemy)
         {
         }
 
