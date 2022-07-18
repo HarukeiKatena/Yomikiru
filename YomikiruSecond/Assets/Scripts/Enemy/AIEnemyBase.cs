@@ -38,11 +38,11 @@ namespace Yomikiru.Character.Enemy
         public EnemyMove Move { get; private set; }
 
         [SerializeField] private float attackTime;
-        public float AttackTime { get => attackTime; }
+        public float AttackTime => attackTime;
         [SerializeField] private float chaseLimitTime;
-        public float ChaseLimitTime { get => chaseLimitTime; }
-        [SerializeField] private float wattingTimeOnPlayerLost;
-        public float WattingTimeOnPlayerLost { get => wattingTimeOnPlayerLost; }
+        public float ChaseLimitTime => chaseLimitTime;
+        [SerializeField] private float waittingTimeOnPlayerLost;
+        public float WaittingTimeOnPlayerLost => waittingTimeOnPlayerLost;
 
         private void Awake()
         {
