@@ -41,8 +41,8 @@ namespace Yomikiru.Character.Enemy
         public float AttackTime => attackTime;
         [SerializeField] private float chaseLimitTime;
         public float ChaseLimitTime => chaseLimitTime;
-        [SerializeField] private float waittingTimeOnPlayerLost;
-        public float WaittingTimeOnPlayerLost => waittingTimeOnPlayerLost;
+        [SerializeField] private float waitingTimeOnPlayerLost;
+        public float WaitingTimeOnPlayerLost => waitingTimeOnPlayerLost;
 
         private void Awake()
         {

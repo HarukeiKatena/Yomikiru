@@ -51,7 +51,7 @@ namespace Yomikiru.Character.Enemy.State
         private async UniTaskVoid OnChaseOverTime(CancellationToken token)
         {
             enemy.Move.StopAgent();
-            await UniTask.Delay(TimeSpan.FromSeconds(enemy.WattingTimeOnPlayerLost), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(enemy.WaitingTimeOnPlayerLost), cancellationToken: token);
             enemy.StateMachine.CurrentState = new EnemyStateSearch(enemy);
         }
         
