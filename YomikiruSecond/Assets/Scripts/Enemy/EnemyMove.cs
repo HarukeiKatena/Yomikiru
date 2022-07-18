@@ -51,6 +51,8 @@ namespace Yomikiru.Character.Enemy
             navMeshAgent.isStopped = false;
         }
 
+        public bool GetAgentIsStopped() { return navMeshAgent.isStopped; }
+
         public void SetRandomDestination()
         {
             // NavMesh.SamplePositionが範囲外の場合、正しい場所を取得できない
