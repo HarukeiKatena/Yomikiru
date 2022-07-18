@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ControllerManagement
   m_EditorClassIdentifier: 
   PlayerCount: 2
-  KeybordPlayerIndex: -1
+  KeybordPlayerIndex: 0
