@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2bd2656eff98ab47b2668d50503788b, type: 3}
   m_Name: ControllerManagement
   m_EditorClassIdentifier: 
+  PlayerCount: 2
   KeybordPlayerIndex: -1

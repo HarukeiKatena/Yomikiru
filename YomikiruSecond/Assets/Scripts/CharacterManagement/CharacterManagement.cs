@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using Yomikiru.Controller;
+using Random = UnityEngine.Random;
 
 namespace Yomikiru.Characte.Management
 {
@@ -16,30 +18,37 @@ namespace Yomikiru.Characte.Management
         [SerializeField] private ControllerManager controllerManager;
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject enemyPrefab;
-        [SerializeField] private Transform[] startPosition;
+        [SerializeField] private Transform startPositionParent;//開始座標が入ったオブジェクトの親
 
         [HideInInspector] public GameObject[] CharacterList;
 
-        private void Start()
+        private void Awake()
         {
+            //初期座標の子オブジェクトを設定
+            var startPositions = startPositionParent.OfType<Transform>().ToList();
+
             //個数集める
-            CharacterList = new GameObject[controllerManager.PlayerDevices.Length];
+            CharacterList = new GameObject[ControllerManager.MaxPlayerCount];
 
             //プレイヤー
             for (int i = 0; i < controllerManager.PlayerCount; i++)
-                CreatePlayer(i);
+            {
+                var startPosition = startPositions[Random.Range(0, startPositions.Count - 1)];
+                CreatePlayer(i, startPosition);
+                startPositions.Remove(startPosition);
+            }
 
             //プレイヤー数が1の場合エネミー作成する
             if (controllerManager.PlayerCount == 1)
-                CreateEnemy(1);
+                CreateEnemy(1, startPositions[1]);
         }
 
-        private void CreatePlayer(int index)
+        private void CreatePlayer(int index, Transform startPosition)
         {
             var player = PlayerInput.Instantiate(playerPrefab);
             player.transform.SetPositionAndRotation(
-                startPosition[index].position,
-                startPosition[index].rotation);
+                startPosition.position,
+                startPosition.rotation);
 
             //事前に指定したデバイスをセットする
             var user = player.user;
@@ -55,10 +64,17 @@ namespace Yomikiru.Characte.Management
                     SetDeviceAndScheme(user, controllerManager.PlayerDevices[index], "Gamepad");
                 }
                 else {//指定デバイスが無い場合
-                    if (Gamepad.all.Count >= index + 1)//ゲームパッドがあればパッドにする
-                        SetDeviceAndScheme(user, Gamepad.all[index], "Gamepad");
-                    else if(index == ControllerManager.MaxPlayerCount - 1)
+                    var pads = Gamepad.all;
+                    if (pads.Count >= index + 1)//ゲームパッドがあればパッドにする
+                    {
+                        SetDeviceAndScheme(user, pads[index], "Gamepad");
+                        controllerManager.PlayerDevices[index] = pads[index];
+                    }
+                    else if (controllerManager.KeybordPlayerIndex == ControllerManager.NotUsedKeybord)
+                    {
                         SetDevicesAndScheme(user, new InputDevice[] {Keyboard.current, Mouse.current}, "KeyboardMouse");
+                        controllerManager.KeybordPlayerIndex = index;
+                    }
                 }
             }
 
@@ -70,15 +86,12 @@ namespace Yomikiru.Characte.Management
             CameraSetting(obj, index);
         }
 
-        private void CreateEnemy(int index)
+        private void CreateEnemy(int index, Transform startPosition)
         {
             var enemy = GameObject.Instantiate(
                 enemyPrefab,
-                startPosition[index].position,
-                startPosition[index].rotation);
-
-            //キャラクター保持
-            CharacterList[index] = enemy.gameObject;
+                startPosition.position,
+                startPosition.rotation);
         }
 
         private void SetDevicesAndScheme(InputUser user, InputDevice[] devices, string scheme)
@@ -97,33 +110,53 @@ namespace Yomikiru.Characte.Management
 
         private void CameraSetting(GameObject parentObject, int playerIndex)
         {
-            var camera = CameraChildFind(parentObject.transform);
-            if(camera == null)
+            var cameraparent = FindCameraParent(parentObject.transform);
+            if(cameraparent == null)
                 return;
 
-            camera.rect = controllerManager.PlayerCount switch
+            int layerindex = LayerMask.NameToLayer("P" + (playerIndex + 1));
+
+            //カメラの設定
+            var cameraobject = cameraparent.Find("Camera");
+            if(cameraobject != null && cameraobject.TryGetComponent(out Camera camera))
             {
-                1 => new Rect(0.0f, 0.0f, 1.0f, 1.0f),
-                2 => playerIndex == 0 ? new Rect(0.0f, 0.5f, 1.0f, 0.5f) : new Rect(0.0f, 0.0f, 1.0f, 0.5f),
-                _ => camera.rect
-            };
+                camera.cullingMask ^= 1 << layerindex;
+                camera.depth = ControllerManager.MaxPlayerCount - playerIndex;
+                camera.rect = controllerManager.PlayerCount switch
+                {
+                    1 => new Rect(0.0f, 0.0f, 1.0f, 1.0f),
+                    2 => playerIndex == 0 ? new Rect(0.0f, 0.5f, 1.0f, 0.5f) : new Rect(0.0f, 0.0f, 1.0f, 0.5f),
+                    _ => camera.rect
+                };
+            }
+
+            //CinemachineVirtualCameraの設定
+            var vcobject = cameraparent.Find("VirtualCamera");
+            if(vcobject != null && vcobject.TryGetComponent(out CinemachineVirtualCamera vc))
+            {
+                vc.gameObject.layer = layerindex;
+            }
         }
 
-        private Camera CameraChildFind(Transform parent)
+        private Transform FindCameraParent(Transform parent)
         {
             foreach (Transform child in parent.transform)
             {
                 if (child.gameObject.name == "Camera")
-                    return child.GetComponent<Camera>();
+                    return child.parent;
 
-                var camera = CameraChildFind(child);
-                if (camera != null)
-                    return camera;
+                var parentobj = FindCameraParent(child);
+                if (parentobj != null)
+                    return parentobj;
             }
-
             return null;
         }
 
+        public Camera GetCharacterCamera(int playerIndex)
+        {
+            return FindCameraParent(CharacterList[playerIndex].transform).
+                transform.Find("Camera").GetComponent<Camera>();
+        }
 
         //引数でしたいしたオブジェクトを除いて一番最初にヒットしたオブジェクトを返す
         public GameObject GetCharacterObject(GameObject ExcludedObject)

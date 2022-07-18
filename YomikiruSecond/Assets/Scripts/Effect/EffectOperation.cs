@@ -28,19 +28,19 @@ namespace Yomikiru.Effect
         }
 
         //再生する
-        public void Play(EffectClip clip)
+        public void Play(EffectClip clip, Vector3 pos)
         {
-            EffectPlay(this.GetCancellationTokenOnDestroy(), clip).Forget();
+            EffectPlay(this.GetCancellationTokenOnDestroy(), clip, pos).Forget();
         }
 
-        private async UniTask EffectPlay(CancellationToken token, EffectClip clip)
+        private async UniTask EffectPlay(CancellationToken token, EffectClip clip, Vector3 pos)
         {
             token.ThrowIfCancellationRequested();
 
             //開始
             isPlaying = true;
             var t = transform;
-            t.position = clip.BacePosition;
+            t.position = clip.BacePosition + pos;
             t.rotation = clip.BaceRotation;
             t.localScale = clip.StartScale;
             renderer.material = clip.EffectMaterial;

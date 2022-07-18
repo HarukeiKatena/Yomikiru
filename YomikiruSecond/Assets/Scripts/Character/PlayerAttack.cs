@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System;
-using Player;
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
@@ -48,6 +47,7 @@ namespace Yomikiru.Character
         public void Attack()
         {
             if(isAttack) return;
+            table.Effect.Request(this.name, table.AttackEffect, transform.position);
             AttackAsync(cts.Token).Forget();
             onAttack.OnNext(Unit.Default);
         }
