@@ -47,10 +47,10 @@ namespace Yomikiru.Character.Enemy
         private void Awake()
         {
             StateMachine.CurrentState = new EnemyStateNone(this);
-            matchInfo.OnStateChange.Subscribe(state => StartGame(state));
+            matchInfo.OnStateChange.Subscribe(state => OnMatchStateChange(state));
 
-            if(TryGetComponent<PlayerAttack>(out var attack)) Attack = attack;
-            if(TryGetComponent<EnemyMove>(out var move)) Move = move;
+            Attack = GetComponent<PlayerAttack>();
+            Move = GetComponent<EnemyMove>();
         }
 
         private void Update()
@@ -58,7 +58,7 @@ namespace Yomikiru.Character.Enemy
             StateMachine.Update(); 
         }
 
-        private void StartGame(MatchState state)
+        private void OnMatchStateChange(MatchState state)
         {
             if(state == MatchState.Ingame) return;
             if(matchInfo.Gamemode.Gamemode == Gamemode.SOLO)
