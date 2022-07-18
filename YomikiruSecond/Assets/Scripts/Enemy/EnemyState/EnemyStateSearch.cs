@@ -18,7 +18,7 @@ namespace Yomikiru.Character.Enemy.State
             enemy.Move.SetRandomDestination();
             enemy.Move.RestartAgent();
 
-            if(enemy.PlayerAttack is object) disposablePlayerAttack = enemy.PlayerAttack.OnAttack.Subscribe(_ => enemy.StateMachine.CurrentState = new EnemyStateChase(enemy));
+            if(enemy.PlayerAttack != null) disposablePlayerAttack = enemy.PlayerAttack.OnAttack.Subscribe(_ => enemy.StateMachine.CurrentState = new EnemyStateChase(enemy));
         }
 
         public override void OnExit()

@@ -19,7 +19,7 @@ namespace Yomikiru.Character.Enemy.State
         {
             chaseTime = 0;
 
-            if(enemy.PlayerAttack is object) disposablePlayerAttack = enemy.PlayerAttack.OnAttack.Subscribe(_ => OnPlayerAttack());
+            if(enemy.PlayerAttack != null) disposablePlayerAttack = enemy.PlayerAttack.OnAttack.Subscribe(_ => OnPlayerAttack());
             enemy.Move.SetDestination(enemy.PlayerAttack.transform.position);
         }
 
