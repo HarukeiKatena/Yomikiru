@@ -1,7 +1,4 @@
-using System;
-using UnityEngine;
 using Yomikiru.Character.Enemy.StateMachine;
-using UniRx;
 
 namespace Yomikiru.Character.Enemy.State
 {

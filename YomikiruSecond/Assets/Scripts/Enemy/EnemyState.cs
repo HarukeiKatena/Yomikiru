@@ -1,5 +1,4 @@
 using UnityEngine;
-using Yomikiru.Character.Enemy;
 
 namespace Yomikiru.Character.Enemy.StateMachine
 {

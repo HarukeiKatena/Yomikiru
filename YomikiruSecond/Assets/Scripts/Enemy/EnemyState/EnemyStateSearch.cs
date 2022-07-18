@@ -5,7 +5,7 @@ using UniRx;
 
 namespace Yomikiru.Character.Enemy.State
 {
-    public sealed class EnemyStateSearch : EnemyState<Yomikiru.Character.Enemy.AIEnemyBase>
+    public sealed class EnemyStateSearch : EnemyState<AIEnemyBase>
     {
         IDisposable disposablePlayerAttack;
         public EnemyStateSearch(AIEnemyBase enemy) : base(enemy)

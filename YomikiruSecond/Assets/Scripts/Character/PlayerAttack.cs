@@ -7,7 +7,6 @@ using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Yomikiru.Input;
 
 namespace Yomikiru.Character
 {

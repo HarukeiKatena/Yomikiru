@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using System.Threading;
 using UnityEngine;
 using UniRx;
 using Yomikiru.Characte.Management;
@@ -13,11 +9,10 @@ namespace Yomikiru.Character.Enemy
     [RequireComponent(typeof(EnemyMove))]
     public class AIEnemyBase : MonoBehaviour
     {
-        // state
-        public EnemyStateMachine<AIEnemyBase> StateMachine { get; private set; } = new EnemyStateMachine<AIEnemyBase>();
-        
-        // parameter
         [SerializeField] private MatchInfo matchInfo;
+        [SerializeField] private float attackTime;
+        [SerializeField] private float chaseLimitTime;
+        [SerializeField] private float waitingTimeOnPlayerLost;
 
         // player info
         private CharacterManagement characterManagement;
@@ -27,22 +22,20 @@ namespace Yomikiru.Character.Enemy
             set 
             { 
                 characterManagement = value;
-                playerAttack = characterManagement.GetCharacterObject(this.gameObject).GetComponent<PlayerAttack>();
+                playerAttack = characterManagement.GetCharacterObject(gameObject).GetComponent<PlayerAttack>();
             }
         }
         private PlayerAttack playerAttack;
         public PlayerAttack PlayerAttack => playerAttack;
 
-        // enemy info
         public PlayerAttack Attack { get; private set; }
         public EnemyMove Move { get; private set; }
 
-        [SerializeField] private float attackTime;
         public float AttackTime => attackTime;
-        [SerializeField] private float chaseLimitTime;
         public float ChaseLimitTime => chaseLimitTime;
-        [SerializeField] private float waitingTimeOnPlayerLost;
         public float WaitingTimeOnPlayerLost => waitingTimeOnPlayerLost;
+
+        public EnemyStateMachine<AIEnemyBase> StateMachine { get; private set; } = new EnemyStateMachine<AIEnemyBase>();
 
         private void Awake()
         {
