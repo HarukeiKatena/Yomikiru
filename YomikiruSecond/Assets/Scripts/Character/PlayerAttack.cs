@@ -12,7 +12,6 @@ using Yomikiru.Input;
 namespace Yomikiru.Character
 {
     [RequireComponent(typeof(Character))]
-    [RequireComponent(typeof(InputEvent))]
     public class PlayerAttack : MonoBehaviour
     {
         // CancellationTokenSourceを生成
@@ -31,6 +30,9 @@ namespace Yomikiru.Character
         // 状態
         private bool isAttack;
 
+        private Subject<Unit> onAttack = new Subject<Unit>();
+        public IObservable<Unit> OnAttack => onAttack;
+
         private void Awake()
         {
             cts = new CancellationTokenSource();
@@ -44,15 +46,15 @@ namespace Yomikiru.Character
             swordGrip.gameObject.SetActive(false);
         }
 
-        public void OnAttack()
+        public void Attack()
         {
             if(isAttack) return;
             AttackAsync(cts.Token).Forget();
+            onAttack.OnNext(Unit.Default);
         }
 
         private async UniTask AttackAsync(CancellationToken token)
         {
-            Debug.Log("Attack");
             //剣を出す
             swordGrip.gameObject.SetActive(true);
             isAttack = true;
