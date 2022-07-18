@@ -64,7 +64,6 @@ namespace Yomikiru.Character.Enemy
                 if (NavMesh.SamplePosition(sourcePosition, out var navMeshHit, navMeshAgent.height * 2, 1))
                 {
                     navMeshAgent.SetDestination(navMeshHit.position);
-                    Debug.Log(navMeshHit.position);
                     break;
                 }
             }
