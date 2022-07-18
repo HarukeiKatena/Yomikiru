@@ -12,12 +12,6 @@ namespace Yomikiru.Character.Enemy
 
         private AIEnemyBase aiEnemyBase;
 
-        // search around parameter
-        [SerializeField] private float aroundTime;
-        [SerializeField] private float sightAngle;
-        [SerializeField] private float maxDistance;
-        private float degreesPerSecond;
-
         // map info
         [SerializeField] private AreaBox areaBox;
 
@@ -26,8 +20,6 @@ namespace Yomikiru.Character.Enemy
             TryGetComponent(out character);
             TryGetComponent(out controller);
             TryGetComponent(out navMeshAgent);
-
-            degreesPerSecond = 360 / aroundTime;
         }
 
         public bool GetReachDestination()
