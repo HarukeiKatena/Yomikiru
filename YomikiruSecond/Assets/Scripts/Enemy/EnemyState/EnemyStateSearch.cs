@@ -7,8 +7,6 @@ namespace Yomikiru.Character.Enemy.State
 {
     public sealed class EnemyStateSearch : EnemyState<Yomikiru.Character.Enemy.AIEnemyBase>
     {
-        bool isPlayerAttacked;
-
         IDisposable disposablePlayerAttack;
         public EnemyStateSearch(AIEnemyBase enemy) : base(enemy)
         {
@@ -19,7 +17,6 @@ namespace Yomikiru.Character.Enemy.State
             Debug.Log("Search");
             enemy.Move.SetRandomDestination();
             enemy.Move.RestartAgent();
-            isPlayerAttacked = false;
 
             if(enemy.PlayerAttack is object) disposablePlayerAttack = enemy.PlayerAttack.OnAttack.Subscribe(_ => enemy.StateMachine.CurrentState = new EnemyStateChase(enemy));
         }
@@ -35,11 +32,6 @@ namespace Yomikiru.Character.Enemy.State
             {
                 enemy.StateMachine.CurrentState =  new EnemyStateAttack(enemy);
             }
-        }
-
-        private void OnPlayerAttack()
-        {
-            
         }
     }
 
