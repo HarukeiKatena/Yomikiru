@@ -36,7 +36,7 @@ namespace Yomikiru.Result
             onStopCamera.OnNext(Unit.Default);
             onStopCamera.OnCompleted();
 
-            await UniTask.Delay(3, cancellationToken: token);
+            await UniTask.Delay(20, cancellationToken: token);
 
             GameManager.Instance.LoadScene(nextSceneName, GameManager.LoadingScreenType.DARK);
         }
