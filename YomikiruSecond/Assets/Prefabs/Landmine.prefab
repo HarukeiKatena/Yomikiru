@@ -272,7 +272,7 @@ MonoBehaviour:
   light: {fileID: 3573555217660048029}
   particles: {fileID: 2670537258157814727}
   audioSource: {fileID: 3573555215765957172}
-  audioClip: {fileID: 8300000, guid: 8356211858d267240a5d5fd2ed5cd962, type: 3}
+  audioClip: {fileID: 8300000, guid: 2240e1c16bcb60040bea5dbda679221a, type: 3}
 --- !u!135 &3573555217713967344
 SphereCollider:
   m_ObjectHideFlags: 0
