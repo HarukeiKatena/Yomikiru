@@ -1,15 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine;
 
-namespace Yomikiru.Enemy
+namespace Yomikiru.Character.Enemy.StateMachine
 {
 
-    public abstract class EnemyState
+    public abstract class EnemyState<T> where T : MonoBehaviour
     {
+        protected T enemy;
 
-        protected AIEnemyBase enemy;
-
-        protected EnemyState(AIEnemyBase enemy) => this.enemy = enemy;
+        protected EnemyState(T enemy) => this.enemy = enemy;
 
         public abstract void OnEnter();
         public abstract void OnExit();

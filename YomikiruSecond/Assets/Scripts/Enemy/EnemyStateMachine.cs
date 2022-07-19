@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Yomikiru.Enemy
+namespace Yomikiru.Character.Enemy.StateMachine
 {
-
-    public sealed class EnemyStateMachine
+    public sealed class EnemyStateMachine<T> where T : MonoBehaviour 
     {
+        private EnemyState<T> currentState;
 
-        private EnemyState currentState;
-
-        public EnemyState CurrentState
+        public EnemyState<T> CurrentState
         {
             get => currentState;
             set

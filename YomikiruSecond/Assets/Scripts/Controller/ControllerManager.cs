@@ -10,7 +10,7 @@ namespace Yomikiru.Controller
     {
         public const int MaxPlayerCount = 2;
 
-        [HideInInspector] public int PlayerCount = MaxPlayerCount;
+        public int PlayerCount = MaxPlayerCount;
 
         public Gamepad[] PlayerDevices = new Gamepad[MaxPlayerCount];
 

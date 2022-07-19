@@ -40,7 +40,11 @@ namespace Yomikiru.Characte.Management
 
             //プレイヤー数が1の場合エネミー作成する
             if (controllerManager.PlayerCount == 1)
-                CreateEnemy(1, startPositions[1]);
+            {
+                var startPosition = startPositions[Random.Range(0, startPositions.Count - 1)];
+                CreateEnemy(1, startPosition);
+                startPositions.Remove(startPosition);
+            }
         }
 
         private void CreatePlayer(int index, Transform startPosition)
@@ -120,7 +124,8 @@ namespace Yomikiru.Characte.Management
             var cameraobject = cameraparent.Find("Camera");
             if(cameraobject != null && cameraobject.TryGetComponent(out Camera camera))
             {
-                camera.cullingMask ^= 1 << layerindex;
+                if (controllerManager.PlayerCount != 1)
+                    camera.cullingMask ^= 1 << layerindex;
                 camera.depth = ControllerManager.MaxPlayerCount - playerIndex;
                 camera.rect = controllerManager.PlayerCount switch
                 {

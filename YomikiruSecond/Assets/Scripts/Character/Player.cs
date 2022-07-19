@@ -71,7 +71,7 @@ namespace Yomikiru.Character
             eventList.Add(inputEvent.OnSprint.Subscribe(move.OnSprintInput));
             eventList.Add(inputEvent.OnLook.Subscribe(camera.OnLookInput));
             eventList.Add(inputEvent.OnJump.Subscribe(_ => move.OnJumpInput()));
-            eventList.Add(inputEvent.OnAttack.Subscribe(_ => attack.OnAttack()));
+            eventList.Add(inputEvent.OnAttack.Subscribe(_ => attack.Attack()));
         }
 
         public void DisableEvents()

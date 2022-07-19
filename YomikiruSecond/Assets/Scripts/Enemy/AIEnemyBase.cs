@@ -1,75 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
-using System;
+using Yomikiru.Characte.Management;
+using Yomikiru.Character.Enemy.StateMachine;
+using Yomikiru.Character.Enemy.State;
 
-using Cysharp.Threading.Tasks;
-
-
-namespace Yomikiru.Enemy
+namespace Yomikiru.Character.Enemy
 {
+    [RequireComponent(typeof(EnemyMove))]
     public class AIEnemyBase : MonoBehaviour
     {
-        private EnemyStateMachine stateMachine;
-        private EnemyState sWonder;
-
         [SerializeField] private MatchInfo matchInfo;
+        [SerializeField] private float attackTime;
+        [SerializeField] private float chaseLimitTime;
+        [SerializeField] private float waitingTimeOnPlayerLost;
 
-        void Awake() 
-        {
-            stateMachine = new EnemyStateMachine();
-            sWonder = new EnemyStateSearch(gameObject.GetComponent<AIEnemyBase>());
-        }
-
-        void Update() 
-        {
-            if(matchInfo.State == MatchState.Ingame)
-            {
-                stateMachine.Update();
+        // player info
+        private CharacterManagement characterManagement;
+        public CharacterManagement CharacterManagement
+        { 
+            get => characterManagement;
+            set 
+            { 
+                characterManagement = value;
+                playerAttack = characterManagement.GetCharacterObject(gameObject).GetComponent<PlayerAttack>();
             }
         }
+        private PlayerAttack playerAttack;
+        public PlayerAttack PlayerAttack => playerAttack;
 
+        public PlayerAttack Attack { get; private set; }
+        public EnemyMove Move { get; private set; }
 
+        public float AttackTime => attackTime;
+        public float ChaseLimitTime => chaseLimitTime;
+        public float WaitingTimeOnPlayerLost => waitingTimeOnPlayerLost;
 
-        
+        public EnemyStateMachine<AIEnemyBase> StateMachine { get; private set; } = new EnemyStateMachine<AIEnemyBase>();
 
-        
-
-        [SerializeField] private GameObject deathPrefab;
-
-        private Subject<Unit> startGame = new Subject<Unit>();
-        public IObservable<Unit> OnStartGame
+        private void Awake()
         {
-            get { return startGame; }
+            StateMachine.CurrentState = new EnemyStateNone(this);
+            matchInfo.OnStateChange.Subscribe(state => OnMatchStateChange(state));
+
+            Attack = GetComponent<PlayerAttack>();
+            Move = GetComponent<EnemyMove>();
         }
 
-        public bool StartGameFlag;
-
-        public IObservable<int> DieEvent => dieEvent;
-        private Subject<int> dieEvent = new Subject<int>();
-
-        // void Start()
-        // {
-        //     StartGameFlag = false;
-        //     WaitForGameStart().Forget();
-        // }
-
-        // async UniTaskVoid WaitForGameStart()
-        // {
-        //     await UniTask.Delay(System.TimeSpan.FromSeconds(10));
-        //     startGame.OnNext(Unit.Default);
-        //     StartGameFlag = true;
-        // }
-
-        public void Die()
+        private void Update()
         {
-            var effect = Instantiate(deathPrefab, transform.position, Quaternion.identity);
-            gameObject.SetActive(false);
-            Destroy(effect, 1.5f);
+            StateMachine.Update(); 
+        }
 
-            dieEvent.OnNext(3);
-            dieEvent.OnCompleted();
+        private void OnMatchStateChange(MatchState state)
+        {
+            if(state == MatchState.Ingame) return;
+            if(matchInfo.Gamemode.Gamemode == Gamemode.SOLO)
+            {
+                StateMachine.CurrentState = new EnemyStateSearch(this);
+            }
         }
     }
 }
