@@ -15,6 +15,7 @@ public class End : MonoBehaviour
     [SerializeField] private ControllerManager controllerManager;
     [SerializeField] private float cameraMoveDelay = 1.0f;
     [SerializeField] private float endWaitTime = 2.0f;
+    [SerializeField] private string nextScene = "ResultScene";
 
     private void Start()
     {
@@ -42,6 +43,6 @@ public class End : MonoBehaviour
         //とりあえずこっちに書く
         controllerManager.ClearPlayerDevice();
 
-        GameManager.Instance.LoadScene("Results", GameManager.LoadingScreenType.DARK);
+        GameManager.Instance.LoadScene(nextScene, GameManager.LoadingScreenType.DARK);
     }
 }
